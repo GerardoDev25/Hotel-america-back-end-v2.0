@@ -1,13 +1,6 @@
-interface IsValidParams {
-  value: any;
-  isRequired?: boolean;
-}
-
 export class BooleanValidator {
-  static isValid = (params: IsValidParams): true | string => {
-    const { value, isRequired = false } = params;
-
-    if (value === undefined && isRequired) return 'property is required';
+  static isValid = (value: any): true | string => {
+    if (value === undefined) return 'property is required';
 
     if (value === 'true' || value === 'false') return true;
 

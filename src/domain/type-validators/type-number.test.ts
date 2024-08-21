@@ -2,25 +2,22 @@ import { NumberValidator } from './type-number';
 
 describe('type-number.ts', () => {
   test('should return true when a valid number is provided', () => {
-    const result = NumberValidator.isValid({ value: 10 });
+    const result = NumberValidator.isValid(10);
     expect(result).toBe(true);
   });
 
   test('should return error message if value is NaN', () => {
-    const result = NumberValidator.isValid({ value: 'hello' });
+    const result = NumberValidator.isValid('hello');
     expect(result).toBe('property most be a number');
   });
 
   test('should return error message if value is falsy', () => {
-    const result = NumberValidator.isValid({ value: '' });
+    const result = NumberValidator.isValid('');
     expect(result).toBe('property most be a number');
   });
 
   test('should return error message when value is undefined and isRequired is true', () => {
-    const result = NumberValidator.isValid({
-      value: undefined,
-      isRequired: true,
-    });
+    const result = NumberValidator.isValid(undefined);
     expect(result).toBe('property is required');
   });
 

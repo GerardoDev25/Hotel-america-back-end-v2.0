@@ -1,7 +1,7 @@
-interface IsValidParams {
-  value: any;
-  isRequired?: boolean;
-}
+// interface IsValidParams {
+//   value: any;
+//   isRequired?: boolean;
+// }
 
 interface MinValueParams {
   value: number;
@@ -9,11 +9,11 @@ interface MinValueParams {
 }
 
 export class NumberValidator {
-  static isValid = (params: IsValidParams): true | string => {
-    const { value, isRequired = false } = params;
+  static isValid = (value: any): true | string => {
+    // const { value, isRequired = false } = params;
     const exertionLists = ['', false, true];
 
-    if (value === undefined && isRequired) {
+    if (value === undefined) {
       return 'property is required';
     }
 
@@ -26,7 +26,7 @@ export class NumberValidator {
   };
 
   static isMinValue = ({ value, minValue }: MinValueParams): true | string => {
-    const isValidNumber = NumberValidator.isValid({ value, isRequired: true });
+    const isValidNumber = NumberValidator.isValid(value);
 
     if (isValidNumber !== true) return isValidNumber;
 
@@ -37,7 +37,7 @@ export class NumberValidator {
   };
 
   static isPositive = (value: number): true | string => {
-    const isValidNumber = NumberValidator.isValid({ value, isRequired: true });
+    const isValidNumber = NumberValidator.isValid(value);
     if (isValidNumber !== true) return isValidNumber;
 
     if (value < 0) return 'property most be a positive';

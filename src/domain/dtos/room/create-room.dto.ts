@@ -42,10 +42,7 @@ export class CreateRoomDto {
       errors.push('betsNumber ' + betsNumberMinValueValid);
 
     // * isAvailable
-    const isAvailableValid = BooleanValidator.isValid({
-      value: isAvailable,
-      isRequired: true,
-    });
+    const isAvailableValid = BooleanValidator.isValid(isAvailable);
     if (isAvailableValid !== true)
       errors.push('isAvailable ' + isAvailableValid);
 
