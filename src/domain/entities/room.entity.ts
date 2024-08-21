@@ -18,6 +18,8 @@ export class RoomEntity implements RoomParams {
   static fromObject(object: Record<string, any>): RoomEntity {
     const { id, roomType, roomNumber, betsNumber, isAvailable } = object;
 
+    // todo implement this with type validators
+    
     if (!id) throw new Error('Id is required');
     if (typeof id !== 'string') throw new Error('Id not valid');
 

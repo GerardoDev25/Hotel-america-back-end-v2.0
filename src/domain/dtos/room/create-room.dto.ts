@@ -1,4 +1,9 @@
-import { RoomType } from '../../interfaces';
+import {
+  BooleanValidator,
+  NumberValidator,
+  StringValidator,
+} from '../../type-validators';
+import { RoomType } from '../../interfaces/room.interface';
 
 export class CreateRoomDto {
   private constructor(
@@ -8,42 +13,51 @@ export class CreateRoomDto {
     public readonly isAvailable: boolean
   ) {}
 
-  static create(props: Record<string, any>): [string[], CreateRoomDto?] {
-    let { roomType, roomNumber, betsNumber, isAvailable } = props;
+  static create(props: Record<string, any>): [string[]?, CreateRoomDto?] {
+    let { roomType, roomNumber, betsNumber, isAvailable = false } = props;
 
     const errors: string[] = [];
-    roomNumber = Number(roomNumber);
-    betsNumber = Number(betsNumber);
 
-    console.log({ roomNumber, betsNumber });
+    // * roomType
+    const roomTypeValid = StringValidator.mostBe({
+      value: roomType,
+      allowValues: ['suit', 'normal'],
+    });
+    if (roomTypeValid !== true) errors.push('roomType ' + roomTypeValid);
 
-    // ? roomType
-    if (!roomType || typeof roomType != 'string')
-      errors.push('"roomType" property is required');
-    if (roomType !== 'suit' && roomType !== 'normal')
-      errors.push('"roomType" property is not valid');
+    // * roomNumber
+    const roomNumberMinValueValid = NumberValidator.isMinValue({
+      value: roomNumber,
+      minValue: 1,
+    });
+    if (roomNumberMinValueValid !== true)
+      errors.push('roomNumber ' + roomNumberMinValueValid);
 
-    // todo fix roomNumber and betsNumber
+    // * betsNumber
+    const betsNumberMinValueValid = NumberValidator.isMinValue({
+      value: betsNumber,
+      minValue: 1,
+    });
+    if (betsNumberMinValueValid !== true)
+      errors.push('betsNumber ' + betsNumberMinValueValid);
 
-    // ?roomNumber
-    if (!roomNumber) errors.push('"roomNumber" property is required');
-    if (isNaN(roomNumber)) errors.push('"roomNumber" most be a number');
-
-    // ?betsNumber
-    if (!betsNumber) errors.push('"betsNumber" property is required');
-    if (isNaN(betsNumber)) errors.push('"betsNumber" most be a number');
-
-    if (isAvailable && typeof isAvailable !== 'boolean')
-      errors.push('isAvailable most be a boolean');
+    // * isAvailable
+    const isAvailableValid = BooleanValidator.isValid({
+      value: isAvailable,
+      isRequired: true,
+    });
+    if (isAvailableValid !== true)
+      errors.push('isAvailable ' + isAvailableValid);
 
     if (errors.length > 0) return [errors, undefined];
+
     return [
-      [],
+      undefined,
       new CreateRoomDto(
         roomType,
-        roomNumber,
-        betsNumber === 0 ? 1 : betsNumber,
-        !!isAvailable
+        +roomNumber,
+        +betsNumber,
+        !!BooleanValidator.toBoolean(isAvailable)
       ),
     ];
   }

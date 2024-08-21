@@ -8,7 +8,7 @@ export class RoomController {
     // return await this.roomService.createRoom(req, res);
     const [errors, createRoomDto] = CreateRoomDto.create(req.body);
 
-    if (errors.length > 0) {
+    if (errors) {
       return res.status(400).json({ errors });
     }
 
