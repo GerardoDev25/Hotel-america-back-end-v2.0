@@ -3,7 +3,7 @@ import {
   NumberValidator,
   StringValidator,
 } from '../../type-validators';
-import { RoomType } from '../../interfaces/room.interface';
+import { RoomParams, RoomType } from '../../interfaces/room.interface';
 
 export class CreateRoomDto {
   private constructor(
@@ -13,8 +13,8 @@ export class CreateRoomDto {
     public readonly isAvailable: boolean
   ) {}
 
-  static create(props: Record<string, any>): [string[]?, CreateRoomDto?] {
-    let { roomType, roomNumber, betsNumber, isAvailable = false } = props;
+  private static verifyProperties(properties: Omit<RoomParams, 'id'>) {
+    const { roomType, roomNumber, betsNumber, isAvailable } = properties;
 
     const errors: string[] = [];
 
@@ -48,6 +48,19 @@ export class CreateRoomDto {
     });
     if (isAvailableValid !== true)
       errors.push('isAvailable ' + isAvailableValid);
+
+    return errors;
+  }
+
+  static create(props: Record<string, any>): [string[]?, CreateRoomDto?] {
+    let { roomType, roomNumber, betsNumber, isAvailable = false } = props;
+
+    const errors = CreateRoomDto.verifyProperties({
+      roomType,
+      roomNumber,
+      betsNumber,
+      isAvailable,
+    });
 
     if (errors.length > 0) return [errors, undefined];
 

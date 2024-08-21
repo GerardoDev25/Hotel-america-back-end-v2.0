@@ -1,9 +1,11 @@
 {
   "conventionalCommits.scopes": [
     "config",
-    "dev"
+    "dev",
+    "test"
   ],
   "cSpell.words": [
-    "dtos"
+    "dtos",
+    "tsnd"
   ]
 }
