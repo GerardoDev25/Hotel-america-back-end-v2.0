@@ -7,6 +7,8 @@ export class StringValidator {
   static isValid = (value: any): true | string => {
     if (value === undefined) return 'property is required';
 
+    if (value === '') return 'property cannot be empty';
+
     if (typeof value !== 'string') return 'property most be a string';
 
     return true;
@@ -19,7 +21,7 @@ export class StringValidator {
     if (isValidString !== true) return isValidString;
 
     if (!allowValues.some((element) => element === value))
-      return 'most be normal or suit';
+      return 'most be: ' + allowValues.join(', ');
     return true;
   };
 }
