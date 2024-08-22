@@ -1,6 +1,6 @@
 import { variables } from '../../config/';
 import { CustomError } from '../error/';
-import { RoomParams, RoomType } from '../interfaces/';
+import { RoomParams, RoomType, RoomTypesList } from '../interfaces/';
 import {
   BooleanValidator,
   NumberValidator,
@@ -34,7 +34,7 @@ export class RoomEntity implements RoomParams {
     // * roomType
     const roomTypeValid = StringValidator.mostBe({
       value: roomType,
-      allowValues: ['suit', 'normal'],
+      allowValues: [RoomTypesList.SUIT, RoomTypesList.NORMAL],
     });
     if (roomTypeValid !== true)
       throw CustomError.badRequest('roomType ' + roomTypeValid);

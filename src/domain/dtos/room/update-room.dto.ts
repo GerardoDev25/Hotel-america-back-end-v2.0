@@ -3,10 +3,8 @@ import {
   NumberValidator,
   StringValidator,
 } from '../../type-validators';
-import { RoomParams, RoomType } from '../../interfaces/room.interface';
+import { RoomParams, RoomType, RoomTypesList } from '../../interfaces/room.interface';
 import { variables } from '../../../config';
-
-// TODO TEST THIS TOMORROW
 
 export class UpdateRoomDto {
   private constructor(
@@ -25,7 +23,7 @@ export class UpdateRoomDto {
     if (roomType !== undefined) {
       const roomTypeValid = StringValidator.mostBe({
         value: roomType,
-        allowValues: ['suit', 'normal'],
+        allowValues: [RoomTypesList.SUIT, RoomTypesList.NORMAL],
       });
       if (roomTypeValid !== true) errors.push('roomType ' + roomTypeValid);
     }

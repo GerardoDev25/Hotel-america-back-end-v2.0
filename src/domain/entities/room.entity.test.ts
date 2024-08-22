@@ -1,9 +1,10 @@
+import { RoomTypesList } from '../interfaces';
 import { RoomEntity } from './room.entity';
 
 describe('room.entity.ts', () => {
   const validObject = {
     id: 'abc',
-    roomType: 'suit',
+    roomType: RoomTypesList.SUIT,
     roomNumber: '101',
     betsNumber: '2',
     isAvailable: 'true',
@@ -12,7 +13,7 @@ describe('room.entity.ts', () => {
     // Arrange
     const expectedRoomEntity = new RoomEntity({
       id: 'abc',
-      roomType: 'suit',
+      roomType: RoomTypesList.SUIT,
       roomNumber: 101,
       betsNumber: 2,
       isAvailable: true,

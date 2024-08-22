@@ -1,1 +1,1 @@
-export type * from './room.interface';
+export * from './room.interface';
