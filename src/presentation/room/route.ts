@@ -11,6 +11,7 @@ export class RoomRoute {
     const controller = new RoomController(service);
 
     route.post('/', controller.createRoom);
+    route.put('/', controller.updateRoom);
 
     return route;
   }
