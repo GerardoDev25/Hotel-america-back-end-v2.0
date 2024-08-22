@@ -1,6 +1,6 @@
-import { variables } from '../../config';
-import { CustomError } from '../error/error.custom';
-import { RoomParams, RoomType } from '../interfaces';
+import { variables } from '../../config/';
+import { CustomError } from '../error/';
+import { RoomParams, RoomType } from '../interfaces/';
 import {
   BooleanValidator,
   NumberValidator,
