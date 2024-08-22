@@ -4,6 +4,7 @@ import {
   StringValidator,
 } from '../../type-validators';
 import { RoomParams, RoomType } from '../../interfaces/room.interface';
+import { variables } from '../../../config';
 
 export class CreateRoomDto {
   private constructor(
@@ -28,7 +29,7 @@ export class CreateRoomDto {
     // * roomNumber
     const roomNumberMinValueValid = NumberValidator.isMinValue({
       value: roomNumber,
-      minValue: 1,
+      minValue: variables.ROOM_NUMBER_MIN_VALUE,
     });
     if (roomNumberMinValueValid !== true)
       errors.push('roomNumber ' + roomNumberMinValueValid);
@@ -36,7 +37,7 @@ export class CreateRoomDto {
     // * betsNumber
     const betsNumberMinValueValid = NumberValidator.isMinValue({
       value: betsNumber,
-      minValue: 1,
+      minValue: variables.BETS_NUMBER_MIN_VALUE,
     });
     if (betsNumberMinValueValid !== true)
       errors.push('betsNumber ' + betsNumberMinValueValid);

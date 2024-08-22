@@ -1,4 +1,11 @@
+import { variables } from '../../config';
+import { CustomError } from '../error/error.custom';
 import { RoomParams, RoomType } from '../interfaces';
+import {
+  BooleanValidator,
+  NumberValidator,
+  StringValidator,
+} from '../type-validators';
 
 export class RoomEntity implements RoomParams {
   id: string;
@@ -15,32 +22,62 @@ export class RoomEntity implements RoomParams {
     this.isAvailable = params.isAvailable;
   }
 
+  private static verifyProperties(properties: RoomParams) {
+    const { id, roomType, roomNumber, betsNumber, isAvailable } = properties;
+
+    // * id
+    const idValidation = StringValidator.isValid(id);
+    if (idValidation !== true) {
+      throw CustomError.badRequest('id' + idValidation);
+    }
+
+    // * roomType
+    const roomTypeValid = StringValidator.mostBe({
+      value: roomType,
+      allowValues: ['suit', 'normal'],
+    });
+    if (roomTypeValid !== true)
+      throw CustomError.badRequest('roomType ' + roomTypeValid);
+
+    // * roomNumber
+    const roomNumberMinValueValid = NumberValidator.isMinValue({
+      value: roomNumber,
+      minValue: variables.ROOM_NUMBER_MIN_VALUE,
+    });
+    if (roomNumberMinValueValid !== true)
+      throw CustomError.badRequest('roomNumber ' + roomNumberMinValueValid);
+
+    // * betsNumber
+    const betsNumberMinValueValid = NumberValidator.isMinValue({
+      value: betsNumber,
+      minValue: variables.BETS_NUMBER_MIN_VALUE,
+    });
+    if (betsNumberMinValueValid !== true)
+      throw CustomError.badRequest('betsNumber ' + betsNumberMinValueValid);
+
+    // * isAvailable
+    const isAvailableValid = BooleanValidator.isValid(isAvailable);
+    if (isAvailableValid !== true)
+      throw CustomError.badRequest('isAvailable ' + isAvailableValid);
+  }
+
   static fromObject(object: Record<string, any>): RoomEntity {
     const { id, roomType, roomNumber, betsNumber, isAvailable } = object;
 
-    // todo implement this with type validators
-    
-    if (!id) throw new Error('Id is required');
-    if (typeof id !== 'string') throw new Error('Id not valid');
-
-    if (!roomType || typeof roomType != 'string')
-      throw new Error('"roomType" property is required');
-    if (roomType !== 'suit' && roomType !== 'normal')
-      throw new Error('"roomType" property is not valid');
-
-    if (!roomNumber) throw new Error('"roomNumber" property is required');
-    if (isNaN(roomNumber)) throw new Error('"roomNumber" most be a number');
-
-    if (!betsNumber) throw new Error('betsNumber is required');
-    if (!betsNumber || isNaN(betsNumber))
-      throw new Error('betsNumber most be a number');
-
-    return new RoomEntity({
+    RoomEntity.verifyProperties({
       id,
       roomType,
       roomNumber,
       betsNumber,
       isAvailable,
+    });
+
+    return new RoomEntity({
+      id,
+      roomType,
+      roomNumber: +roomNumber,
+      betsNumber: +betsNumber,
+      isAvailable: BooleanValidator.toBoolean(isAvailable) ?? false,
     });
   }
 }
