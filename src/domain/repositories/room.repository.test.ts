@@ -25,13 +25,13 @@ describe('room.repository.ts', () => {
     async create(createRoomDto: CreateRoomDto): Promise<RoomEntity> {
       return mockRoom2;
     }
-    async findById(id: number): Promise<RoomEntity> {
+    async findById(id: string): Promise<RoomEntity> {
       return mockRoom;
     }
     async updateById(updateRoomDto: UpdateRoomDto): Promise<RoomEntity> {
       return mockRoom;
     }
-    async deleteById(id: number): Promise<RoomEntity> {
+    async deleteById(id: string): Promise<RoomEntity> {
       return mockRoom2;
     }
   }

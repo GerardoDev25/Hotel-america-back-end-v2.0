@@ -5,9 +5,10 @@ export interface RoomParams {
   betsNumber: number;
   isAvailable: boolean;
 }
-  export enum RoomTypesList {
-    SUIT = 'suit',
-    NORMAL = 'normal',
-  }
-  
-  export type RoomType = 'suit' | 'normal';
+
+export type RoomType = 'suit' | 'normal';
+
+export enum RoomTypesList {
+  SUIT = 'suit',
+  NORMAL = 'normal',
+}
