@@ -1,7 +1,7 @@
 import { CreateRoomDto, UpdateRoomDto } from '../dtos/room';
 import { RoomEntity } from '../entities';
 import { RoomTypesList } from '../interfaces';
-import { RoomDatabase } from './room.database';
+import { RoomDatasource } from './room.datasource';
 describe('room.database.ts', () => {
   const mockRoom: RoomEntity = {
     id: 'abc',
@@ -18,20 +18,20 @@ describe('room.database.ts', () => {
     isAvailable: true,
   };
 
-  class MockRoomDataSource implements RoomDatabase {
+  class MockRoomDataSource implements RoomDatasource {
     async getAll(): Promise<RoomEntity[]> {
       return [mockRoom, mockRoom2];
     }
     async create(createRoomDto: CreateRoomDto): Promise<RoomEntity> {
       return mockRoom2;
     }
-    async findById(id: number): Promise<RoomEntity> {
+    async findById(id: string): Promise<RoomEntity> {
       return mockRoom;
     }
     async updateById(updateRoomDto: UpdateRoomDto): Promise<RoomEntity> {
       return mockRoom;
     }
-    async deleteById(id: number): Promise<RoomEntity> {
+    async deleteById(id: string): Promise<RoomEntity> {
       return mockRoom2;
     }
   }

@@ -1,1 +1,1 @@
-export * from './room.database';
+export * from './room.datasource';
