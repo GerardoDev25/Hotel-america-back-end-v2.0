@@ -54,26 +54,36 @@ export class CreateRoomDto {
     return errors;
   }
 
-  static create(props: Record<string, any>): [string[]?, CreateRoomDto?] {
-    let { roomType, roomNumber, betsNumber, isAvailable = false } = props;
+  // static create(props: Record<string, any>): [string[]?, CreateRoomDto?] {
+  //   let { roomType, roomNumber, betsNumber, isAvailable = false } = props;
 
-    const errors = CreateRoomDto.verifyProperties({
+  //   const errors = CreateRoomDto.verifyProperties({
+  //     roomType,
+  //     roomNumber,
+  //     betsNumber,
+  //     isAvailable,
+  //   });
+
+  //   if (errors.length > 0) return [errors, undefined];
+
+  //   return [
+  //     undefined,
+  //     new CreateRoomDto(
+  //       roomType,
+  //       +roomNumber,
+  //       +betsNumber,
+  //       !!BooleanValidator.toBoolean(isAvailable)
+  //     ),
+  //   ];
+  // }
+  static create(props: Record<string, any>): CreateRoomDto {
+    const { roomType, roomNumber, betsNumber, isAvailable = false } = props;
+
+    return new CreateRoomDto(
       roomType,
-      roomNumber,
-      betsNumber,
-      isAvailable,
-    });
-
-    if (errors.length > 0) return [errors, undefined];
-
-    return [
-      undefined,
-      new CreateRoomDto(
-        roomType,
-        +roomNumber,
-        +betsNumber,
-        !!BooleanValidator.toBoolean(isAvailable)
-      ),
-    ];
+      +roomNumber,
+      +betsNumber,
+      !!BooleanValidator.toBoolean(isAvailable)
+    );
   }
 }

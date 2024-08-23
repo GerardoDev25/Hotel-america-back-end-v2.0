@@ -2,7 +2,8 @@
   "conventionalCommits.scopes": [
     "config",
     "dev",
-    "test"
+    "test",
+    "refactor"
   ],
   "cSpell.words": [
     "datasource",
