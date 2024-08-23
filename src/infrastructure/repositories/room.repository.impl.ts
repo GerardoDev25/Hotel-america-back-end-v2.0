@@ -17,13 +17,13 @@ export class RoomRepositoryImpl extends RoomRepository {
   async create(createRoomDto: CreateRoomDto): Promise<RoomEntity> {
     return this.roomDataSource.create(createRoomDto);
   }
-  async findById(id: string): Promise<RoomEntity> {
-    return this.roomDataSource.findById(id);
+  async getById(id: string): Promise<RoomEntity> {
+    return this.roomDataSource.getById(id);
   }
-  async updateById(updateRoomDto: UpdateRoomDto): Promise<RoomEntity> {
-    return this.roomDataSource.updateById(updateRoomDto);
+  async update(updateRoomDto: UpdateRoomDto): Promise<RoomEntity> {
+    return this.roomDataSource.update(updateRoomDto);
   }
-  async deleteById(id: string): Promise<RoomEntity> {
-    return this.roomDataSource.deleteById(id);
+  async delete(id: string): Promise<RoomEntity> {
+    return this.roomDataSource.delete(id);
   }
 }

@@ -12,14 +12,14 @@ export class RoomDatasourceImpl extends RoomDatasource {
   async create(createRoomDto: CreateRoomDto): Promise<RoomEntity> {
     return RoomEntity.fromObject({ ...createRoomDto, id: Uuid.v4() });
   }
-  async findById(id: string): Promise<RoomEntity> {
+  async getById(id: string): Promise<RoomEntity> {
     const room = rooms.find((room) => room.id === id) ?? rooms[0];
     return RoomEntity.fromObject(room);
   }
-  async updateById(updateRoomDto: UpdateRoomDto): Promise<RoomEntity> {
+  async update(updateRoomDto: UpdateRoomDto): Promise<RoomEntity> {
     return RoomEntity.fromObject(rooms[1]);
   }
-  async deleteById(id: string): Promise<RoomEntity> {
+  async delete(id: string): Promise<RoomEntity> {
     return RoomEntity.fromObject(rooms[2]);
   }
 }

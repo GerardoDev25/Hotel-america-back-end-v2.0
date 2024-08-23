@@ -4,8 +4,8 @@ import { RoomEntity } from '../entities';
 export abstract class RoomRepository {
   // todo pagination
   abstract getAll(): Promise<RoomEntity[]>;
+  abstract getById(id: string): Promise<RoomEntity>;
   abstract create(createRoomDto: CreateRoomDto): Promise<RoomEntity>;
-  abstract findById(id: string): Promise<RoomEntity>;
-  abstract updateById(updateRoomDto: UpdateRoomDto): Promise<RoomEntity>;
-  abstract deleteById(id: string): Promise<RoomEntity>;
+  abstract update(updateRoomDto: UpdateRoomDto): Promise<RoomEntity>;
+  abstract delete(id: string): Promise<RoomEntity>;
 }
