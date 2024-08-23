@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { variables } from '../../../config';
-import { RoomParams, RoomTypesList } from '../../../domain/interfaces';
+import { RoomTypesList } from '../../../domain/interfaces';
 import {
   StringValidator,
   NumberValidator,

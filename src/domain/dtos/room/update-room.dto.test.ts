@@ -10,9 +10,8 @@ describe('update-room.dto.ts', () => {
       isAvailable: false,
     };
 
-    const [errors, result] = UpdateRoomDto.create(data);
+    const result = UpdateRoomDto.create(data);
 
-    expect(errors).toBeUndefined();
     expect(result).toBeInstanceOf(UpdateRoomDto);
     expect(result).toEqual(data);
   });
@@ -22,30 +21,9 @@ describe('update-room.dto.ts', () => {
       id: 'd9bbb473-09fa-4cc1-98ad-b2405550606f',
     };
 
-    const [errors, result] = UpdateRoomDto.create(data);
+    const result = UpdateRoomDto.create(data);
 
-    expect(errors).toBeUndefined();
     expect(result).toBeInstanceOf(UpdateRoomDto);
     expect(result).toEqual(expect.objectContaining(data));
-  });
-
-  test('should return and error message array if data is wrong', () => {
-    const data = {
-      roomType: 'not-allow',
-      roomNumber: true,
-      betsNumber: '12a',
-      isAvailable: 50,
-    };
-
-    const [errors, result] = UpdateRoomDto.create(data);
-
-    expect(result).toBeUndefined();
-    expect(errors).toEqual([
-      'id property is required',
-      'roomType most be: suit, normal',
-      'roomNumber property most be a number',
-      'betsNumber property most be a number',
-      'isAvailable property most be a boolean',
-    ]);
   });
 });

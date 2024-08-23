@@ -28,18 +28,6 @@ export class RoomController {
       .catch((error) => this.handleError(res, error));
   };
 
-  // public createRoom = async (req: Request, res: Response) => {
-  //   const [errors, createRoomDto] = CreateRoomDto.create(req.body);
-
-  //   if (errors) {
-  //     return res.status(400).json({ errors });
-  //   }
-
-  //   this.roomService
-  //     .create(createRoomDto!)
-  //     .then((data) => res.status(201).json(data))
-  //     .catch((error) => this.handleError(res, error));
-  // };
   public createRoom = async (req: Request, res: Response) => {
     const createRoomDto = CreateRoomDto.create(req.body);
 
@@ -48,19 +36,6 @@ export class RoomController {
       .then((data) => res.status(201).json(data))
       .catch((error) => this.handleError(res, error));
   };
-
-  // public updateRoom = async (req: Request, res: Response) => {
-  //   const [errors, updateRoomDto] = UpdateRoomDto.create(req.body);
-
-  //   if (errors) {
-  //     return res.status(400).json({ errors });
-  //   }
-
-  //   this.roomService
-  //     .update(updateRoomDto!)
-  //     .then((data) => res.json(data))
-  //     .catch((error) => this.handleError(res, error));
-  // };
 
   public updateRoom = async (req: Request, res: Response) => {
     const updateRoomDto = UpdateRoomDto.create(req.body);
