@@ -42,7 +42,7 @@ export class CheckDataRoom {
       errors.push('isAvailable ' + isAvailableValid);
 
     if (errors.length > 0) {
-      return res.status(400).json(errors);
+      return res.status(400).json({ ok: false, errors });
     }
 
     next();
@@ -94,7 +94,7 @@ export class CheckDataRoom {
     }
 
     if (errors.length > 0) {
-      return res.status(400).json(errors);
+      return res.status(400).json({ ok: false, errors });
     }
 
     next();
