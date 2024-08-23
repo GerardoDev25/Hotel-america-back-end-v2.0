@@ -3,11 +3,7 @@ import {
   NumberValidator,
   StringValidator,
 } from '../../type-validators';
-import {
-  RoomParams,
-  RoomType,
-  RoomTypesList,
-} from '../../interfaces/room.interface';
+import { RoomParams, RoomType, RoomTypesList } from '../../interfaces/';
 import { variables } from '../../../config';
 
 type UpdateRoomDtoProps = {

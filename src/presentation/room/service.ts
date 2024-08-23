@@ -3,11 +3,24 @@ import { RoomRepository } from '../../domain/repositories';
 
 export class RoomService {
   constructor(private readonly roomRepository: RoomRepository) {}
-  async createRoom(createRoomDto: CreateRoomDto) {
+
+  async getAll() {
+    return this.roomRepository.getAll();
+  }
+
+  async getById(id: string) {
+    return this.roomRepository.getById(id);
+  }
+
+  async create(createRoomDto: CreateRoomDto) {
     return this.roomRepository.create(createRoomDto);
   }
 
-  async updateRoom(updateRoomDto: UpdateRoomDto) {
+  async update(updateRoomDto: UpdateRoomDto) {
     return this.roomRepository.update(updateRoomDto);
+  }
+
+  async delete(id: string) {
+    return this.roomRepository.delete(id);
   }
 }

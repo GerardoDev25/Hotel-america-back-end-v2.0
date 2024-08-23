@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { RoomService } from './service';
 import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
 import { CustomError } from '../../domain/error';
+import { RoomService } from './service';
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
@@ -14,6 +14,20 @@ export class RoomController {
       .json({ error: `Internal server error - check Logs}` });
   };
 
+  public getAllRoom = async (req: Request, res: Response) => {
+    this.roomService
+      .getAll()
+      .then((data) => res.json(data))
+      .catch((error) => this.handleError(res, error));
+  };
+
+  public getByIdRoom = async (req: Request, res: Response) => {
+    this.roomService
+      .getById(req.params.id)
+      .then((data) => res.json(data))
+      .catch((error) => this.handleError(res, error));
+  };
+
   public createRoom = async (req: Request, res: Response) => {
     const [errors, createRoomDto] = CreateRoomDto.create(req.body);
 
@@ -22,7 +36,7 @@ export class RoomController {
     }
 
     this.roomService
-      .createRoom(createRoomDto!)
+      .create(createRoomDto!)
       .then((data) => res.status(201).json(data))
       .catch((error) => this.handleError(res, error));
   };
@@ -35,7 +49,14 @@ export class RoomController {
     }
 
     this.roomService
-      .updateRoom(updateRoomDto!)
+      .update(updateRoomDto!)
+      .then((data) => res.json(data))
+      .catch((error) => this.handleError(res, error));
+  };
+
+  public deletedRoom = async (req: Request, res: Response) => {
+    this.roomService
+      .delete(req.params.id)
       .then((data) => res.json(data))
       .catch((error) => this.handleError(res, error));
   };
