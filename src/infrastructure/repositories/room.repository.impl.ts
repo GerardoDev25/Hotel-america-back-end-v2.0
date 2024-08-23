@@ -1,10 +1,7 @@
-import { Uuid } from '../../config/adapters/';
 import { RoomDatasource } from '../../domain/datasources';
 import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
 import { RoomEntity } from '../../domain/entities';
 import { RoomRepository } from '../../domain/repositories';
-
-import { rooms } from '../../utils/data/data-test';
 
 export class RoomRepositoryImpl extends RoomRepository {
   constructor(private readonly roomDataSource: RoomDatasource) {
