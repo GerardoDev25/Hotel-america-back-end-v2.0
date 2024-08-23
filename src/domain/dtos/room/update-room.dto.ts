@@ -3,21 +3,34 @@ import {
   NumberValidator,
   StringValidator,
 } from '../../type-validators';
-import { RoomParams, RoomType, RoomTypesList } from '../../interfaces/room.interface';
+import {
+  RoomParams,
+  RoomType,
+  RoomTypesList,
+} from '../../interfaces/room.interface';
 import { variables } from '../../../config';
+
+type UpdateRoomDtoProps = {
+  id: string;
+} & Partial<Omit<RoomParams, 'id'>>;
 
 export class UpdateRoomDto {
   private constructor(
+    public readonly id: string,
     public readonly roomType?: RoomType,
     public readonly roomNumber?: number,
     public readonly betsNumber?: number,
     public readonly isAvailable?: boolean
   ) {}
 
-  private static verifyProperties(properties: Partial<Omit<RoomParams, 'id'>>) {
-    const { roomType, roomNumber, betsNumber, isAvailable } = properties;
+  private static verifyProperties(properties: UpdateRoomDtoProps) {
+    const { id, roomType, roomNumber, betsNumber, isAvailable } = properties;
 
     const errors: string[] = [];
+
+    // * id
+    const idValid = StringValidator.isValid(id);
+    if (idValid !== true) errors.push('id ' + idValid);
 
     // * roomType
     if (roomType !== undefined) {
@@ -58,9 +71,10 @@ export class UpdateRoomDto {
   }
 
   static create(props: Record<string, any>): [string[]?, UpdateRoomDto?] {
-    let { roomType, roomNumber, betsNumber, isAvailable = false } = props;
+    let { id, roomType, roomNumber, betsNumber, isAvailable = false } = props;
 
     const errors = UpdateRoomDto.verifyProperties({
+      id,
       roomType,
       roomNumber,
       betsNumber,
@@ -72,6 +86,7 @@ export class UpdateRoomDto {
     return [
       undefined,
       new UpdateRoomDto(
+        id,
         roomType,
         +roomNumber,
         +betsNumber,
