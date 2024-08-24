@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { variables } from '../../../config';
+import { variables } from '../../../domain/variables/';
 import { RoomTypesList } from '../../../domain/interfaces';
 import {
   StringValidator,
