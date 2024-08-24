@@ -1,4 +1,4 @@
-import { variables } from '../../config/';
+import { variables } from '../variables';
 import { CustomError } from '../error/';
 import { RoomParams, RoomType, RoomTypesList } from '../interfaces/';
 import {
