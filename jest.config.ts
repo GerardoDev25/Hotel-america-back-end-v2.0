@@ -4,6 +4,7 @@
  */
 
 import type { Config } from 'jest';
+import path from 'node:path';
 
 const config: Config = {
   // All imported modules in your tests should be mocked automatically
@@ -161,9 +162,10 @@ const config: Config = {
   // ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  // testPathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    path.resolve(__dirname, 'postgres'),
+  ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],
@@ -190,7 +192,9 @@ const config: Config = {
   // verbose: undefined,
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
-  // watchPathIgnorePatterns: [],
+  watchPathIgnorePatterns: [
+    path.resolve(__dirname, 'postgres'),
+  ],
 
   // Whether to use watchman for file crawling
   // watchman: true,
