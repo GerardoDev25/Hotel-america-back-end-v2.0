@@ -6,6 +6,7 @@
   "author": "Gerardo Miranda <gerardodev25@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "seed": "ts-node-dev ./src/data/seed/seed.ts",
     "dev": "tsnd --respawn --clear src/app.ts",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node dist/app.js",
