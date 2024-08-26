@@ -1,20 +1,20 @@
 import { variables } from '../variables';
 import { CustomError } from '../error/';
-import { RoomParams, RoomType, RoomTypesList } from '../interfaces/';
+import { IRoom, RoomType, RoomTypesList } from '../interfaces/';
 import {
   BooleanValidator,
   NumberValidator,
   StringValidator,
 } from '../type-validators';
 
-export class RoomEntity implements RoomParams {
+export class RoomEntity implements IRoom {
   id: string;
   roomType: RoomType;
   roomNumber: number;
   betsNumber: number;
   isAvailable: boolean;
 
-  constructor(params: RoomParams) {
+  constructor(params: IRoom) {
     this.id = params.id;
     this.roomType = params.roomType;
     this.roomNumber = params.roomNumber;
@@ -22,7 +22,7 @@ export class RoomEntity implements RoomParams {
     this.isAvailable = params.isAvailable;
   }
 
-  private static verifyProperties(properties: RoomParams) {
+  private static verifyProperties(properties: IRoom) {
     const { id, roomType, roomNumber, betsNumber, isAvailable } = properties;
 
     // * id

@@ -1,5 +1,5 @@
 import { BooleanValidator } from '../../type-validators';
-import { RoomParams, RoomType } from '../../interfaces/';
+import { RoomType } from '../../interfaces/';
 
 export class UpdateRoomDto {
   private constructor(

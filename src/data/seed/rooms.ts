@@ -1,6 +1,6 @@
-import { RoomParams } from '../../domain/interfaces';
+import { IRoom } from '../../domain/interfaces';
 
-export const rooms: Omit<RoomParams, 'id'>[] = [
+export const rooms: Omit<IRoom, 'id'>[] = [
   {
     roomType: 'normal',
     roomNumber: 100,
