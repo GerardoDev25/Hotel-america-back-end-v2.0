@@ -1,1 +1,6 @@
-export const variables = { BETS_NUMBER_MIN_VALUE: 1, ROOM_NUMBER_MIN_VALUE: 1 };
+export const variables = {
+  BETS_NUMBER_MIN_VALUE: 1,
+  ROOM_NUMBER_MIN_VALUE: 1,
+  PAGINATION_PAGE_DEFAULT: 1,
+  PAGINATION_LIMIT_DEFAULT: 10,
+};

@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
 import { CustomError } from '../../domain/error';
 import { RoomService } from './service';
+import { AvailableDto, PaginationDto } from '../../domain/dtos/share';
+import { variables } from '../../domain/variables';
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
@@ -11,12 +13,31 @@ export class RoomController {
     }
     return res
       .status(500)
-      .json({ error: `Internal server error - check Logs}` });
+      .json({ error: `Internal server error - check Logs` });
   };
 
   public getAllRoom = async (req: Request, res: Response) => {
+    const page = req.query.page ?? variables.PAGINATION_PAGE_DEFAULT;
+    const limit = req.query.limit ?? variables.PAGINATION_LIMIT_DEFAULT;
+    const available = req.query.isAvailable as string;
+
+    const [paginationError, paginationDto] = PaginationDto.create(
+      +page,
+      +limit
+    );
+    const [isAvailableError, availableDto] = AvailableDto.create(available);
+
+    if (paginationError) {
+      return res.status(400).json({ error: paginationError });
+    }
+    if (isAvailableError) {
+      return res.status(400).json({ error: isAvailableError });
+    }
+
+    AvailableDto;
+
     this.roomService
-      .getAll()
+      .getAll(paginationDto!, availableDto!.isAvailable)
       .then((data) => res.json(data))
       .catch((error) => this.handleError(res, error));
   };

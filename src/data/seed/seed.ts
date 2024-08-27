@@ -1,8 +1,6 @@
 import { prisma } from '../postgres';
 import { seedData } from './data';
 
-seedData;
-
 (async () => {
   try {
     await main();
@@ -19,8 +17,7 @@ seedData;
 async function main() {
   // * delete data
   await prisma.room.deleteMany();
-  
-  
+
   // * create data
   await prisma.room.createMany({ data: seedData.rooms });
 }

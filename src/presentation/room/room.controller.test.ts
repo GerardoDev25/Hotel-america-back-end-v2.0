@@ -4,15 +4,19 @@ import { CustomError } from '../../domain/error';
 
 // todo BEFORE I HAVE TO IMPLEMENT ROOM.SERVICE IN ORDER TO HANDLE THE ERROR
 
-
 describe('room.controller.ts', () => {
-  // Successfully retrieve all rooms
-  it('should return all rooms when getAllRoom is called', async () => {
+  test('should return all rooms when getAllRoom is called', async () => {
     // Arrange
     const mockRoomService = {
       getAll: jest.fn().mockResolvedValue([{ id: '1', roomType: 'Single' }]),
     };
-    const req = {} as Request;
+    const req = {
+      query: {
+        page: '1',
+        limit: '10',
+        isAvailable: 'true',
+      },
+    } as unknown as Request;
 
     const res = {
       json: jest.fn(),
@@ -35,7 +39,7 @@ describe('room.controller.ts', () => {
   //       .mockRejectedValue(CustomError.notFound('Room not found')),
   //   };
   //   const req = { params: { id: 'non-existent-id' } } as unknown as Request;
-    
+
   //   const res = {
   //     status: jest.fn().mockReturnThis(),
   //     json: jest.fn(),

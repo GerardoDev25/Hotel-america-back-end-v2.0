@@ -1,6 +1,7 @@
 import { RoomDatasource } from '../../domain/datasources';
 import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
 import { RoomEntity } from '../../domain/entities';
+import { RoomPagination } from '../../domain/interfaces';
 import { RoomRepository } from '../../domain/repositories';
 
 export class RoomRepositoryImpl extends RoomRepository {
@@ -8,18 +9,29 @@ export class RoomRepositoryImpl extends RoomRepository {
     super();
   }
 
-  async getAll(): Promise<RoomEntity[]> {
-    return this.roomDataSource.getAll();
+  getAll(
+    page: number,
+    limit: number,
+    isAvailable?: boolean
+  ): Promise<RoomPagination> {
+    if (isAvailable === undefined) {
+      return this.roomDataSource.getAll(page, limit);
+    }
+    return this.roomDataSource.getAllAvailable(page, limit, isAvailable);
   }
+
   async create(createRoomDto: CreateRoomDto): Promise<RoomEntity> {
     return this.roomDataSource.create(createRoomDto);
   }
+
   async getById(id: string): Promise<RoomEntity> {
     return this.roomDataSource.getById(id);
   }
+
   async update(updateRoomDto: UpdateRoomDto): Promise<RoomEntity> {
     return this.roomDataSource.update(updateRoomDto);
   }
+
   async delete(id: string): Promise<RoomEntity> {
     return this.roomDataSource.delete(id);
   }
