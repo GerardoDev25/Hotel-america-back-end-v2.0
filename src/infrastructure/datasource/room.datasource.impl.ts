@@ -90,6 +90,9 @@ export class RoomDatasourceImpl extends RoomDatasource {
 
       return RoomEntity.fromObject(room);
     } catch (error) {
+      if (error instanceof CustomError) {
+        throw error;
+      }
       console.log(error);
       throw CustomError.internalServerError(`internal server error`);
     }

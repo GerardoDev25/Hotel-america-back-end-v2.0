@@ -4,6 +4,7 @@ import { CustomError } from '../../domain/error';
 import { RoomService } from './service';
 import { AvailableDto, PaginationDto } from '../../domain/dtos/share';
 import { variables } from '../../domain/variables';
+
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
@@ -33,8 +34,6 @@ export class RoomController {
     if (isAvailableError) {
       return res.status(400).json({ error: isAvailableError });
     }
-
-    AvailableDto;
 
     this.roomService
       .getAll(paginationDto!, availableDto!.isAvailable)

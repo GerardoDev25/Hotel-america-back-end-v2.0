@@ -1,15 +1,55 @@
 import { Request, Response } from 'express';
 import { RoomController } from './controller';
 import { CustomError } from '../../domain/error';
-
-// todo BEFORE I HAVE TO IMPLEMENT ROOM.SERVICE IN ORDER TO HANDLE THE ERROR
+import { RoomService } from './service';
+import { PaginationDto } from '../../domain/dtos/share';
 
 describe('room.controller.ts', () => {
-  test('should return all rooms when getAllRoom is called', async () => {
+  const room1 = {
+    roomType: 'normal',
+    roomNumber: 128,
+    betsNumber: 2,
+    isAvailable: true,
+  };
+  const room2 = {
+    roomType: 'suit',
+    roomNumber: 129,
+    betsNumber: 3,
+    isAvailable: true,
+  };
+
+  const mockRoomService = {
+    getAll: jest.fn().mockResolvedValue([room1, room2]),
+    getById: jest
+      .fn()
+      .mockResolvedValue(room1)
+      .mockRejectedValue(CustomError.notFound('Room not found')),
+    create: jest
+      .fn()
+      .mockResolvedValue(room1)
+      .mockRejectedValue(
+        CustomError.internalServerError('internal server error')
+      ),
+    update: jest
+      .fn()
+      .mockResolvedValue(room1)
+      .mockRejectedValue(
+        CustomError.internalServerError('internal server error')
+      ),
+    delete: jest
+      .fn()
+      .mockResolvedValue(room1)
+      .mockRejectedValue(
+        CustomError.internalServerError('internal server error')
+      ),
+  } as unknown as RoomService;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should return all rooms when getAllRoom is called (getAll)', async () => {
     // Arrange
-    const mockRoomService = {
-      getAll: jest.fn().mockResolvedValue([{ id: '1', roomType: 'Single' }]),
-    };
     const req = {
       query: {
         page: '1',
@@ -21,38 +61,151 @@ describe('room.controller.ts', () => {
     const res = {
       json: jest.fn(),
     } as unknown as Response;
-    const roomController = new RoomController(mockRoomService as any);
 
-    // Act
+    const roomController = new RoomController(mockRoomService);
     await roomController.getAllRoom(req, res);
 
-    // Assert
     expect(mockRoomService.getAll).toHaveBeenCalled();
-    expect(res.json).toHaveBeenCalledWith([{ id: '1', roomType: 'Single' }]);
+    expect(res.json).toHaveBeenCalledWith([room1, room2]);
   });
 
-  // it('should return 404 error when room ID does not exist', async () => {
-  //   // Arrange
-  //   const mockRoomService = {
-  //     getById: jest
-  //       .fn()
-  //       .mockRejectedValue(CustomError.notFound('Room not found')),
-  //   };
-  //   const req = { params: { id: 'non-existent-id' } } as unknown as Request;
+  test('should retrieve all rooms with default pagination when no query parameters are provided (getAll)', async () => {
+    const req = {
+      query: {},
+    } as unknown as Request;
 
-  //   const res = {
-  //     status: jest.fn().mockReturnThis(),
-  //     json: jest.fn(),
-  //   } as unknown as Response;
+    const res = {
+      json: jest.fn().mockReturnThis(),
+      status: jest.fn().mockReturnThis(),
+    } as unknown as Response;
 
-  //   const roomController = new RoomController(mockRoomService as any);
+    const roomController = new RoomController(mockRoomService);
 
-  //   // Act
-  //   await roomController.getByIdRoom(req, res);
+    await roomController.getAllRoom(req, res);
 
-  //   // Assert
-  //   expect(mockRoomService.getById).toHaveBeenCalledWith('non-existent-id');
-  //   expect(res.status).toHaveBeenCalledWith(404);
-  //   expect(res.json).toHaveBeenCalledWith({ error: 'Room not found' });
-  // });
+    expect(mockRoomService.getAll).toHaveBeenCalledWith(
+      expect.any(PaginationDto),
+      undefined
+    );
+    expect(res.json).toHaveBeenCalledWith([room1, room2]);
+  });
+
+  it('should  return error if is not well paginated (getAll)', async () => {
+    const req = {
+      query: { page: 'hol' },
+    } as unknown as Request;
+
+    const res = {
+      json: jest.fn().mockReturnThis(),
+      status: jest.fn().mockReturnThis(),
+    } as unknown as Response;
+
+    const roomController = new RoomController(mockRoomService);
+    await roomController.getAllRoom(req, res);
+
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'Page and limit must be a number',
+    });
+    expect(res.status).toHaveBeenCalledWith(400);
+  });
+
+  it('should  return error if isAvailable param is invalid (getAll)', async () => {
+    const req = {
+      query: { isAvailable: 'hol' },
+    } as unknown as Request;
+
+    const res = {
+      json: jest.fn().mockReturnThis(),
+      status: jest.fn().mockReturnThis(),
+    } as unknown as Response;
+
+    const roomController = new RoomController(mockRoomService);
+    await roomController.getAllRoom(req, res);
+
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'isAvailable most be true or false',
+    });
+    expect(res.status).toHaveBeenCalledWith(400);
+  });
+
+  it('should return throw error when room ID does not exist (getById)', async () => {
+    const req = { params: { id: 'non-existent-id' } } as unknown as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
+
+    const roomController = new RoomController(mockRoomService);
+
+    // Act
+    await roomController.getByIdRoom(req, res);
+
+    // Assert
+    expect(mockRoomService.getById).toHaveBeenCalledWith('non-existent-id');
+    expect(roomController.getByIdRoom).rejects.toThrow();
+  });
+
+  it('should return throw error when room ID does not exist (getById)', async () => {
+    const req = { params: { id: 'non-existent-id' } } as unknown as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
+
+    const roomController = new RoomController(mockRoomService);
+
+    // Act
+    try {
+      await roomController.getByIdRoom(req, res);
+    } catch (error) {
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Room not found' });
+      expect(mockRoomService.getById).toHaveBeenCalledWith('non-existent-id');
+      expect(error).toBeInstanceOf(CustomError);
+    }
+  });
+
+  it('should create a new room when createRoom is called (create)', async () => {
+    const req = { body: room1 } as unknown as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
+
+    const roomController = new RoomController(mockRoomService);
+    await roomController.createRoom(req, res);
+
+    expect(mockRoomService.create).toHaveBeenCalledWith(room1);
+  });
+
+  it('should update a room when updateRoom is called (update)', async () => {
+    const req = { body: room1 } as unknown as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
+
+    const roomController = new RoomController(mockRoomService);
+    await roomController.updateRoom(req, res);
+
+    expect(mockRoomService.update).toHaveBeenCalledWith(room1);
+  });
+
+  it('should delete a room when deleteRoom is called (delete)', async () => {
+    const req = { params: { id: 'some-room-id' } } as unknown as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
+
+    const roomController = new RoomController(mockRoomService);
+    await roomController.deletedRoom(req, res);
+
+    expect(mockRoomService.delete).toHaveBeenCalledWith(req.params.id);
+  });
 });
