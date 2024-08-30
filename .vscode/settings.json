@@ -3,7 +3,8 @@
     "config",
     "dev",
     "test",
-    "refactor"
+    "refactor",
+    "doc"
   ],
   "cSpell.words": [
     "datasource",
