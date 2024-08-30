@@ -1,0 +1,14 @@
+
+services:
+  postgres-db:
+    container_name: hotel_america_db_test
+    image: postgres:15.3
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./postgres_test:/var/lib/postgresql/data
+    ports:
+      - ${DB_PORT}:5432

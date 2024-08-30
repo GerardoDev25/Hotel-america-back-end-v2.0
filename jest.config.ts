@@ -165,6 +165,7 @@ const config: Config = {
   testPathIgnorePatterns: [
     '/node_modules/',
     path.resolve(__dirname, 'postgres'),
+    path.resolve(__dirname, 'postgres_test'),
   ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
@@ -194,6 +195,7 @@ const config: Config = {
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
   watchPathIgnorePatterns: [
     path.resolve(__dirname, 'postgres'),
+    path.resolve(__dirname, 'postgres_test'),
   ],
 
   // Whether to use watchman for file crawling
