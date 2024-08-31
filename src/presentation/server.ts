@@ -1,5 +1,6 @@
 import path from 'node:path';
 import express, { Router } from 'express';
+import { checkDatabaseConnection } from '../data/postgres';
 
 interface Options {
   port: number;
@@ -47,7 +48,7 @@ export class Server {
     // console.log();
 
     this.loadMiddleware();
-
+    await checkDatabaseConnection()
     this.serverListener = this.app.listen(this.port, () => {
       console.log(`Server running on port ${this.port}`);
     });

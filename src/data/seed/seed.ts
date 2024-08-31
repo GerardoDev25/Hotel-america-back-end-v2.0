@@ -1,4 +1,4 @@
-import { prisma } from '../postgres';
+import { checkDatabaseConnection, prisma } from '../postgres';
 import { seedData } from './data';
 
 (async () => {
@@ -15,6 +15,8 @@ import { seedData } from './data';
 })();
 
 async function main() {
+  await checkDatabaseConnection();
+
   // * delete data
   await prisma.room.deleteMany();
 

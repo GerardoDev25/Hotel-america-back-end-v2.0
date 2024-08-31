@@ -1,7 +1,6 @@
 import { CustomError } from './error.custom';
 
 describe('error.custom.ts', () => {
-  // Creating a CustomError instance with a status code and message
   it('should create a CustomError instance with the given status code and message', () => {
     // Arrange
     const statusCodeObjet = {

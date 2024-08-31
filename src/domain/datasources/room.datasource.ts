@@ -3,7 +3,6 @@ import { RoomEntity } from '../entities';
 import { RoomPagination } from '../interfaces';
 
 export abstract class RoomDatasource {
-  // todo pagination
   abstract getAll(page: number, limit: number): Promise<RoomPagination>;
 
   abstract getAllAvailable(
