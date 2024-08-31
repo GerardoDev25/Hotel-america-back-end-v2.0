@@ -44,7 +44,7 @@ export class Server {
   }
 
   async start() {
-    console.log();
+    // console.log();
 
     this.loadMiddleware();
 

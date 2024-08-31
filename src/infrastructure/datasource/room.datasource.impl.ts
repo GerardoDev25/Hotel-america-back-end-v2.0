@@ -4,6 +4,7 @@ import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
 import { RoomEntity } from '../../domain/entities';
 import { CustomError } from '../../domain/error';
 import { RoomPagination } from '../../domain/interfaces';
+import { cleanObject } from '../../utils';
 
 // TODO ADD LOGGER TO CATCH ERROR
 
@@ -99,16 +100,13 @@ export class RoomDatasourceImpl extends RoomDatasource {
   }
 
   async update(updateRoomDto: UpdateRoomDto): Promise<RoomEntity> {
-    const { id } = updateRoomDto;
+    const { id, ...rest } = updateRoomDto;
 
     await this.getById(id);
+    const data = cleanObject(rest);
 
     try {
-      const updatedRoom = await prisma.room.update({
-        where: { id },
-        data: updateRoomDto,
-      });
-
+      const updatedRoom = await prisma.room.update({ where: { id }, data });
       return RoomEntity.fromObject(updatedRoom);
     } catch (error) {
       console.log(error);
