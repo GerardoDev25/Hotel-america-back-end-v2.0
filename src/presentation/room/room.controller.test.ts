@@ -104,7 +104,8 @@ describe('room.controller.ts', () => {
     await roomController.getAllRoom(req, res);
 
     expect(res.json).toHaveBeenCalledWith({
-      error: 'Page and limit must be a number',
+      errors: ['Page and limit must be a number'],
+      ok: false,
     });
     expect(res.status).toHaveBeenCalledWith(400);
   });
@@ -123,7 +124,8 @@ describe('room.controller.ts', () => {
     await roomController.getAllRoom(req, res);
 
     expect(res.json).toHaveBeenCalledWith({
-      error: 'isAvailable most be true or false',
+      errors: ['isAvailable most be true or false'],
+      ok: false,
     });
     expect(res.status).toHaveBeenCalledWith(400);
   });
