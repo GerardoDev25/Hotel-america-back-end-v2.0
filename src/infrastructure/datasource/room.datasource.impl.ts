@@ -88,7 +88,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
       const room = await prisma.room.findUnique({ where: { id } });
 
       if (!room) {
-        throw CustomError.notFound(`todo with id: ${id} not found`);
+        throw CustomError.notFound(`room with id: ${id} not found`);
       }
 
       return { ok: true, room: RoomEntity.fromObject(room) };

@@ -142,7 +142,7 @@ describe('room.route.ts', () => {
       .expect(404);
 
     expect(body.ok).toBeFalsy();
-    expect(body.errors[0]).toEqual(`todo with id: ${id} not found`);
+    expect(body.errors[0]).toEqual(`room with id: ${id} not found`);
   });
 
   test('should create a room (create)', async () => {
