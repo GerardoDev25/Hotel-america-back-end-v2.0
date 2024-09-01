@@ -91,7 +91,8 @@ describe('room.route.ts', () => {
       .get(`/api/room?page=${page}&limit=${limit}&isAvailable=${isAvailable}`)
       .expect(400);
 
-    expect(body).toEqual({ error: 'isAvailable most be true or false' });
+    expect(body.ok).toBeFalsy();
+    expect(body.errors[0]).toBe('isAvailable most be true or false');
   });
 
   test('should get error message if pagination is grown (getAll)', async () => {
@@ -102,7 +103,8 @@ describe('room.route.ts', () => {
       .get(`/api/room?page=${page}&limit=${limit}`)
       .expect(400);
 
-    expect(body).toEqual({ error: 'Page and limit must be a number' });
+    expect(body.ok).toBeFalsy();
+    expect(body.errors[0]).toBe('Page and limit must be a number');
   });
 
   test('should get error message if pagination contain negative numbers (getAll)', async () => {
@@ -113,7 +115,8 @@ describe('room.route.ts', () => {
       .get(`/api/room?page=${page}&limit=${limit}`)
       .expect(400);
 
-    expect(body).toEqual({ error: 'Page must be greaten than 0' });
+    expect(body.ok).toBeFalsy();
+    expect(body.errors[0]).toBe('Page must be greaten than 0');
   });
 
   test('should get a room by id (getById)', async () => {
@@ -139,7 +142,7 @@ describe('room.route.ts', () => {
       .expect(404);
 
     expect(body.ok).toBeFalsy();
-    expect(body.error).toEqual(`todo with id: ${id} not found`);
+    expect(body.errors[0]).toEqual(`todo with id: ${id} not found`);
   });
 
   test('should create a room (create)', async () => {

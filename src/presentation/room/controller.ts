@@ -12,11 +12,11 @@ export class RoomController {
     if (error instanceof CustomError) {
       return res
         .status(error.statusCode)
-        .json({ ok: false, error: error.message });
+        .json({ ok: false, errors: [error.message] });
     }
     return res
       .status(500)
-      .json({ ok: false, error: `Internal server error - check Logs` });
+      .json({ ok: false, errors: [`Internal server error - check Logs`] });
   };
 
   public getAllRoom = async (req: Request, res: Response) => {
@@ -31,10 +31,10 @@ export class RoomController {
     const [isAvailableError, availableDto] = AvailableDto.create(available);
 
     if (paginationError) {
-      return res.status(400).json({ error: paginationError });
+      return res.status(400).json({ ok: false, errors: [paginationError] });
     }
     if (isAvailableError) {
-      return res.status(400).json({ error: isAvailableError });
+      return res.status(400).json({ ok: false, errors: [isAvailableError] });
     }
 
     this.roomService
