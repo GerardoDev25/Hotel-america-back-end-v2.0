@@ -94,7 +94,7 @@ describe('room.route.ts', () => {
     expect(body).toEqual({ error: 'isAvailable most be true or false' });
   });
 
-  test('should get error message if pagination is grown', async () => {
+  test('should get error message if pagination is grown (getAll)', async () => {
     const page = 'page';
     const limit = 'limit';
     await prisma.room.createMany({ data: seedData.rooms });
@@ -116,17 +116,20 @@ describe('room.route.ts', () => {
     expect(body).toEqual({ error: 'Page must be greaten than 0' });
   });
 
-  test('should get a room by id', async () => {
-    const room = await prisma.room.create({ data: seedData.rooms[0] });
+  test('should get a room by id (getById)', async () => {
+    const roomTest = await prisma.room.create({ data: seedData.rooms[0] });
     const { body } = await request(testServer.app)
-      .get(`/api/room/${room.id}`)
+      .get(`/api/room/${roomTest.id}`)
       .expect(200);
 
-    expect(room.id).toEqual(body.id);
-    expect(room.roomType).toEqual(body.roomType);
-    expect(room.roomNumber).toBe(body.roomNumber);
-    expect(room.betsNumber).toBe(body.betsNumber);
-    expect(room.isAvailable).toBe(body.isAvailable);
+    const { ok, room } = body;
+
+    expect(ok).toBeTruthy();
+    expect(roomTest.id).toEqual(room.id);
+    expect(roomTest.roomType).toEqual(room.roomType);
+    expect(roomTest.roomNumber).toBe(room.roomNumber);
+    expect(roomTest.betsNumber).toBe(room.betsNumber);
+    expect(roomTest.isAvailable).toBe(room.isAvailable);
   });
 
   test('should get not found message (getById)', async () => {
@@ -135,21 +138,25 @@ describe('room.route.ts', () => {
       .get(`/api/room/${id}`)
       .expect(404);
 
-    expect(body).toEqual({ error: `todo with id: ${id} not found` });
+    expect(body.ok).toBeFalsy();
+    expect(body.error).toEqual(`todo with id: ${id} not found`);
   });
 
-  test('should create a room', async () => {
-    const room = seedData.rooms[0];
+  test('should create a room (create)', async () => {
+    const roomCreated = seedData.rooms[0];
     const { body } = await request(testServer.app)
       .post('/api/room')
-      .send(room)
+      .send(roomCreated)
       .expect(201);
 
-    expect(body.id).toBeDefined();
-    expect(body.roomType).toEqual(room.roomType);
-    expect(body.roomNumber).toBe(room.roomNumber);
-    expect(body.betsNumber).toBe(room.betsNumber);
-    expect(body.isAvailable).toBe(room.isAvailable);
+    const { ok, room } = body;
+
+    expect(ok).toBeTruthy();
+    expect(room.id).toBeDefined();
+    expect(room.roomType).toEqual(roomCreated.roomType);
+    expect(room.roomNumber).toBe(roomCreated.roomNumber);
+    expect(room.betsNumber).toBe(roomCreated.betsNumber);
+    expect(room.isAvailable).toBe(roomCreated.isAvailable);
   });
 
   test('should get error white create room (create)', async () => {
@@ -169,25 +176,26 @@ describe('room.route.ts', () => {
   });
 
   test('should update a room (update)', async () => {
-    const room = await prisma.room.create({ data: seedData.rooms[0] });
+    const roomCreated = await prisma.room.create({ data: seedData.rooms[0] });
     const betsNumber = 1000;
 
     const { body } = await request(testServer.app)
       .put(`/api/room/`)
-      .send({ id: room.id, betsNumber })
+      .send({ id: roomCreated.id, betsNumber })
       .expect(200);
+    const { ok, message } = body;
 
-    expect(body.id).toBe(room.id);
-    expect(body.betsNumber).toBe(betsNumber);
+    expect(ok).toBeTruthy();
+    expect(message).toBe('room updated successfully');
   });
 
   test('should get and error while updating a room (update)', async () => {
-    const room = await prisma.room.create({ data: seedData.rooms[0] });
+    const roomCreated = await prisma.room.create({ data: seedData.rooms[0] });
     const betsNumber = 'not-valid';
 
     const { body } = await request(testServer.app)
       .put(`/api/room/`)
-      .send({ id: room.id, betsNumber })
+      .send({ id: roomCreated.id, betsNumber })
       .expect(400);
 
     expect(body).toEqual({
@@ -196,7 +204,7 @@ describe('room.route.ts', () => {
     });
   });
 
-  test('should delete a room by id', async () => {
+  test('should delete a room by id (delete)', async () => {
     const room = await prisma.room.create({ data: seedData.rooms[0] });
 
     const { body } = await request(testServer.app)
@@ -204,12 +212,9 @@ describe('room.route.ts', () => {
       .send()
       .expect(200);
 
-    expect(body).toEqual({
-      id: expect.any(String),
-      roomType: expect.any(String),
-      roomNumber: expect.any(Number),
-      betsNumber: expect.any(Number),
-      isAvailable: expect.any(Boolean),
-    });
+    const { ok, message } = body;
+
+    expect(ok).toBeTruthy();
+    expect(message).toBe('room deleted successfully');
   });
 });

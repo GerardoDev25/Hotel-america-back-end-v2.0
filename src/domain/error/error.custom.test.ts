@@ -25,7 +25,6 @@ describe('error.custom.ts', () => {
 
     statusCodeArray.forEach(([key, status]) => {
       const error = CustomError[key as statusCodeEnum](key);
-
       expect(error).toBeInstanceOf(CustomError);
       expect(error.statusCode).toBe(status);
       expect(error.message).toBe(key);

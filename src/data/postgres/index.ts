@@ -8,7 +8,7 @@ export const checkDatabaseConnection = async () => {
     await prismaCheck.$connect();
     // console.log('Connected to the database');
     prismaCheck.$disconnect();
-  } catch (error:any) {
+  } catch (error: any) {
     prismaCheck.$disconnect();
     console.error('Error connecting to the database:', error.message);
     process.exit(1);

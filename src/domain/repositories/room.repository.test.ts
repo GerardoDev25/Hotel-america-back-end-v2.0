@@ -39,17 +39,21 @@ describe('room.repository.ts', () => {
       return getAllReturnValue;
     }
 
-    async create(createRoomDto: CreateRoomDto): Promise<RoomEntity> {
-      return mockRoom2;
+    async getById(id: string): Promise<{ ok: boolean; room: RoomEntity }> {
+      return { ok: true, room: mockRoom };
     }
-    async getById(id: string): Promise<RoomEntity> {
-      return mockRoom;
+    async create(
+      createRoomDto: CreateRoomDto
+    ): Promise<{ ok: boolean; room: RoomEntity }> {
+      return { ok: true, room: mockRoom2 };
     }
-    async update(updateRoomDto: UpdateRoomDto): Promise<RoomEntity> {
-      return mockRoom;
+    async update(
+      updateRoomDto: UpdateRoomDto
+    ): Promise<{ ok: boolean; message: string }> {
+      return { ok: true, message: 'update' };
     }
-    async delete(id: string): Promise<RoomEntity> {
-      return mockRoom2;
+    async delete(id: string): Promise<{ ok: boolean; message: string }> {
+      return { ok: true, message: 'delete' };
     }
   }
 

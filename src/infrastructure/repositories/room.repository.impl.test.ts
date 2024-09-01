@@ -1,7 +1,7 @@
 import { RoomDatasource } from '../../domain/datasources';
 import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
 import { RoomEntity } from '../../domain/entities';
-import { RoomPagination, RoomTypesList } from '../../domain/interfaces';
+import { RoomTypesList } from '../../domain/interfaces';
 import { RoomRepositoryImpl } from './room.repository.impl';
 
 describe('room.repository.impl.ts', () => {

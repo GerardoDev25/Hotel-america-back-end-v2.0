@@ -70,18 +70,20 @@ export class RoomDatasourceImpl extends RoomDatasource {
     }
   }
 
-  async create(createRoomDto: CreateRoomDto): Promise<RoomEntity> {
+  async create(
+    createRoomDto: CreateRoomDto
+  ): Promise<{ ok: boolean; room: RoomEntity }> {
     try {
       const newRoom = await prisma.room.create({ data: createRoomDto });
 
-      return RoomEntity.fromObject(newRoom);
+      return { ok: true, room: RoomEntity.fromObject(newRoom) };
     } catch (error) {
       console.log(error);
       throw CustomError.internalServerError(`internal server error`);
     }
   }
 
-  async getById(id: string): Promise<RoomEntity> {
+  async getById(id: string): Promise<{ ok: boolean; room: RoomEntity }> {
     try {
       const room = await prisma.room.findUnique({ where: { id } });
 
@@ -89,7 +91,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
         throw CustomError.notFound(`todo with id: ${id} not found`);
       }
 
-      return RoomEntity.fromObject(room);
+      return { ok: true, room: RoomEntity.fromObject(room) };
     } catch (error) {
       if (error instanceof CustomError) {
         throw error;
@@ -99,7 +101,9 @@ export class RoomDatasourceImpl extends RoomDatasource {
     }
   }
 
-  async update(updateRoomDto: UpdateRoomDto): Promise<RoomEntity> {
+  async update(
+    updateRoomDto: UpdateRoomDto
+  ): Promise<{ ok: boolean; message: string }> {
     const { id, ...rest } = updateRoomDto;
 
     await this.getById(id);
@@ -107,14 +111,14 @@ export class RoomDatasourceImpl extends RoomDatasource {
 
     try {
       const updatedRoom = await prisma.room.update({ where: { id }, data });
-      return RoomEntity.fromObject(updatedRoom);
+      return { ok: true, message: 'room updated successfully' };
     } catch (error) {
       console.log(error);
       throw CustomError.internalServerError(`internal server error`);
     }
   }
 
-  async delete(id: string): Promise<RoomEntity> {
+  async delete(id: string): Promise<{ ok: boolean; message: string }> {
     await this.getById(id);
 
     try {
@@ -122,7 +126,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
         where: { id },
       });
 
-      return RoomEntity.fromObject(deletedRoom);
+      return { ok: true, message: 'room deleted successfully' };
     } catch (error) {
       console.log(error);
       throw CustomError.internalServerError(`internal server error`);

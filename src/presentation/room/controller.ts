@@ -10,11 +10,13 @@ export class RoomController {
 
   private handleError = (res: Response, error: unknown) => {
     if (error instanceof CustomError) {
-      return res.status(error.statusCode).json({ error: error.message });
+      return res
+        .status(error.statusCode)
+        .json({ ok: false, error: error.message });
     }
     return res
       .status(500)
-      .json({ error: `Internal server error - check Logs` });
+      .json({ ok: false, error: `Internal server error - check Logs` });
   };
 
   public getAllRoom = async (req: Request, res: Response) => {
