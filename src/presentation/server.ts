@@ -1,13 +1,17 @@
 import path from 'node:path';
 import express, { Router } from 'express';
 import { checkDatabaseConnection } from '../data/postgres';
-import { CustomError } from '../domain/error';
 
 interface Options {
   port: number;
   routes: Router;
   public_path?: string;
+  logger: Logger;
 }
+type Logger = {
+  log: (message: string) => void;
+  error: (message: string) => void;
+};
 
 export class Server {
   public readonly app = express();
@@ -16,12 +20,14 @@ export class Server {
 
   private readonly publicPath: string;
   private readonly routes: Router;
+  private readonly logger: Logger;
 
   constructor(options: Options) {
-    const { port, routes, public_path = 'public' } = options;
+    const { port, routes, public_path = 'public', logger } = options;
     this.port = port;
     this.publicPath = public_path;
     this.routes = routes;
+    this.logger = logger;
   }
 
   private loadMiddleware() {
@@ -46,15 +52,16 @@ export class Server {
   }
 
   async start() {
-    // console.log();
     const isDatabaseConnected = await checkDatabaseConnection();
 
     if (isDatabaseConnected) {
       this.loadMiddleware();
       this.serverListener = this.app.listen(this.port, () => {
+        // this.logger.log(`Server running on port ${this.port}`);
         console.log(`Server running on port ${this.port}`);
       });
     } else {
+      this.logger.error('Database is not connected');
       throw 'database disconnected';
     }
   }
