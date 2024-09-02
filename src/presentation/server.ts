@@ -1,6 +1,7 @@
 import path from 'node:path';
 import express, { Router } from 'express';
 import { checkDatabaseConnection } from '../data/postgres';
+import { CustomError } from '../domain/error';
 
 interface Options {
   port: number;
@@ -46,12 +47,16 @@ export class Server {
 
   async start() {
     // console.log();
+    const isDatabaseConnected = await checkDatabaseConnection();
 
-    this.loadMiddleware();
-    await checkDatabaseConnection()
-    this.serverListener = this.app.listen(this.port, () => {
-      console.log(`Server running on port ${this.port}`);
-    });
+    if (isDatabaseConnected) {
+      this.loadMiddleware();
+      this.serverListener = this.app.listen(this.port, () => {
+        console.log(`Server running on port ${this.port}`);
+      });
+    } else {
+      throw 'database disconnected';
+    }
   }
 
   close() {
