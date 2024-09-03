@@ -4,11 +4,19 @@ import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
 import { RoomEntity } from '../../domain/entities';
 import { CustomError } from '../../domain/error';
 import { RoomPagination } from '../../domain/interfaces';
+import { LoggerService } from '../../presentation/services';
 import { cleanObject } from '../../utils';
 
 // TODO ADD LOGGER TO CATCH ERROR
 
 export class RoomDatasourceImpl extends RoomDatasource {
+  constructor(
+    // todo create logger service and then inject here
+    private readonly logger: LoggerService
+  ) {
+    super();
+  }
+
   async getAllAvailable(
     page: number,
     limit: number,
@@ -36,8 +44,10 @@ export class RoomDatasourceImpl extends RoomDatasource {
         prev: page - 1 > 0 ? `/api/room?page=${page - 1}&limit=${limit}` : null,
         rooms: rooms.map((room) => RoomEntity.fromObject(room)),
       };
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      const a = error as Error;
+      console.log({ message: a.message, stack: a.stack, name: a.name });
+      // console.log(error.message);
       throw CustomError.internalServerError(`internal server error`);
     }
   }

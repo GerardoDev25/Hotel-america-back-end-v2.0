@@ -1,17 +1,14 @@
 import path from 'node:path';
 import express, { Router } from 'express';
 import { checkDatabaseConnection } from '../data/postgres';
+import { LoggerService } from './services';
 
 interface Options {
   port: number;
   routes: Router;
   public_path?: string;
-  logger: Logger;
+  logger?: LoggerService;
 }
-type Logger = {
-  log: (message: string) => void;
-  error: (message: string) => void;
-};
 
 export class Server {
   public readonly app = express();
@@ -20,7 +17,7 @@ export class Server {
 
   private readonly publicPath: string;
   private readonly routes: Router;
-  private readonly logger: Logger;
+  private readonly logger: LoggerService | undefined;
 
   constructor(options: Options) {
     const { port, routes, public_path = 'public', logger } = options;
@@ -61,7 +58,7 @@ export class Server {
         console.log(`Server running on port ${this.port}`);
       });
     } else {
-      this.logger.error('Database is not connected');
+      this.logger?.error('Database is not connected');
       throw 'database disconnected';
     }
   }

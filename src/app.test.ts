@@ -1,5 +1,6 @@
 import { envs } from './config';
 import { Server } from '../src/presentation/server';
+import { LoggerService } from './presentation/services';
 
 jest.mock('../src/presentation/server');
 
@@ -11,6 +12,7 @@ describe('app.ts', () => {
     expect(Server).toHaveBeenCalledWith({
       port: envs.PORT,
       routes: expect.any(Function),
+      logger: new LoggerService('server.ts'),
     });
 
     expect(Server.prototype.start).toHaveBeenCalledTimes(1);

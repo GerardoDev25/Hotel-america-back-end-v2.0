@@ -1,19 +1,19 @@
-import { buildLogger } from './adapters';
 import { envs } from './config/envs';
 import { AppRoute } from './presentation/routes';
 import { Server } from './presentation/server';
+import { LoggerService } from './presentation/services';
 
 (async () => {
   main();
 })();
 
 async function main() {
-  const logger = buildLogger('server.ts');
+  const logger = new LoggerService('server.ts');
 
   const server = new Server({
     port: envs.PORT,
     routes: AppRoute.router,
-    logger: logger,
+    logger,
   });
 
   server.start();

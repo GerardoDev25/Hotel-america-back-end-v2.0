@@ -18,10 +18,28 @@ enum RoomType {
   normal
 }
 
+enum RoleType {
+  admin
+  laundry
+  reception
+  cafe
+}
+
 model Room {
   id          String   @id @default(uuid())
   roomType    RoomType
-  roomNumber  Int 
+  roomNumber  Int
   betsNumber  Int
   isAvailable Boolean? @default(false)
 }
+
+// model User {
+//   id       String   @id @default(uuid())
+//   role     RoleType
+//   birdDate DateTime
+//   name     String
+//   phone    String   @unique
+//   username String   @unique
+//   password String
+//   isActive Boolean  @default(false)
+// }
