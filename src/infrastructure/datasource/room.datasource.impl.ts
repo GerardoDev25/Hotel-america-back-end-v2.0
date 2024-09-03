@@ -7,13 +7,8 @@ import { RoomPagination } from '../../domain/interfaces';
 import { LoggerService } from '../../presentation/services';
 import { cleanObject } from '../../utils';
 
-// TODO ADD LOGGER TO CATCH ERROR
-
 export class RoomDatasourceImpl extends RoomDatasource {
-  constructor(
-    // todo create logger service and then inject here
-    private readonly logger: LoggerService
-  ) {
+  constructor(private readonly logger: LoggerService) {
     super();
   }
 
@@ -45,9 +40,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
         rooms: rooms.map((room) => RoomEntity.fromObject(room)),
       };
     } catch (error: any) {
-      const a = error as Error;
-      console.log({ message: a.message, stack: a.stack, name: a.name });
-      // console.log(error.message);
+      this.logger.error(error.message);
       throw CustomError.internalServerError(`internal server error`);
     }
   }
@@ -74,8 +67,8 @@ export class RoomDatasourceImpl extends RoomDatasource {
         prev: page - 1 > 0 ? `/api/room?page=${page - 1}&limit=${limit}` : null,
         rooms: rooms.map((room) => RoomEntity.fromObject(room)),
       };
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      this.logger.error(error.message);
       throw CustomError.internalServerError(`internal server error`);
     }
   }
@@ -87,8 +80,8 @@ export class RoomDatasourceImpl extends RoomDatasource {
       const newRoom = await prisma.room.create({ data: createRoomDto });
 
       return { ok: true, room: RoomEntity.fromObject(newRoom) };
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      this.logger.error(error.message);
       throw CustomError.internalServerError(`internal server error`);
     }
   }
@@ -120,10 +113,10 @@ export class RoomDatasourceImpl extends RoomDatasource {
     const data = cleanObject(rest);
 
     try {
-      const updatedRoom = await prisma.room.update({ where: { id }, data });
+      await prisma.room.update({ where: { id }, data });
       return { ok: true, message: 'room updated successfully' };
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      this.logger.error(error.message);
       throw CustomError.internalServerError(`internal server error`);
     }
   }
@@ -132,13 +125,11 @@ export class RoomDatasourceImpl extends RoomDatasource {
     await this.getById(id);
 
     try {
-      const deletedRoom = await prisma.room.delete({
-        where: { id },
-      });
+      await prisma.room.delete({ where: { id } });
 
       return { ok: true, message: 'room deleted successfully' };
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      this.logger.error(error.message);
       throw CustomError.internalServerError(`internal server error`);
     }
   }
