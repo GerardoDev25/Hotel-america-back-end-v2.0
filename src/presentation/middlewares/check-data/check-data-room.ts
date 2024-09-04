@@ -54,7 +54,7 @@ export class CheckDataRoom {
     const errors: string[] = [];
 
     // * id
-    const idValid = StringValidator.isValid(id);
+    const idValid = StringValidator.isValidUUID(id);
     if (idValid !== true) errors.push('id ' + idValid);
 
     // * roomType

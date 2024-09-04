@@ -26,7 +26,7 @@ export class RoomEntity implements IRoom {
     const { id, roomType, roomNumber, betsNumber, isAvailable } = properties;
 
     // * id
-    const idValidation = StringValidator.isValid(id);
+    const idValidation = StringValidator.isValidUUID(id);
     if (idValidation !== true) {
       throw CustomError.badRequest('id' + idValidation);
     }

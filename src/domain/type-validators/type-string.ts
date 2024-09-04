@@ -24,4 +24,17 @@ export class StringValidator {
       return 'most be: ' + allowValues.join(', ');
     return true;
   };
+
+  static isValidUUID(id: string) {
+    const validId = StringValidator.isValid(id);
+
+    if (typeof validId === 'string') {
+      return validId;
+    }
+
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    return uuidRegex.test(id) ? true : 'is not a valid id';
+  }
 }

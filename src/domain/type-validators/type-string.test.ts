@@ -51,4 +51,16 @@ describe('type-string.ts', () => {
     expect(isValidSpy).toHaveBeenCalledTimes(1);
     expect(isValidSpy).toHaveBeenCalledWith(value);
   });
+
+  test('should be a uuid', () => {
+    const id = '896af4a2-e09a-4f58-8092-8cd95e80b589';
+    const validId = StringValidator.isValidUUID(id);
+    expect(validId).toBe(true);
+  });
+
+  test('should get error message if not valid uuid', () => {
+    const id = 'not uuid';
+    const validId = StringValidator.isValidUUID(id);
+    expect(validId).toBe('is not a valid id');
+  });
 });
