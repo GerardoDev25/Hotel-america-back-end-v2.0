@@ -2,6 +2,7 @@ import path from 'node:path';
 import express, { Router } from 'express';
 import { checkDatabaseConnection } from '../data/postgres';
 import { LoggerService } from './services';
+import { envs } from '../config';
 
 interface Options {
   port: number;
@@ -55,7 +56,10 @@ export class Server {
       this.loadMiddleware();
       this.serverListener = this.app.listen(this.port, () => {
         // this.logger.log(`Server running on port ${this.port}`);
-        console.log(`Server running on port ${this.port}`);
+
+        if (envs.NODE_ENV !== 'test') {
+          console.log(`Server running on port ${this.port}`);
+        }
       });
     } else {
       this.logger?.error('Database is not connected');

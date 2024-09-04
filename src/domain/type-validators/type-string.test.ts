@@ -61,6 +61,6 @@ describe('type-string.ts', () => {
   test('should get error message if not valid uuid', () => {
     const id = 'not uuid';
     const validId = StringValidator.isValidUUID(id);
-    expect(validId).toBe('is not a valid id');
+    expect(validId).toBe('is not a valid uuid');
   });
 });
