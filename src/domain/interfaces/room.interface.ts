@@ -1,5 +1,3 @@
-import { RoomEntity } from "../entities";
-
 export interface IRoom {
   id: string;
   roomType: RoomType;
@@ -16,7 +14,7 @@ export enum RoomTypesList {
 }
 
 export interface RoomPagination {
-  rooms: RoomEntity[];
+  rooms: IRoom[];
   total: number;
   page: number;
   limit: number;

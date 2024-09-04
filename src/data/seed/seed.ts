@@ -5,7 +5,8 @@ import { seedData } from './data';
   try {
     await main();
 
-    console.log('seeded');
+    console.log('initial data seeded');
+    
     process.exit(0);
   } catch (error) {
     console.error(error);

@@ -5,7 +5,7 @@ import { RoomEntity } from '../../domain/entities';
 import { CustomError } from '../../domain/error';
 import { RoomPagination } from '../../domain/interfaces';
 import { LoggerService } from '../../presentation/services';
-import { cleanObject } from '../../utils';
+import { cleanObject, pagination } from '../../utils';
 
 export class RoomDatasourceImpl extends RoomDatasource {
   constructor(private readonly logger: LoggerService) {
@@ -18,7 +18,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
     isAvailable: boolean
   ): Promise<RoomPagination> {
     try {
-      const [total, rooms] = await Promise.all([
+      const [total, roomsDb] = await Promise.all([
         prisma.room.count({ where: { isAvailable } }),
 
         prisma.room.findMany({
@@ -28,17 +28,10 @@ export class RoomDatasourceImpl extends RoomDatasource {
         }),
       ]);
 
-      return {
-        page,
-        limit,
-        total,
-        next:
-          page * limit < total
-            ? `/api/room?page=${page + 1}&limit=${limit}`
-            : null,
-        prev: page - 1 > 0 ? `/api/room?page=${page - 1}&limit=${limit}` : null,
-        rooms: rooms.map((room) => RoomEntity.fromObject(room)),
-      };
+      const rooms = roomsDb.map((room) => RoomEntity.fromObject(room));
+      const { next, prev } = pagination({ page, limit, total, path: 'room' });
+
+      return { page, limit, total, next, prev, rooms };
     } catch (error: any) {
       this.logger.error(error.message);
       throw CustomError.internalServerError(`internal server error`);
@@ -47,7 +40,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
 
   async getAll(page: number, limit: number): Promise<RoomPagination> {
     try {
-      const [total, rooms] = await Promise.all([
+      const [total, roomsDb] = await Promise.all([
         prisma.room.count(),
         prisma.room.findMany({
           skip: (page - 1) * limit,
@@ -56,17 +49,10 @@ export class RoomDatasourceImpl extends RoomDatasource {
         }),
       ]);
 
-      return {
-        page,
-        limit,
-        total,
-        next:
-          page * limit < total
-            ? `/api/room?page=${page + 1}&limit=${limit}`
-            : null,
-        prev: page - 1 > 0 ? `/api/room?page=${page - 1}&limit=${limit}` : null,
-        rooms: rooms.map((room) => RoomEntity.fromObject(room)),
-      };
+      const rooms = roomsDb.map((room) => RoomEntity.fromObject(room));
+      const { next, prev } = pagination({ page, limit, total, path: 'room' });
+
+      return { page, limit, total, next, prev, rooms };
     } catch (error: any) {
       this.logger.error(error.message);
       throw CustomError.internalServerError(`internal server error`);
