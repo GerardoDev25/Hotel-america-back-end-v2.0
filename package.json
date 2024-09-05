@@ -9,6 +9,7 @@
     "seed": "ts-node-dev ./src/data/seed/seed.ts",
     "dev": "tsnd --respawn --clear src/app.ts",
     "build": "rimraf ./dist && tsc",
+    "delete-logs": "rimraf ./logs",
     "start": "npm run build && node dist/app.js",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
