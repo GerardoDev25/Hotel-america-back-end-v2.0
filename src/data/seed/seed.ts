@@ -6,7 +6,7 @@ import { seedData } from './data';
     await main();
 
     console.log('initial data seeded');
-    
+
     process.exit(0);
   } catch (error) {
     console.error(error);
@@ -20,7 +20,9 @@ async function main() {
 
   // * delete data
   await prisma.room.deleteMany();
+  await prisma.user.deleteMany();
 
   // * create data
   await prisma.room.createMany({ data: seedData.rooms });
+  await prisma.user.createMany({ data: seedData.users });
 }

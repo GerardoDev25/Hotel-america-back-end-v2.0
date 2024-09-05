@@ -24,6 +24,7 @@
     "prisma:generate-test": "npx dotenv -e .env.test -- npx prisma generate"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/node": "^22.5.0",
@@ -40,6 +41,7 @@
   },
   "dependencies": {
     "@prisma/client": "5.18.0",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "env-var": "^7.5.0",
     "express": "^4.19.2",

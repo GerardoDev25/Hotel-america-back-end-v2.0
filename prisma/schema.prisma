@@ -38,7 +38,7 @@ model User {
   role     RoleType
   birdDate DateTime
   name     String
-  phone    String   @unique
+  phone    String
   username String   @unique
   password String
   isActive Boolean  @default(false)
