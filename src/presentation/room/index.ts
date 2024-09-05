@@ -1,3 +1,3 @@
-export * from './controller';
-export * from './route';
-export * from './service';
+export * from './room.controller';
+export * from './room.route';
+export * from './room.service';

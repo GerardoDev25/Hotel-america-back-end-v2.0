@@ -19,7 +19,7 @@ export enum UserRolesList {
 }
 
 export interface UserPagination {
-  rooms: IUser[];
+  users: IUser[];
   total: number;
   page: number;
   limit: number;

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { RoomRoute } from './room';
+import { UserRoute } from './user';
 
 export class AppRoute {
   constructor() {}
@@ -8,6 +9,7 @@ export class AppRoute {
     const route = Router();
 
     route.use('/api/room', RoomRoute.routes);
+    route.use('/api/user', UserRoute.routes);
 
     return route;
   }

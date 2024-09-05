@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { RoomController } from './room.controller';
+import { UserController } from './user.controller';
 import { CustomError } from '../../domain/error';
-import { RoomService } from './room.service';
+import { UserService } from './user.service';
 import { PaginationDto } from '../../domain/dtos/share';
 
 describe('room.controller.ts', () => {
@@ -42,7 +42,7 @@ describe('room.controller.ts', () => {
       .mockRejectedValue(
         CustomError.internalServerError('internal server error')
       ),
-  } as unknown as RoomService;
+  } as unknown as UserService;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -62,8 +62,8 @@ describe('room.controller.ts', () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    const roomController = new RoomController(mockRoomService);
-    await roomController.getAllRoom(req, res);
+    const roomController = new UserController(mockRoomService);
+    await roomController.getAllUsers(req, res);
 
     expect(mockRoomService.getAll).toHaveBeenCalled();
     expect(res.json).toHaveBeenCalledWith([room1, room2]);
@@ -79,9 +79,9 @@ describe('room.controller.ts', () => {
       status: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    const roomController = new RoomController(mockRoomService);
+    const roomController = new UserController(mockRoomService);
 
-    await roomController.getAllRoom(req, res);
+    await roomController.getAllUsers(req, res);
 
     expect(mockRoomService.getAll).toHaveBeenCalledWith(
       expect.any(PaginationDto),
@@ -100,8 +100,8 @@ describe('room.controller.ts', () => {
       status: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    const roomController = new RoomController(mockRoomService);
-    await roomController.getAllRoom(req, res);
+    const roomController = new UserController(mockRoomService);
+    await roomController.getAllUsers(req, res);
 
     expect(res.json).toHaveBeenCalledWith({
       errors: ['Page and limit must be a number'],
@@ -120,8 +120,8 @@ describe('room.controller.ts', () => {
       status: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    const roomController = new RoomController(mockRoomService);
-    await roomController.getAllRoom(req, res);
+    const roomController = new UserController(mockRoomService);
+    await roomController.getAllUsers(req, res);
 
     expect(res.json).toHaveBeenCalledWith({
       errors: ['isAvailable most be true or false'],
@@ -138,14 +138,14 @@ describe('room.controller.ts', () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    const roomController = new RoomController(mockRoomService);
+    const roomController = new UserController(mockRoomService);
 
     // Act
-    await roomController.getByIdRoom(req, res);
+    await roomController.getUserById(req, res);
 
     // Assert
     expect(mockRoomService.getById).toHaveBeenCalledWith('non-existent-id');
-    expect(roomController.getByIdRoom).rejects.toThrow();
+    expect(roomController.getUserById).rejects.toThrow();
   });
 
   it('should return throw error when room ID does not exist (getById)', async () => {
@@ -156,11 +156,11 @@ describe('room.controller.ts', () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    const roomController = new RoomController(mockRoomService);
+    const roomController = new UserController(mockRoomService);
 
     // Act
     try {
-      await roomController.getByIdRoom(req, res);
+      await roomController.getUserById(req, res);
     } catch (error) {
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ message: 'Room not found' });
@@ -177,8 +177,8 @@ describe('room.controller.ts', () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    const roomController = new RoomController(mockRoomService);
-    await roomController.createRoom(req, res);
+    const roomController = new UserController(mockRoomService);
+    await roomController.createUser(req, res);
 
     expect(mockRoomService.create).toHaveBeenCalledWith(room1);
   });
@@ -191,8 +191,8 @@ describe('room.controller.ts', () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    const roomController = new RoomController(mockRoomService);
-    await roomController.updateRoom(req, res);
+    const roomController = new UserController(mockRoomService);
+    await roomController.updateUser(req, res);
 
     expect(mockRoomService.update).toHaveBeenCalledWith(room1);
   });
@@ -205,8 +205,8 @@ describe('room.controller.ts', () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    const roomController = new RoomController(mockRoomService);
-    await roomController.deletedRoom(req, res);
+    const roomController = new UserController(mockRoomService);
+    await roomController.deleteUser(req, res);
 
     expect(mockRoomService.delete).toHaveBeenCalledWith(req.params.id);
   });

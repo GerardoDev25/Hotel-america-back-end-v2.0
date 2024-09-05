@@ -1,7 +1,7 @@
 import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
 import { PaginationDto } from '../../domain/dtos/share';
 import { RoomRepository } from '../../domain/repositories';
-import { RoomService } from './room.service';
+import { UserService } from './user.service';
 
 describe('room.service.ts', () => {
   const mockRoomRepository = {
@@ -15,7 +15,7 @@ describe('room.service.ts', () => {
   it('should to have been called with parameter (getAll)', async () => {
     const isAvailable = true;
     const paginationDto = { page: 1, limit: 10 } as PaginationDto;
-    const service = new RoomService(mockRoomRepository);
+    const service = new UserService(mockRoomRepository);
 
     await service.getAll(paginationDto, isAvailable);
 
@@ -29,7 +29,7 @@ describe('room.service.ts', () => {
 
   it('should to have been called with parameter (getById)', async () => {
     const id = 'some-id';
-    const service = new RoomService(mockRoomRepository);
+    const service = new UserService(mockRoomRepository);
 
     await service.getById(id);
 
@@ -44,7 +44,7 @@ describe('room.service.ts', () => {
       betsNumber: 3,
       isAvailable: true,
     });
-    const service = new RoomService(mockRoomRepository);
+    const service = new UserService(mockRoomRepository);
 
     await service.create(room);
 
@@ -59,7 +59,7 @@ describe('room.service.ts', () => {
       betsNumber: 3,
       isAvailable: true,
     });
-    const service = new RoomService(mockRoomRepository);
+    const service = new UserService(mockRoomRepository);
     await service.update(room);
 
     expect(mockRoomRepository.update).toHaveBeenCalledTimes(1);
@@ -68,7 +68,7 @@ describe('room.service.ts', () => {
 
   it('should to have been called with parameter (delete)', async () => {
     const id = 'some-id'
-    const service = new RoomService(mockRoomRepository);
+    const service = new UserService(mockRoomRepository);
     await service.delete(id);
 
     expect(mockRoomRepository.delete).toHaveBeenCalledTimes(1);
