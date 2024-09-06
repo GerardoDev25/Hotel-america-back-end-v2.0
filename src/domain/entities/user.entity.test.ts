@@ -1,16 +1,24 @@
-import { IUser } from '../interfaces';
+import { Uuid } from '../../adapters';
+import {
+  generateRandomDate,
+  generateRandomPassword,
+  generateRandomPhone,
+  generateRandomUsername,
+  getRandomBoolean,
+} from '../../utils/generator';
+import { IUser, UserRolesList } from '../interfaces';
 import { UserEntity } from './user.entity';
 
 describe('user.entity.ts', () => {
   const validUser: IUser = {
-    id: '896af4a2-e09a-4f58-8092-8cd95e80b589',
-    role: 'admin',
-    birdDate: '1994-09-03',
-    name: 'John',
-    phone: '1234567',
-    username: 'john_username',
-    password: '123456',
-    isActive: false,
+    id: Uuid.v4(),
+    role: UserRolesList.ADMIN,
+    birdDate: generateRandomDate(),
+    name: generateRandomDate(),
+    phone: generateRandomPhone(),
+    username: generateRandomUsername(),
+    password: generateRandomPassword(),
+    isActive: getRandomBoolean(),
   };
 
   test('should return a UserEntity with valid object', () => {

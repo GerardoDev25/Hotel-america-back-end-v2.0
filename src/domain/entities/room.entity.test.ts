@@ -1,9 +1,10 @@
+import { Uuid } from '../../adapters';
 import { RoomTypesList } from '../interfaces';
 import { RoomEntity } from './room.entity';
 
 describe('room.entity.ts', () => {
   const validObject = {
-    id: '896af4a2-e09a-4f58-8092-8cd95e80b589',
+    id: Uuid.v4(),
     roomType: RoomTypesList.SUIT,
     roomNumber: '101',
     betsNumber: '2',
@@ -12,7 +13,7 @@ describe('room.entity.ts', () => {
   test('should return RoomEntity instance when given valid object properties', () => {
     // Arrange
     const expectedRoomEntity = new RoomEntity({
-      id: '896af4a2-e09a-4f58-8092-8cd95e80b589',
+      id: validObject.id,
       roomType: RoomTypesList.SUIT,
       roomNumber: 101,
       betsNumber: 2,
