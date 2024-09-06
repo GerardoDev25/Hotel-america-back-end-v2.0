@@ -22,50 +22,34 @@ describe('type-number.ts', () => {
   });
 
   test('should return true when the number is greater than or equal to the minimum value', () => {
-    // Arrange
     const value = 15;
     const minValue = 10;
-
-    // Act
     const result = NumberValidator.isMinValue({ value, minValue });
 
-    // Assert
     expect(result).toBe(true);
   });
 
   test('should return error message if number is min than to the minimum value', () => {
-    // Arrange
     const value = 15;
     const minValue = 20;
-
-    // Act
     const result = NumberValidator.isMinValue({ value, minValue });
 
-    // Assert
     expect(result).toBe(
       'property most be a greater than or equal to ' + minValue
     );
   });
 
   test('should return true when a positive number is provided', () => {
-    // Arrange
     const positiveNumber = 10;
-
-    // Act
     const result = NumberValidator.isPositive(positiveNumber);
 
-    // Assert
     expect(result).toBe(true);
   });
 
   test('should return error message if a negative number is provided', () => {
-    // Arrange
     const positiveNumber = -10;
-
-    // Act
     const result = NumberValidator.isPositive(positiveNumber);
 
-    // Assert
     expect(result).toBe('property most be a positive');
   });
 });
