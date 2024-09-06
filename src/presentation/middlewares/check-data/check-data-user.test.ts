@@ -1,7 +1,15 @@
-import { Request, Response } from 'express';
-import { CheckDataRoom } from './check-data-room';
+import { Request } from 'express';
+import { CheckDataUser } from './check-data-user';
+import {
+  generateRandomDate,
+  generateRandomName,
+  generateRandomPassword,
+  generateRandomPhone,
+  generateRandomUsername,
+} from '../../../utils/generator';
+import { Uuid } from '../../../adapters';
 
-describe('CREATE check-data-room.ts', () => {
+describe('CREATE check-data-user.ts', () => {
   const res = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
@@ -16,14 +24,17 @@ describe('CREATE check-data-room.ts', () => {
   test('should call next() when all inputs are valid', () => {
     const req = {
       body: {
-        roomType: 'suit',
-        roomNumber: 1,
-        betsNumber: 1,
-        isAvailable: true,
+        birdDate: generateRandomDate(),
+        name: generateRandomName(),
+        password: generateRandomPassword(),
+        phone: generateRandomPhone(),
+        role: 'admin',
+        username: generateRandomUsername(),
+        isActive: true,
       },
     } as Request;
 
-    CheckDataRoom.create(req, res, next);
+    CheckDataUser.create(req, res, next);
 
     expect(next).toHaveBeenCalled();
     expect(next).toHaveBeenCalledTimes(1);
@@ -31,31 +42,34 @@ describe('CREATE check-data-room.ts', () => {
     expect(res.json).not.toHaveBeenCalled();
   });
 
-  test('should return error when isAvailable property is not boolean', () => {
+  test('should return error when isActive property is not boolean', () => {
     const req = {
       body: {
-        roomType: 'suit',
-        roomNumber: 1,
-        betsNumber: 1,
-        isAvailable: 'not bool',
+        birdDate: generateRandomDate(),
+        name: generateRandomName(),
+        password: generateRandomPassword(),
+        phone: generateRandomPhone(),
+        role: 'admin',
+        username: generateRandomUsername(),
+        isActive: 12,
       },
     } as any;
 
-    CheckDataRoom.create(req, res, next);
+    CheckDataUser.create(req, res, next);
 
     expect(next).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.status).toHaveBeenCalledTimes(1);
     expect(res.json).toHaveBeenCalledWith({
       ok: false,
-      errors: ['isAvailable property most be a boolean'],
+      errors: ['isActive property most be a boolean'],
     });
   });
 
   test('should return error when properties are missing', () => {
     const req = { body: {} } as any;
 
-    CheckDataRoom.create(req, res, next);
+    CheckDataUser.create(req, res, next);
 
     expect(next).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
@@ -63,15 +77,18 @@ describe('CREATE check-data-room.ts', () => {
     expect(res.json).toHaveBeenCalledWith({
       ok: false,
       errors: [
-        'roomType property is required',
-        'roomNumber property is required',
-        'betsNumber property is required',
+        'role property is required',
+        'birdDate property is required',
+        'name property is required',
+        'phone property is required',
+        'username property is required',
+        'password property is required',
       ],
     });
   });
 });
 
-describe('UPDATE check-data-room.ts', () => {
+describe('UPDATE check-data-user.ts', () => {
   const res = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
@@ -84,11 +101,9 @@ describe('UPDATE check-data-room.ts', () => {
   });
 
   test('should get all properties as optional but id required', () => {
-    // const req = { body: { id: '123e4567-e89b-12d3-a456-426614174000' } } as any;
-    // const req = { body: { id: '1896af4a2-e09a-4f58-8092-8cd95e80b589' } } as any;
-    const req = { body: { id: '896af4a2-e09a-4f58-8092-8cd95e80b589' } } as any;
+    const req = { body: { id: Uuid.v4() } } as any;
 
-    CheckDataRoom.update(req, res, next);
+    CheckDataUser.update(req, res, next);
     expect(next).toHaveBeenCalled();
     expect(next).toHaveBeenCalledTimes(1);
     expect(res.status).not.toHaveBeenCalled();
@@ -105,7 +120,7 @@ describe('UPDATE check-data-room.ts', () => {
 
     const next = jest.fn();
 
-    CheckDataRoom.update(req, res, next);
+    CheckDataUser.update(req, res, next);
     expect(next).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.status).toHaveBeenCalledTimes(1);
@@ -118,15 +133,18 @@ describe('UPDATE check-data-room.ts', () => {
   test('should check properties if comes', () => {
     const req = {
       body: {
-        id: '896af4a2-e09a-4f58-8092-8cd95e80b589',
-        roomType: 'not-suit',
-        roomNumber: true,
-        betsNumber: 'ab',
-        isAvailable: 'not bool',
+        id: Uuid.v4(),
+        birdDate: 'not-valid-date',
+        name: 12,
+        password: 21,
+        phone: true,
+        role: false,
+        username: null,
+        isActive: true,
       },
     } as any;
 
-    CheckDataRoom.update(req, res, next);
+    CheckDataUser.update(req, res, next);
 
     expect(next).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
@@ -134,10 +152,12 @@ describe('UPDATE check-data-room.ts', () => {
     expect(res.json).toHaveBeenCalledWith({
       ok: false,
       errors: [
-        'roomType most be: suit, normal',
-        'roomNumber property most be a number',
-        'betsNumber property most be a number',
-        'isAvailable property most be a boolean',
+        'role property most be a string',
+        'birdDate property most be a valid date',
+        'name property most be a string',
+        'phone property most be a string',
+        'username property most be a string',
+        'password property most be a string',
       ],
     });
   });

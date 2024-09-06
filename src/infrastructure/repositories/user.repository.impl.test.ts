@@ -2,7 +2,6 @@ import { Uuid } from '../../adapters';
 import { UserDatasource } from '../../domain/datasources';
 import { CreateUserDto, UpdateUserDto } from '../../domain/dtos/user';
 import { UserEntity } from '../../domain/entities';
-import { UserRolesList } from '../../domain/interfaces';
 import {
   generateRandomDate,
   generateRandomName,
