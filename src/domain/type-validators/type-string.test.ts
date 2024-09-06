@@ -1,3 +1,4 @@
+import { Uuid } from '../../adapters';
 import { StringValidator } from './type-string';
 
 describe('type-string.ts', () => {
@@ -53,9 +54,9 @@ describe('type-string.ts', () => {
   });
 
   test('should be a uuid', () => {
-    const id = '896af4a2-e09a-4f58-8092-8cd95e80b589';
+    const id = Uuid.v4();
     const validId = StringValidator.isValidUUID(id);
-    expect(validId).toBe(true);
+    expect(validId).toBeTruthy();
   });
 
   test('should get error message if not valid uuid', () => {

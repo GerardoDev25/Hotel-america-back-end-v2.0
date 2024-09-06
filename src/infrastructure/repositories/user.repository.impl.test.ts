@@ -1,111 +1,133 @@
-import { RoomDatasource } from '../../domain/datasources';
-import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
-import { RoomEntity } from '../../domain/entities';
-import { RoomTypesList } from '../../domain/interfaces';
-import { RoomRepositoryImpl } from './room.repository.impl';
+import { Uuid } from '../../adapters';
+import { UserDatasource } from '../../domain/datasources';
+import { CreateUserDto, UpdateUserDto } from '../../domain/dtos/user';
+import { UserEntity } from '../../domain/entities';
+import { UserRolesList } from '../../domain/interfaces';
+import {
+  generateRandomDate,
+  generateRandomName,
+  generateRandomPassword,
+  generateRandomPhone,
+  generateRandomUsername,
+} from '../../utils/generator';
+import { UserRepositoryImpl } from './user.repository.impl';
 
-describe('room.repository.impl.ts', () => {
+describe('user.repository.impl.ts', () => {
   const page = 2;
   const limit = 10;
-  const isAvailable = true;
+  const isActive = true;
 
-  const createRoom: CreateRoomDto = {
-    roomType: RoomTypesList.SUIT,
-    roomNumber: 1,
-    betsNumber: 1,
-    isAvailable: false,
+  const createUser: CreateUserDto = {
+    birdDate: new Date(generateRandomDate()),
+    name: generateRandomName(),
+    password: generateRandomPassword(),
+    phone: generateRandomPhone(),
+    role: 'admin',
+    username: generateRandomUsername(),
+    isActive: true,
   };
 
-  const updateRoom: UpdateRoomDto = {
-    id: 'abv',
-    roomType: RoomTypesList.NORMAL,
-    roomNumber: 2,
-    betsNumber: 2,
-    isAvailable: true,
+  const updateUser: UpdateUserDto = {
+    id: Uuid.v4(),
+    birdDate: new Date(generateRandomDate()),
+    name: generateRandomName(),
+    password: generateRandomPassword(),
+    phone: generateRandomPhone(),
+    role: 'cafe',
+    username: generateRandomUsername(),
+    isActive: true,
   };
 
-  const mockRoom: RoomEntity = new RoomEntity({
-    id: 'abc',
-    roomType: RoomTypesList.NORMAL,
-    roomNumber: 12,
-    betsNumber: 12,
-    isAvailable: true,
+  const mockUser: UserEntity = new UserEntity({
+    id: Uuid.v4(),
+    birdDate: generateRandomDate(),
+    name: generateRandomName(),
+    password: generateRandomPassword(),
+    phone: generateRandomPhone(),
+    role: 'reception',
+    username: generateRandomUsername(),
+    isActive: false,
   });
-  const mockRoom2: RoomEntity = new RoomEntity({
-    id: 'abc',
-    roomType: RoomTypesList.NORMAL,
-    roomNumber: 12,
-    betsNumber: 12,
-    isAvailable: true,
+  const mockUser2: UserEntity = new UserEntity({
+    id: Uuid.v4(),
+    birdDate: generateRandomDate(),
+    name: generateRandomName(),
+    password: generateRandomPassword(),
+    phone: generateRandomPhone(),
+    role: 'laundry',
+    username: generateRandomUsername(),
+    isActive: false,
   });
 
   const getAllReturnValue = {
-    rooms: [mockRoom, mockRoom2],
+    users: [mockUser, mockUser2],
     limit,
     next: '',
     page,
     prev: '',
     total: 0,
   };
-  const mockDatasource: RoomDatasource = {
+  const mockDatasource: UserDatasource = {
     getAll: jest.fn().mockResolvedValue(getAllReturnValue),
-    getAllAvailable: jest.fn().mockResolvedValue(getAllReturnValue),
-    getById: jest.fn().mockResolvedValue(mockRoom),
-    create: jest.fn().mockResolvedValue(mockRoom2),
-    update: jest.fn().mockResolvedValue(mockRoom2),
-    delete: jest.fn().mockResolvedValue(mockRoom2),
+    getAllActive: jest.fn().mockResolvedValue(getAllReturnValue),
+    getById: jest.fn().mockResolvedValue(mockUser),
+    create: jest.fn().mockResolvedValue(mockUser2),
+    update: jest.fn().mockResolvedValue(mockUser2),
+    delete: jest.fn().mockResolvedValue(mockUser2),
   };
-  const repository = new RoomRepositoryImpl(mockDatasource);
+  const repository = new UserRepositoryImpl(mockDatasource);
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   test('should call getAll', async () => {
-    const rooms = await repository.getAll(page, limit);
+    const users = await repository.getAll(page, limit);
 
     expect(mockDatasource.getAll).toHaveBeenCalled();
     expect(mockDatasource.getAll).toHaveBeenCalledWith(page, limit);
 
-    expect(rooms).toEqual(getAllReturnValue);
+    expect(users).toEqual(getAllReturnValue);
   });
 
   test('should call getAllAvailable', async () => {
-    const roomsAvailable = await repository.getAll(page, limit, isAvailable);
+    const usersAvailable = await repository.getAll(page, limit, isActive);
 
-    expect(mockDatasource.getAllAvailable).toHaveBeenCalled();
-    expect(mockDatasource.getAllAvailable).toHaveBeenCalledWith(
+    expect(mockDatasource.getAllActive).toHaveBeenCalled();
+    expect(mockDatasource.getAllActive).toHaveBeenCalledWith(
       page,
       limit,
-      isAvailable
+      isActive
     );
-    expect(roomsAvailable).toEqual(getAllReturnValue);
+    expect(usersAvailable).toEqual(getAllReturnValue);
   });
 
   test('should call getById', async () => {
-    const room = await repository.getById('some-id');
-    expect(mockDatasource.getById).toHaveBeenCalledWith(expect.any(String));
-    expect(room).toEqual(mockRoom);
+    const id = Uuid.v4();
+    const user = await repository.getById(id);
+    expect(mockDatasource.getById).toHaveBeenCalledWith(id);
+    expect(user).toEqual(mockUser);
   });
 
   test('should call create with parameter', async () => {
-    const room = await repository.create(createRoom);
+    const user = await repository.create(createUser);
 
     expect(mockDatasource.create).toHaveBeenCalledTimes(1);
-    expect(mockDatasource.create).toHaveBeenCalledWith(createRoom);
-    expect(room).toEqual(mockRoom2);
+    expect(mockDatasource.create).toHaveBeenCalledWith(createUser);
+    expect(user).toEqual(mockUser2);
   });
 
   test('should call update with parameter', async () => {
-    const room = await repository.update(updateRoom);
+    const user = await repository.update(updateUser);
     expect(mockDatasource.update).toHaveBeenCalledTimes(1);
-    expect(mockDatasource.update).toHaveBeenCalledWith(updateRoom);
-    expect(room).toEqual(mockRoom2);
+    expect(mockDatasource.update).toHaveBeenCalledWith(updateUser);
+    expect(user).toEqual(mockUser2);
   });
 
   test('should call delete', async () => {
-    const room = await repository.delete('some-id');
-    expect(mockDatasource.delete).toHaveBeenCalledWith(expect.any(String));
-    expect(room).toEqual(mockRoom2);
+    const id = Uuid.v4();
+    const user = await repository.delete(id);
+    expect(mockDatasource.delete).toHaveBeenCalledWith(id);
+    expect(user).toEqual(mockUser2);
   });
 });
