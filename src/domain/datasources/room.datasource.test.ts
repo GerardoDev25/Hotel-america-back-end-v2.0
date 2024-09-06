@@ -1,3 +1,4 @@
+import { Uuid } from '../../adapters';
 import { CreateRoomDto, UpdateRoomDto } from '../dtos/room';
 import { RoomEntity } from '../entities';
 import { RoomPagination, RoomTypesList } from '../interfaces';
@@ -67,15 +68,12 @@ describe('room.database.ts', () => {
 
   test('test in function getAll()', async () => {
     const mockRoomDataSource = new MockRoomDataSource();
+    const { rooms } = await mockRoomDataSource.getAll(page, limit);
 
-    expect(mockRoomDataSource).toBeInstanceOf(MockRoomDataSource);
     expect(typeof mockRoomDataSource.getAll).toBe('function');
     expect(mockRoomDataSource.getAll(page, limit)).resolves.toEqual(
       getAllReturnValue
     );
-
-    const { rooms } = await mockRoomDataSource.getAll(page, limit);
-
     expect(rooms).toBeInstanceOf(Array);
     expect(rooms).toHaveLength(2);
     rooms.forEach((room) => {
@@ -85,23 +83,65 @@ describe('room.database.ts', () => {
 
   test('test in function getAllAvailable()', async () => {
     const mockRoomDataSource = new MockRoomDataSource();
-
-    expect(mockRoomDataSource).toBeInstanceOf(MockRoomDataSource);
-    expect(typeof mockRoomDataSource.getAllAvailable).toBe('function');
-    expect(
-      mockRoomDataSource.getAllAvailable(page, limit, isAvailable)
-    ).resolves.toEqual(getAllReturnValue);
-
     const { rooms } = await mockRoomDataSource.getAllAvailable(
       page,
       limit,
       isAvailable
     );
 
+    expect(typeof mockRoomDataSource.getAllAvailable).toBe('function');
+    expect(
+      mockRoomDataSource.getAllAvailable(page, limit, isAvailable)
+    ).resolves.toEqual(getAllReturnValue);
+
     expect(rooms).toBeInstanceOf(Array);
     expect(rooms).toHaveLength(2);
     rooms.forEach((room) => {
       expect(room).toBeInstanceOf(RoomEntity);
+    });
+  });
+
+  test('test in function create()', async () => {
+    const mockRoomDataSource = new MockRoomDataSource();
+
+    const { id, ...rest } = mockRoom;
+
+    const { ok, room } = await mockRoomDataSource.create(rest);
+
+    expect(ok).toBeTruthy();
+    expect(room).toBeInstanceOf(RoomEntity);
+    expect(typeof mockRoomDataSource.create).toBe('function');
+    expect(mockRoomDataSource.create(rest)).resolves.toEqual({
+      ok: true,
+      room: mockRoom2,
+    });
+  });
+
+  test('test in function update()', async () => {
+    const mockRoomDataSource = new MockRoomDataSource();
+
+    const { ok, message } = await mockRoomDataSource.update(mockRoom);
+
+    expect(ok).toBeTruthy();
+    expect(typeof message).toBe('string');
+    expect(typeof mockRoomDataSource.update).toBe('function');
+    expect(mockRoomDataSource.update(mockRoom)).resolves.toEqual({
+      ok: true,
+      message: expect.any(String),
+    });
+  });
+
+  test('test in function delete()', async () => {
+    const id = Uuid.v4()
+    const mockRoomDataSource = new MockRoomDataSource();
+    const { ok, message } = await mockRoomDataSource.delete(id);
+
+    expect(ok).toBeTruthy();
+    expect(typeof message).toBe('string');
+    expect(typeof mockRoomDataSource.delete).toBe('function');
+    expect(mockRoomDataSource.delete(id)).resolves.toEqual({
+      ok: true,
+      message: expect.any(String),
     });
   });
 });
