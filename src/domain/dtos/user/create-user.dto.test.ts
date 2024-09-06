@@ -1,17 +1,29 @@
+import { Uuid } from '../../../adapters';
+import {
+  generateRandomDate,
+  generateRandomName,
+  generateRandomPassword,
+  generateRandomPhone,
+} from '../../../utils/generator';
 import { CreateUserDto } from './create-user.dto';
 
-describe('create-room.dto.ts', () => {
-  test('should create an instance of CreateRoomDto', () => {
+describe('create-user.dto.ts', () => {
+  test('should create an instance of CreateUserDto', () => {
     const data = {
-      roomType: 'suit',
-      roomNumber: 12,
-      betsNumber: 12,
-      isAvailable: false,
+      birdDate: generateRandomDate(),
+      name: generateRandomName(),
+      password: generateRandomPassword(),
+      phone: generateRandomPhone(),
+      role: 'admin',
+      username: generateRandomName(),
+      isActive: true,
     };
 
     const result = CreateUserDto.create(data);
 
     expect(result).toBeInstanceOf(CreateUserDto);
-    expect(result).toEqual(expect.objectContaining(data));
+    expect(result).toEqual(
+      expect.objectContaining({ ...data, birdDate: new Date(data.birdDate) })
+    );
   });
 });
