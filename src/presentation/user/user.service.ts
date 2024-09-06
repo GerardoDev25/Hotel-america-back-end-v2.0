@@ -5,9 +5,9 @@ import { UserRepository } from '../../domain/repositories';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async getAll(paginationDto: PaginationDto, isAvailable?: boolean) {
+  async getAll(paginationDto: PaginationDto, isActive?: boolean) {
     const { page, limit } = paginationDto;
-    return this.userRepository.getAll(page, limit, isAvailable);
+    return this.userRepository.getAll(page, limit, isActive);
   }
 
   async getById(id: string) {
