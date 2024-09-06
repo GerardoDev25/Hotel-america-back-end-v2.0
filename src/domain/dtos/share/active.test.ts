@@ -1,32 +1,32 @@
-import { AvailableDto } from './available';
+import { ActiveDto } from './active';
 
-describe('available.ts', () => {
+describe('active.ts', () => {
   test('should return truthy or flashy', () => {
-    const availableDto = AvailableDto.create(true);
-    const availableDto2 = AvailableDto.create('true');
+    const activeDto = ActiveDto.create(true);
+    const activeDto2 = ActiveDto.create('true');
 
-    const availableDto3 = AvailableDto.create(false);
-    const availableDto4 = AvailableDto.create('false');
+    const activeDto3 = ActiveDto.create(false);
+    const activeDto4 = ActiveDto.create('false');
 
-    expect(availableDto[1]?.isAvailable).toBeTruthy();
-    expect(availableDto2[1]?.isAvailable).toBeTruthy();
-    expect(availableDto3[1]?.isAvailable).toBeFalsy();
-    expect(availableDto4[1]?.isAvailable).toBeFalsy();
+    expect(activeDto[1]?.isActive).toBeTruthy();
+    expect(activeDto2[1]?.isActive).toBeTruthy();
+    expect(activeDto3[1]?.isActive).toBeFalsy();
+    expect(activeDto4[1]?.isActive).toBeFalsy();
   });
 
   test('should return undefined', () => {
-    const availableDto = AvailableDto.create(undefined);
-    const availableDto2 = AvailableDto.create(null);
+    const activeDto = ActiveDto.create(undefined);
+    const activeDto2 = ActiveDto.create(null);
 
-    expect(availableDto[1]?.isAvailable).toBeUndefined();
-    expect(availableDto2[1]?.isAvailable).toBeUndefined();
+    expect(activeDto[1]?.isActive).toBeUndefined();
+    expect(activeDto2[1]?.isActive).toBeUndefined();
   });
 
   test('should return error message', () => {
-    const availableDto = AvailableDto.create('no valid');
-    const availableDto2 = AvailableDto.create(12);
+    const activeDto = ActiveDto.create('no valid');
+    const activeDto2 = ActiveDto.create(12);
 
-    expect(availableDto2[0]).toBe('isAvailable most be true or false');
-    expect(availableDto[1]).toBeUndefined();
+    expect(activeDto2[0]).toBe('isActive most be true or false');
+    expect(activeDto[1]).toBeUndefined();
   });
 });
