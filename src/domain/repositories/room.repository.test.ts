@@ -1,3 +1,4 @@
+import { Uuid } from '../../adapters';
 import { CreateRoomDto, UpdateRoomDto } from '../dtos/room';
 import { RoomEntity } from '../entities';
 import { RoomPagination, RoomTypesList } from '../interfaces';
@@ -30,7 +31,7 @@ describe('room.repository.ts', () => {
     prev: '',
     total: 0,
   };
-  class MockRoomDataSource implements RoomRepository {
+  class MockRoomRepository implements RoomRepository {
     async getAll(
       page: number,
       limit: number,
@@ -58,16 +59,15 @@ describe('room.repository.ts', () => {
   }
 
   test('test in function getAll()', async () => {
-    const mockRoomDataSource = new MockRoomDataSource();
+    const mockRoomRepository = new MockRoomRepository();
 
-    expect(mockRoomDataSource).toBeInstanceOf(MockRoomDataSource);
-    expect(typeof mockRoomDataSource.getAll).toBe('function');
+    expect(typeof mockRoomRepository.getAll).toBe('function');
+    const { rooms } = await mockRoomRepository.getAll(page, limit, isAvailable);
 
     expect(
-      mockRoomDataSource.getAll(page, limit, isAvailable)
+      mockRoomRepository.getAll(page, limit, isAvailable)
     ).resolves.toEqual(getAllReturnValue);
 
-    const { rooms } = await mockRoomDataSource.getAll(page, limit, isAvailable);
 
     expect(rooms).toBeInstanceOf(Array);
     expect(rooms).toHaveLength(2);
@@ -75,4 +75,50 @@ describe('room.repository.ts', () => {
       expect(room).toBeInstanceOf(RoomEntity);
     });
   });
+
+  test('test in function create()', async () => {
+    const mockRoomRepository = new MockRoomRepository();
+
+    const { id, ...rest } = mockRoom;
+
+    const { ok, room } = await mockRoomRepository.create(rest);
+
+    expect(ok).toBeTruthy();
+    expect(room).toBeInstanceOf(RoomEntity);
+    expect(typeof mockRoomRepository.create).toBe('function');
+    expect(mockRoomRepository.create(rest)).resolves.toEqual({
+      ok: true,
+      room: mockRoom2,
+    });
+  });
+
+  test('test in function update()', async () => {
+    const mockRoomRepository = new MockRoomRepository();
+
+    const { ok, message } = await mockRoomRepository.update(mockRoom);
+
+    expect(ok).toBeTruthy();
+    expect(typeof message).toBe('string');
+    expect(typeof mockRoomRepository.update).toBe('function');
+    expect(mockRoomRepository.update(mockRoom)).resolves.toEqual({
+      ok: true,
+      message: expect.any(String),
+    });
+  });
+
+  test('test in function delete()', async () => {
+    const id = Uuid.v4()
+    const mockRoomRepository = new MockRoomRepository();
+    const { ok, message } = await mockRoomRepository.delete(id);
+
+    expect(ok).toBeTruthy();
+    expect(typeof message).toBe('string');
+    expect(typeof mockRoomRepository.delete).toBe('function');
+    expect(mockRoomRepository.delete(id)).resolves.toEqual({
+      ok: true,
+      message: expect.any(String),
+    });
+  });
+
+  
 });

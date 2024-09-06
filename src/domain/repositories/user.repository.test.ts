@@ -8,10 +8,9 @@ import {
 } from '../../utils/generator';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user';
 import { UserEntity } from '../entities';
-import { UserPagination, UserRolesList } from '../interfaces';
-import { UserDatasource } from './user.datasource';
-
-describe('user.database.ts', () => {
+import { UserPagination } from '../interfaces';
+import { UserRepository } from './user.repository';
+describe('user.repository.ts', () => {
   const page = 2;
   const limit = 10;
   const isActive = true;
@@ -32,7 +31,7 @@ describe('user.database.ts', () => {
     name: generateRandomName(),
     password: generateRandomPassword(),
     phone: generateRandomPhone(),
-    role: 'cafe',
+    role: 'reception',
     username: generateRandomUsername(),
     isActive: false,
   });
@@ -45,70 +44,40 @@ describe('user.database.ts', () => {
     prev: '',
     total: 0,
   };
-
-  class MockUserDataSource implements UserDatasource {
-    async getAllActive(
+  class MockUserRepository implements UserRepository {
+    async getAll(
       page: number,
       limit: number,
       isActive: boolean
     ): Promise<UserPagination> {
       return getAllReturnValue;
     }
-
-    async getAll(page: number, limit: number): Promise<UserPagination> {
-      return getAllReturnValue;
+    async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
+      return { ok: true, user: mockUser };
     }
-
     async create(
       createUserDto: CreateUserDto
     ): Promise<{ ok: boolean; user: UserEntity }> {
       return { ok: true, user: mockUser2 };
     }
-
-    async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
-      return { ok: true, user: mockUser };
-    }
-
     async update(
       updateUserDto: UpdateUserDto
     ): Promise<{ ok: boolean; message: string }> {
-      return { ok: true, message: '' };
+      return { ok: true, message: 'update' };
     }
-
     async delete(id: string): Promise<{ ok: boolean; message: string }> {
-      return { ok: true, message: '' };
+      return { ok: true, message: 'delete' };
     }
   }
 
   test('test in function getAll()', async () => {
-    const mockUserDataSource = new MockUserDataSource();
+    const mockUserRepository = new MockUserRepository();
 
-    expect(typeof mockUserDataSource.getAll).toBe('function');
-    expect(mockUserDataSource.getAll(page, limit)).resolves.toEqual(
+    expect(typeof mockUserRepository.getAll).toBe('function');
+    const { users } = await mockUserRepository.getAll(page, limit, isActive);
+
+    expect(mockUserRepository.getAll(page, limit, isActive)).resolves.toEqual(
       getAllReturnValue
-    );
-
-    const { users } = await mockUserDataSource.getAll(page, limit);
-
-    expect(users).toBeInstanceOf(Array);
-    expect(users).toHaveLength(2);
-    users.forEach((user) => {
-      expect(user).toBeInstanceOf(UserEntity);
-    });
-  });
-
-  test('test in function getAllActive()', async () => {
-    const mockUserDataSource = new MockUserDataSource();
-
-    expect(typeof mockUserDataSource.getAllActive).toBe('function');
-    expect(
-      mockUserDataSource.getAllActive(page, limit, isActive)
-    ).resolves.toEqual(getAllReturnValue);
-
-    const { users } = await mockUserDataSource.getAllActive(
-      page,
-      limit,
-      isActive
     );
 
     expect(users).toBeInstanceOf(Array);
@@ -119,34 +88,36 @@ describe('user.database.ts', () => {
   });
 
   test('test in function create()', async () => {
-    const mockUserDataSource = new MockUserDataSource();
+    const mockUserRepository = new MockUserRepository();
+
     const { id, ...rest } = mockUser;
     const createUser = {
       ...rest,
       birdDate: new Date(rest.birdDate),
     };
-
-    const { ok, user } = await mockUserDataSource.create(createUser);
+    const { ok, user } = await mockUserRepository.create(createUser);
 
     expect(ok).toBeTruthy();
     expect(user).toBeInstanceOf(UserEntity);
-    expect(typeof mockUserDataSource.create).toBe('function');
-    expect(mockUserDataSource.create(createUser)).resolves.toEqual({
+    expect(typeof mockUserRepository.create).toBe('function');
+    expect(mockUserRepository.create(createUser)).resolves.toEqual({
       ok: true,
-      user: expect.any(UserEntity),
+      user: mockUser2,
     });
   });
 
   test('test in function update()', async () => {
-    const mockUserDataSource = new MockUserDataSource();
-    const { birdDate, ...rest } = mockUser;
-
-    const { ok, message } = await mockUserDataSource.update(rest);
+    const mockUserRepository = new MockUserRepository();
+    const updateUser = {
+      ...mockUser,
+      birdDate: new Date(mockUser.birdDate),
+    };
+    const { ok, message } = await mockUserRepository.update(updateUser);
 
     expect(ok).toBeTruthy();
     expect(typeof message).toBe('string');
-    expect(typeof mockUserDataSource.update).toBe('function');
-    expect(mockUserDataSource.update(rest)).resolves.toEqual({
+    expect(typeof mockUserRepository.update).toBe('function');
+    expect(mockUserRepository.update(updateUser)).resolves.toEqual({
       ok: true,
       message: expect.any(String),
     });
@@ -154,13 +125,13 @@ describe('user.database.ts', () => {
 
   test('test in function delete()', async () => {
     const id = Uuid.v4();
-    const mockUserDataSource = new MockUserDataSource();
-    const { ok, message } = await mockUserDataSource.delete(id);
+    const mockUserRepository = new MockUserRepository();
+    const { ok, message } = await mockUserRepository.delete(id);
 
     expect(ok).toBeTruthy();
     expect(typeof message).toBe('string');
-    expect(typeof mockUserDataSource.delete).toBe('function');
-    expect(mockUserDataSource.delete(id)).resolves.toEqual({
+    expect(typeof mockUserRepository.delete).toBe('function');
+    expect(mockUserRepository.delete(id)).resolves.toEqual({
       ok: true,
       message: expect.any(String),
     });
