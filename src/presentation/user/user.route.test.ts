@@ -3,8 +3,9 @@ import request from 'supertest';
 import { prisma } from '../../data/postgres';
 import { testServer } from '../../test-server';
 import { seedData } from '../../data/seed/data';
+import { Uuid } from '../../adapters';
 
-describe('room.route.ts', () => {
+describe('user.route.ts', () => {
   beforeAll(async () => {
     await testServer.start();
   });
@@ -14,93 +15,81 @@ describe('room.route.ts', () => {
   });
 
   beforeEach(async () => {
-    await prisma.room.deleteMany();
+    await prisma.user.deleteMany();
   });
 
-  test('should get all room (getAll)', async () => {
+  test('should get all users (getAll)', async () => {
     const page = 1;
     const limit = 10;
-    await prisma.room.createMany({ data: seedData.rooms });
-    const { body } = await request(testServer.app).get('/api/room').expect(200);
+    await prisma.user.createMany({ data: seedData.users });
+    const { body } = await request(testServer.app).get('/api/user').expect(200);
 
     expect(body.page).toBe(page);
     expect(body.limit).toBe(limit);
     expect(body.total).toBeDefined();
-    expect(body.next).toBe('/api/room?page=2&limit=10');
-    expect(body.prev).toBe(null);
+    expect(body.next).toBeNull();
+    expect(body.prev).toBeNull();
 
-    expect(body.rooms).toBeInstanceOf(Array);
-    expect(body.rooms[0]).toEqual({
-      betsNumber: expect.any(Number),
+    expect(body.users).toBeInstanceOf(Array);
+    expect(body.users[0]).toEqual({
       id: expect.any(String),
-      isAvailable: expect.any(Boolean),
-      roomNumber: expect.any(Number),
-      roomType: expect.any(String),
+      birdDate: expect.any(String),
+      isActive: expect.any(Boolean),
+      name: expect.any(String),
+      password: expect.any(String),
+      phone: expect.any(String),
+      role: expect.any(String),
+      username: expect.any(String),
+    });
+  });
+  
+  test('should get all users Active (getAll)', async () => {
+    const page = 1;
+    const limit = 10;
+    const isActive = true;
+    await prisma.user.createMany({ data: seedData.users });
+    const { body } = await request(testServer.app)
+      .get(`/api/user?page=${page}&limit=${limit}&isActive=${isActive}`)
+      .expect(200);
+
+    body.users.forEach((user: any) => {
+      expect(user.isActive).toBe(isActive);
     });
   });
 
-  test('should get all room with pagination (getAll)', async () => {
-    const page = 2;
-    const limit = 7;
-    await prisma.room.createMany({ data: seedData.rooms });
-    const { body } = await request(testServer.app)
-      .get(`/api/room?page=${page}&limit=${limit}`)
-      .expect(200);
-
-    expect(body.page).toBe(page);
-    expect(body.limit).toBe(limit);
-    expect(body.total).toBeDefined();
-    expect(body.next).toBe(`/api/room?page=${page + 1}&limit=${limit}`);
-    expect(body.prev).toBe(`/api/room?page=${page - 1}&limit=${limit}`);
-  });
-
-  test('should get all rooms Available (getAll)', async () => {
+  test('should get all users not Active (getAll)', async () => {
     const page = 1;
     const limit = 10;
-    const isAvailable = true;
-    await prisma.room.createMany({ data: seedData.rooms });
+    const isActive = false;
+    await prisma.user.createMany({ data: seedData.users });
     const { body } = await request(testServer.app)
-      .get(`/api/room?page=${page}&limit=${limit}&isAvailable=${isAvailable}`)
+      .get(`/api/user?page=${page}&limit=${limit}&isActive=${isActive}`)
       .expect(200);
 
-    body.rooms.forEach((room: any) => {
-      expect(room.isAvailable).toBe(isAvailable);
+    body.users.forEach((user: any) => {
+      expect(user.isActive).toBe(isActive);
     });
   });
 
-  test('should get all rooms not Available (getAll)', async () => {
+  test('should get error message if isActive is not a boolean (getAll)', async () => {
     const page = 1;
     const limit = 10;
-    const isAvailable = false;
-    await prisma.room.createMany({ data: seedData.rooms });
+    const isActive = 'not-boolean';
+    await prisma.user.createMany({ data: seedData.users });
     const { body } = await request(testServer.app)
-      .get(`/api/room?page=${page}&limit=${limit}&isAvailable=${isAvailable}`)
-      .expect(200);
-
-    body.rooms.forEach((room: any) => {
-      expect(room.isAvailable).toBe(isAvailable);
-    });
-  });
-
-  test('should get error message if isAvailable is not a boolean (getAll)', async () => {
-    const page = 1;
-    const limit = 10;
-    const isAvailable = 'not-boolean';
-    await prisma.room.createMany({ data: seedData.rooms });
-    const { body } = await request(testServer.app)
-      .get(`/api/room?page=${page}&limit=${limit}&isAvailable=${isAvailable}`)
+      .get(`/api/user?page=${page}&limit=${limit}&isActive=${isActive}`)
       .expect(400);
 
     expect(body.ok).toBeFalsy();
-    expect(body.errors[0]).toBe('isAvailable most be true or false');
+    expect(body.errors[0]).toBe('isActive most be true or false');
   });
 
   test('should get error message if pagination is grown (getAll)', async () => {
     const page = 'page';
     const limit = 'limit';
-    await prisma.room.createMany({ data: seedData.rooms });
+    await prisma.user.createMany({ data: seedData.users });
     const { body } = await request(testServer.app)
-      .get(`/api/room?page=${page}&limit=${limit}`)
+      .get(`/api/user?page=${page}&limit=${limit}`)
       .expect(400);
 
     expect(body.ok).toBeFalsy();
@@ -110,114 +99,123 @@ describe('room.route.ts', () => {
   test('should get error message if pagination contain negative numbers (getAll)', async () => {
     const page = -1;
     const limit = -3;
-    await prisma.room.createMany({ data: seedData.rooms });
+    await prisma.user.createMany({ data: seedData.users });
     const { body } = await request(testServer.app)
-      .get(`/api/room?page=${page}&limit=${limit}`)
+      .get(`/api/user?page=${page}&limit=${limit}`)
       .expect(400);
 
     expect(body.ok).toBeFalsy();
     expect(body.errors[0]).toBe('Page must be greaten than 0');
   });
 
-  test('should get a room by id (getById)', async () => {
-    const roomTest = await prisma.room.create({ data: seedData.rooms[0] });
+  test('should get a user by id (getById)', async () => {
+    const userTest = await prisma.user.create({ data: seedData.users[0] });
     const { body } = await request(testServer.app)
-      .get(`/api/room/${roomTest.id}`)
+      .get(`/api/user/${userTest.id}`)
       .expect(200);
 
-    const { ok, room } = body;
+    const { ok, user } = body;
 
     expect(ok).toBeTruthy();
-    expect(roomTest.id).toEqual(room.id);
-    expect(roomTest.roomType).toEqual(room.roomType);
-    expect(roomTest.roomNumber).toBe(room.roomNumber);
-    expect(roomTest.betsNumber).toBe(room.betsNumber);
-    expect(roomTest.isAvailable).toBe(room.isAvailable);
+    expect(userTest.id).toEqual(user.id);
+    expect(userTest.role).toBe(user.role);
+    expect(userTest.birdDate).toEqual(new Date(user.birdDate));
+    expect(userTest.name).toBe(user.name);
+    expect(userTest.phone).toBe(user.phone);
+    expect(userTest.username).toBe(user.username);
+    expect(userTest.password).toBe(user.password);
+    expect(userTest.isActive).toBe(user.isActive);
   });
 
   test('should get not found message (getById)', async () => {
-    const id = 'no-room';
+    const id = Uuid.v4();
     const { body } = await request(testServer.app)
-      .get(`/api/room/${id}`)
+      .get(`/api/user/${id}`)
       .expect(404);
 
     expect(body.ok).toBeFalsy();
-    expect(body.errors[0]).toEqual(`room with id: ${id} not found`);
+    expect(body.errors[0]).toEqual(`user with id: ${id} not found`);
   });
 
-  test('should create a room (create)', async () => {
-    const roomCreated = seedData.rooms[0];
+  test('should create a user (create)', async () => {
+    const userCreated = seedData.users[0];
     const { body } = await request(testServer.app)
-      .post('/api/room')
-      .send(roomCreated)
+      .post('/api/user')
+      .send(userCreated)
       .expect(201);
 
-    const { ok, room } = body;
+    const { ok, user } = body;
 
     expect(ok).toBeTruthy();
-    expect(room.id).toBeDefined();
-    expect(room.roomType).toEqual(roomCreated.roomType);
-    expect(room.roomNumber).toBe(roomCreated.roomNumber);
-    expect(room.betsNumber).toBe(roomCreated.betsNumber);
-    expect(room.isAvailable).toBe(roomCreated.isAvailable);
+    expect(user.id).toBeDefined();
+    expect(userCreated.role).toBe(user.role);
+    expect(userCreated.birdDate).toEqual(new Date(user.birdDate));
+    expect(userCreated.name).toBe(user.name);
+    expect(userCreated.phone).toBe(user.phone);
+    expect(userCreated.username).toBe(user.username);
+    expect(userCreated.password).toBe(user.password);
+    expect(userCreated.isActive).toBe(user.isActive);
   });
 
-  test('should get error white create room (create)', async () => {
+  test('should get error white create user (create)', async () => {
     const { body } = await request(testServer.app)
-      .post('/api/room')
+      .post('/api/user')
       .send({})
       .expect(400);
 
     expect(body).toEqual({
       ok: false,
       errors: [
-        'roomType property is required',
-        'roomNumber property is required',
-        'betsNumber property is required',
+        'role property is required',
+        'birdDate property is required',
+        'name property is required',
+        'phone property is required',
+        'username property is required',
+        'password property is required',
       ],
     });
   });
 
-  test('should update a room (update)', async () => {
-    const roomCreated = await prisma.room.create({ data: seedData.rooms[0] });
-    const betsNumber = 1000;
+  test('should update a user (update)', async () => {
+    const userCreated = await prisma.user.create({ data: seedData.users[0] });
+    const name = 'name_update';
 
     const { body } = await request(testServer.app)
-      .put(`/api/room/`)
-      .send({ id: roomCreated.id, betsNumber })
+      .put(`/api/user/`)
+      .send({ id: userCreated.id, name })
       .expect(200);
     const { ok, message } = body;
 
     expect(ok).toBeTruthy();
-    expect(message).toBe('room updated successfully');
+    expect(message).toBe('user updated successfully');
   });
 
-  test('should get and error while updating a room (update)', async () => {
-    const roomCreated = await prisma.room.create({ data: seedData.rooms[0] });
-    const betsNumber = 'not-valid';
+  test('should get and error while updating a (update)', async () => {
+    const userCreated = await prisma.user.create({ data: seedData.users[0] });
+    const name = false;
 
     const { body } = await request(testServer.app)
-      .put(`/api/room/`)
-      .send({ id: roomCreated.id, betsNumber })
+      .put(`/api/user/`)
+      .send({ id: userCreated.id, name })
       .expect(400);
 
     expect(body).toEqual({
       ok: false,
-      errors: ['betsNumber property most be a number'],
+      errors: ['name property most be a string'],
     });
   });
 
-  test('should delete a room by id (delete)', async () => {
-    const room = await prisma.room.create({ data: seedData.rooms[0] });
+  test('should delete a user by id (delete)', async () => {
+    const user = await prisma.user.create({ data: seedData.users[0] });
 
     const { body } = await request(testServer.app)
-      .delete(`/api/room/${room.id}`)
+      .delete(`/api/user/${user.id}`)
       .send()
       .expect(200);
 
     const { ok, message } = body;
 
     expect(ok).toBeTruthy();
-    expect(message).toBe('room deleted successfully');
+    expect(message).toBe('user deleted successfully');
   });
 });

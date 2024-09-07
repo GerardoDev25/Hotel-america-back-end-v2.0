@@ -20,8 +20,8 @@
     "test:coverage": "jest --coverage",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate",
-    "prisma:migrate-test": "npx dotenv -e .env.test -- npx prisma migrate deploy",
-    "prisma:generate-test": "npx dotenv -e .env.test -- npx prisma generate"
+    "prisma:migrate-test": "dotenv -e .env.test -- npx prisma migrate deploy",
+    "prisma:generate-test": "dotenv -e .env.test -- npx prisma generate"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -30,6 +30,7 @@
     "@types/node": "^22.5.0",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
+    "dotenv-cli": "^7.4.2",
     "jest": "^29.7.0",
     "prisma": "^5.18.0",
     "rimraf": "^6.0.1",
