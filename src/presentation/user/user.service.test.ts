@@ -64,7 +64,7 @@ describe('user.service.ts', () => {
   });
 
   it('should to have been called with parameter (update)', async () => {
-    const room = UpdateUserDto.create({
+    const user = UpdateUserDto.create({
       id:Uuid.v4(),
       birdDate: generateRandomDate(),
       name: generateRandomName(),
@@ -75,10 +75,10 @@ describe('user.service.ts', () => {
       isActive: true,
     });
     const service = new UserService(mockUserRepository);
-    await service.update(room);
+    await service.update(user);
 
     expect(mockUserRepository.update).toHaveBeenCalledTimes(1);
-    expect(mockUserRepository.update).toHaveBeenCalledWith(room);
+    expect(mockUserRepository.update).toHaveBeenCalledWith(user);
   });
 
   it('should to have been called with parameter (delete)', async () => {
