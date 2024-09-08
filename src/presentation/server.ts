@@ -55,8 +55,6 @@ export class Server {
     if (isDatabaseConnected) {
       this.loadMiddleware();
       this.serverListener = this.app.listen(this.port, () => {
-        // this.logger.log(`Server running on port ${this.port}`);
-
         if (envs.NODE_ENV !== 'test') {
           console.log(`Server running on port ${this.port}`);
         }

@@ -8,7 +8,7 @@ import {
 } from '../../utils/generator';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user';
 import { UserEntity } from '../entities';
-import { UserPagination, UserRolesList } from '../interfaces';
+import { UserPagination } from '../interfaces';
 import { UserDatasource } from './user.datasource';
 
 describe('user.database.ts', () => {

@@ -22,7 +22,9 @@ describe('user.route.ts', () => {
     const page = 1;
     const limit = 10;
     await prisma.user.createMany({ data: seedData.users });
-    const { body } = await request(testServer.app).get('/api/user').expect(200);
+    const { body } = await request(testServer.app)
+      .get('/api/user/')
+      .expect(200);
 
     expect(body.page).toBe(page);
     expect(body.limit).toBe(limit);
@@ -42,7 +44,7 @@ describe('user.route.ts', () => {
       username: expect.any(String),
     });
   });
-  
+
   test('should get all users Active (getAll)', async () => {
     const page = 1;
     const limit = 10;

@@ -110,7 +110,28 @@ describe('UPDATE check-data-user.ts', () => {
     expect(res.json).not.toHaveBeenCalled();
   });
 
-  test('should valid id', () => {
+  test('should verify all properties if coming', () => {
+    const req = {
+      body: {
+        id: Uuid.v4(),
+        birdDate: generateRandomDate(),
+        name: generateRandomName(),
+        password: generateRandomPassword(),
+        phone: generateRandomPhone(),
+        role: 'admin',
+        username: generateRandomUsername(),
+        isActive: true,
+      },
+    } as any;
+
+    CheckDataUser.update(req, res, next);
+    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.json).not.toHaveBeenCalled();
+  });
+
+  test('should valid type id', () => {
     const req = { body: { id: true } } as any;
 
     const res = {
@@ -127,6 +148,25 @@ describe('UPDATE check-data-user.ts', () => {
     expect(res.json).toHaveBeenCalledWith({
       ok: false,
       errors: ['id property most be a string'],
+    });
+  });
+  test('should valid uuid', () => {
+    const req = { body: { id: 'not-uuid' } } as any;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as any;
+
+    const next = jest.fn();
+
+    CheckDataUser.update(req, res, next);
+    expect(next).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({
+      ok: false,
+      errors: ['id is not a valid uuid'],
     });
   });
 
