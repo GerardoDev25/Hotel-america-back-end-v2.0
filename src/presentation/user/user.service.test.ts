@@ -13,6 +13,7 @@ import {
 
 describe('user.service.ts', () => {
   const mockUserRepository = {
+    getByParam: jest.fn().mockReturnValue({ ok: true, user: false }),
     getAll: jest.fn(),
     getById: jest.fn(),
     create: jest.fn(),
@@ -61,11 +62,16 @@ describe('user.service.ts', () => {
 
     expect(mockUserRepository.create).toHaveBeenCalledTimes(1);
     expect(mockUserRepository.create).toHaveBeenCalledWith(user);
+
+    expect(mockUserRepository.getByParam).toHaveBeenCalledTimes(1);
+    expect(mockUserRepository.getByParam).toHaveBeenCalledWith({
+      username: user.username,
+    });
   });
 
   it('should to have been called with parameter (update)', async () => {
     const user = UpdateUserDto.create({
-      id:Uuid.v4(),
+      id: Uuid.v4(),
       birdDate: generateRandomDate(),
       name: generateRandomName(),
       password: generateRandomPassword(),
