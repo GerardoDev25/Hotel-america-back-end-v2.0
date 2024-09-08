@@ -8,7 +8,7 @@ import {
 } from '../../utils/generator';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user';
 import { UserEntity } from '../entities';
-import { UserPagination } from '../interfaces';
+import { IUser, UserPagination } from '../interfaces';
 import { UserDatasource } from './user.datasource';
 
 describe('user.database.ts', () => {
@@ -47,6 +47,20 @@ describe('user.database.ts', () => {
   };
 
   class MockUserDataSource implements UserDatasource {
+    async getByParam(
+      searchParam: Partial<Pick<IUser, keyof IUser>>
+    ): Promise<{ ok: boolean; user: UserEntity | null }> {
+      return { ok: true, user: mockUser };
+    }
+
+    async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
+      return { ok: true, user: mockUser };
+    }
+
+    async getAll(page: number, limit: number): Promise<UserPagination> {
+      return getAllReturnValue;
+    }
+
     async getAllActive(
       page: number,
       limit: number,
@@ -55,18 +69,10 @@ describe('user.database.ts', () => {
       return getAllReturnValue;
     }
 
-    async getAll(page: number, limit: number): Promise<UserPagination> {
-      return getAllReturnValue;
-    }
-
     async create(
       createUserDto: CreateUserDto
     ): Promise<{ ok: boolean; user: UserEntity }> {
       return { ok: true, user: mockUser2 };
-    }
-
-    async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
-      return { ok: true, user: mockUser };
     }
 
     async update(
@@ -79,6 +85,26 @@ describe('user.database.ts', () => {
       return { ok: true, message: '' };
     }
   }
+
+  test('test in function getById()', async () => {
+    const id = Uuid.v4();
+    const mockUserDataSource = new MockUserDataSource();
+    expect(typeof mockUserDataSource.getById).toBe('function');
+    expect(mockUserDataSource.getById(id)).resolves.toEqual({
+      ok: true,
+      user: mockUser,
+    });
+  });
+
+  test('test in function getWhere()', async () => {
+    const username = Uuid.v4();
+    const mockUserDataSource = new MockUserDataSource();
+    expect(typeof mockUserDataSource.getByParam).toBe('function');
+    expect(mockUserDataSource.getByParam({ username })).resolves.toEqual({
+      ok: true,
+      user: mockUser,
+    });
+  });
 
   test('test in function getAll()', async () => {
     const mockUserDataSource = new MockUserDataSource();

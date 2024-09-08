@@ -1,6 +1,6 @@
 import { CreateUserDto, UpdateUserDto } from '../dtos/user';
 import { UserEntity } from '../entities';
-import { UserPagination } from '../interfaces';
+import { IUser, UserPagination } from '../interfaces';
 
 export abstract class UserDatasource {
   abstract getAll(page: number, limit: number): Promise<UserPagination>;
@@ -12,6 +12,10 @@ export abstract class UserDatasource {
   ): Promise<UserPagination>;
 
   abstract getById(id: string): Promise<{ ok: boolean; user: UserEntity }>;
+
+  abstract getByParam(
+    searchParam: Partial<Pick<IUser, keyof IUser>>
+  ): Promise<{ ok: boolean; user: UserEntity | null }>;
 
   abstract create(
     createUserDto: CreateUserDto
