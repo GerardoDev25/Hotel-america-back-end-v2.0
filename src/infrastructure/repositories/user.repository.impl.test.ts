@@ -2,6 +2,7 @@ import { Uuid } from '../../adapters';
 import { UserDatasource } from '../../domain/datasources';
 import { CreateUserDto, UpdateUserDto } from '../../domain/dtos/user';
 import { UserEntity } from '../../domain/entities';
+import { IUser } from '../../domain/interfaces';
 import {
   generateRandomDate,
   generateRandomName,
@@ -67,9 +68,10 @@ describe('user.repository.impl.ts', () => {
     total: 0,
   };
   const mockDatasource: UserDatasource = {
+    getByParam: jest.fn().mockResolvedValue(mockUser2),
+    getById: jest.fn().mockResolvedValue(mockUser),
     getAll: jest.fn().mockResolvedValue(getAllReturnValue),
     getAllActive: jest.fn().mockResolvedValue(getAllReturnValue),
-    getById: jest.fn().mockResolvedValue(mockUser),
     create: jest.fn().mockResolvedValue(mockUser2),
     update: jest.fn().mockResolvedValue(mockUser2),
     delete: jest.fn().mockResolvedValue(mockUser2),
@@ -78,6 +80,22 @@ describe('user.repository.impl.ts', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  test('should call getById', async () => {
+    const id = Uuid.v4();
+    await repository.getById(id);
+
+    expect(mockDatasource.getById).toHaveBeenCalled();
+    expect(mockDatasource.getById).toHaveBeenCalledWith(id);
+  });
+
+  test('should call getByParam', async () => {
+    const username = generateRandomUsername();
+    await repository.getByParam({ username });
+
+    expect(mockDatasource.getByParam).toHaveBeenCalledWith({ username });
+    expect(mockDatasource.getByParam).toHaveBeenCalled();
   });
 
   test('should call getAll', async () => {

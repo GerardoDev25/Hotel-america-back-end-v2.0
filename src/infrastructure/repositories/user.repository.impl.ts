@@ -1,12 +1,22 @@
 import { UserDatasource } from '../../domain/datasources';
 import { CreateUserDto, UpdateUserDto } from '../../domain/dtos/user';
 import { UserEntity } from '../../domain/entities';
-import { UserPagination } from '../../domain/interfaces';
+import { IUser, UserPagination } from '../../domain/interfaces';
 import { UserRepository } from '../../domain/repositories';
 
 export class UserRepositoryImpl extends UserRepository {
   constructor(private readonly userDataSource: UserDatasource) {
     super();
+  }
+
+  async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
+    return this.userDataSource.getById(id);
+  }
+
+  getByParam(
+    searchParam: Partial<Pick<IUser, keyof IUser>>
+  ): Promise<{ ok: boolean; user: UserEntity | null }> {
+    return this.userDataSource.getByParam(searchParam);
   }
 
   getAll(
@@ -24,10 +34,6 @@ export class UserRepositoryImpl extends UserRepository {
     createUserDto: CreateUserDto
   ): Promise<{ ok: boolean; user: UserEntity }> {
     return this.userDataSource.create(createUserDto);
-  }
-
-  async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
-    return this.userDataSource.getById(id);
   }
 
   async update(

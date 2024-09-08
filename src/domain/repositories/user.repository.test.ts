@@ -8,7 +8,7 @@ import {
 } from '../../utils/generator';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user';
 import { UserEntity } from '../entities';
-import { UserPagination } from '../interfaces';
+import { IUser, UserPagination } from '../interfaces';
 import { UserRepository } from './user.repository';
 describe('user.repository.ts', () => {
   const page = 2;
@@ -45,6 +45,16 @@ describe('user.repository.ts', () => {
     total: 0,
   };
   class MockUserRepository implements UserRepository {
+    async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
+      return { ok: true, user: mockUser };
+    }
+
+    async getByParam(
+      searchParam: Partial<Pick<IUser, keyof IUser>>
+    ): Promise<{ ok: boolean; user: UserEntity | null }> {
+      return { ok: true, user: mockUser };
+    }
+
     async getAll(
       page: number,
       limit: number,
@@ -52,23 +62,53 @@ describe('user.repository.ts', () => {
     ): Promise<UserPagination> {
       return getAllReturnValue;
     }
-    async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
-      return { ok: true, user: mockUser };
-    }
+
     async create(
       createUserDto: CreateUserDto
     ): Promise<{ ok: boolean; user: UserEntity }> {
       return { ok: true, user: mockUser2 };
     }
+
     async update(
       updateUserDto: UpdateUserDto
     ): Promise<{ ok: boolean; message: string }> {
       return { ok: true, message: 'update' };
     }
+
     async delete(id: string): Promise<{ ok: boolean; message: string }> {
       return { ok: true, message: 'delete' };
     }
   }
+
+  test('test in function getById()', async () => {
+    const id = Uuid.v4();
+    const mockUserRepository = new MockUserRepository();
+
+    const { user } = await mockUserRepository.getById(id);
+
+    expect(typeof mockUserRepository.getById).toBe('function');
+    expect(mockUserRepository.getById(id)).resolves.toEqual({
+      ok: true,
+      user: mockUser,
+    });
+
+    expect(user).toBeInstanceOf(UserEntity);
+  });
+
+  test('test in function getByParam()', async () => {
+    const searchParam: Partial<Pick<IUser, keyof IUser>> = { isActive: false };
+    const mockUserRepository = new MockUserRepository();
+
+    const { user } = await mockUserRepository.getByParam(searchParam);
+
+    expect(typeof mockUserRepository.getByParam).toBe('function');
+    expect(mockUserRepository.getByParam(searchParam)).resolves.toEqual({
+      ok: true,
+      user: mockUser,
+    });
+
+    expect(user).toBeInstanceOf(UserEntity);
+  });
 
   test('test in function getAll()', async () => {
     const mockUserRepository = new MockUserRepository();
