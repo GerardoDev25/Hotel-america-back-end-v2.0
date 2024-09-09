@@ -1,4 +1,4 @@
-export class CreateRegisterDto {
+export class UpdateRegisterDto {
   constructor(
     public readonly id: string,
     public readonly guestsNumber?: number,
@@ -6,23 +6,31 @@ export class CreateRegisterDto {
     public readonly price?: number,
     public readonly userId?: string,
     public readonly roomId?: string,
-    public readonly checkIn?: string,
-    public readonly checkOut?: string
+    public readonly checkIn?: Date,
+    public readonly checkOut?: Date
   ) {}
 
-  static create(props: Record<string, any>): CreateRegisterDto {
-    const { id, guestsNumber, discount, price, userId, roomId, checkIn, checkOut } =
-      props;
+  static create(props: Record<string, any>): UpdateRegisterDto {
+    const {
+      id,
+      guestsNumber,
+      discount,
+      price,
+      userId,
+      roomId,
+      checkIn,
+      checkOut,
+    } = props;
 
-    return new CreateRegisterDto(
-      id
+    return new UpdateRegisterDto(
+      id,
       +guestsNumber,
       +discount,
       +price,
       userId,
       roomId,
-      checkIn,
-      checkOut
+      checkIn ? new Date(checkIn) : undefined,
+      checkOut ? new Date(checkOut) : undefined
     );
   }
 }

@@ -1,4 +1,3 @@
-import { Uuid } from '../../../adapters';
 import {
   generateRandomDate,
   generateRandomName,
