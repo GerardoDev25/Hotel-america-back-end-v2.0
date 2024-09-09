@@ -10,6 +10,8 @@
     "datasource",
     "datasources",
     "dtos",
+    "fkey",
+    "pkey",
     "tsnd"
   ]
 }

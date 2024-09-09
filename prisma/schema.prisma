@@ -31,6 +31,10 @@ model Room {
   roomNumber  Int
   betsNumber  Int
   isAvailable Boolean? @default(false)
+
+  // * relations
+  // ? one to one
+  register Register?
 }
 
 model User {
@@ -42,4 +46,28 @@ model User {
   username String   @unique
   password String
   isActive Boolean  @default(false)
+
+  // * relations
+  // ? one to many
+  Register Register[]
+}
+
+model Register {
+  id          String    @id @default(uuid())
+  checkIn     DateTime  @default(now())
+  checkOut    DateTime?
+  guestsNumber Int
+
+  // ? discount and price will be manage on cents
+  discount Int @default(0)
+  price    Int
+
+  // * relations
+  // ? many to one
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // ? one to one
+  room   Room   @relation(fields: [roomId], references: [id])
+  roomId String @unique
 }
