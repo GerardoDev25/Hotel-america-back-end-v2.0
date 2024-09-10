@@ -12,6 +12,15 @@ export class UserDatasourceImpl extends UserDatasource {
     super();
   }
 
+  private handleError(error: any) {
+    if (error instanceof CustomError) {
+      throw error;
+    } else {
+      this.logger.error((error as Error).message);
+      throw CustomError.internalServerError(`internal server error`);
+    }
+  }
+
   async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
     try {
       const user = await prisma.user.findUnique({ where: { id } });
@@ -22,11 +31,7 @@ export class UserDatasourceImpl extends UserDatasource {
 
       return { ok: true, user: UserEntity.fromObject(user) };
     } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
-      }
-      console.log(error);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 
@@ -39,8 +44,7 @@ export class UserDatasourceImpl extends UserDatasource {
 
       return { ok: true, user: UserEntity.fromObject(user) };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 
@@ -59,8 +63,7 @@ export class UserDatasourceImpl extends UserDatasource {
 
       return { page, limit, total, next, prev, users };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 
@@ -82,11 +85,10 @@ export class UserDatasourceImpl extends UserDatasource {
 
       const users = usersDb.map((user) => UserEntity.fromObject(user));
       const { next, prev } = pagination({ page, limit, total, path: 'user' });
-
+      
       return { page, limit, total, next, prev, users };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 
@@ -98,8 +100,7 @@ export class UserDatasourceImpl extends UserDatasource {
 
       return { ok: true, user: UserEntity.fromObject(newUser) };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 
@@ -115,8 +116,7 @@ export class UserDatasourceImpl extends UserDatasource {
       await prisma.user.update({ where: { id }, data });
       return { ok: true, message: 'user updated successfully' };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 
@@ -125,11 +125,9 @@ export class UserDatasourceImpl extends UserDatasource {
 
     try {
       await prisma.user.delete({ where: { id } });
-
       return { ok: true, message: 'user deleted successfully' };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 }
