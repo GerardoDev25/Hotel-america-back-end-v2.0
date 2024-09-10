@@ -110,10 +110,14 @@ export class RegisterEntity implements IRegister {
       roomId,
     });
 
+    const checkOutValid = checkOut
+      ? new Date(checkOut).toISOString().split('T').at(0)
+      : undefined;
+
     return new RegisterEntity({
       id,
       checkIn: new Date(checkIn).toISOString().split('T').at(0) ?? checkIn,
-      checkOut: new Date(checkOut).toISOString().split('T').at(0),
+      checkOut: checkOutValid,
       guestsNumber,
       discount,
       price,
