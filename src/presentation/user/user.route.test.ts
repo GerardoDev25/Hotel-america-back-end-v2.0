@@ -158,6 +158,21 @@ describe('user.route.ts', () => {
     expect(userCreated.isActive).toBe(user.isActive);
   });
 
+  test('should get and error if username is duplicated (create)', async () => {
+    const userCreated = seedData.users[0];
+    await prisma.user.create({ data: userCreated });
+
+    const { body } = await request(testServer.app)
+      .post('/api/user')
+      .send(userCreated)
+      .expect(409);
+
+    const { ok, errors } = body;
+
+    expect(ok).toBeFalsy();
+    expect(errors[0]).toEqual(`username ${userCreated.username} duplicated`);
+  });
+
   test('should get error white create user (create)', async () => {
     const { body } = await request(testServer.app)
       .post('/api/user')

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { CheckDataRoom } from './check-data-room';
+import { Uuid } from '../../../adapters';
 
 describe('CREATE check-data-room.ts', () => {
   const res = {
@@ -84,11 +85,10 @@ describe('UPDATE check-data-room.ts', () => {
   });
 
   test('should get all properties as optional but id required', () => {
-    // const req = { body: { id: '123e4567-e89b-12d3-a456-426614174000' } } as any;
-    // const req = { body: { id: '1896af4a2-e09a-4f58-8092-8cd95e80b589' } } as any;
-    const req = { body: { id: '896af4a2-e09a-4f58-8092-8cd95e80b589' } } as any;
+    const req = { body: { id: Uuid.v4() } } as any;
 
     CheckDataRoom.update(req, res, next);
+
     expect(next).toHaveBeenCalled();
     expect(next).toHaveBeenCalledTimes(1);
     expect(res.status).not.toHaveBeenCalled();
@@ -118,7 +118,7 @@ describe('UPDATE check-data-room.ts', () => {
   test('should check properties if comes', () => {
     const req = {
       body: {
-        id: '896af4a2-e09a-4f58-8092-8cd95e80b589',
+        id: Uuid.v4(),
         roomType: 'not-suit',
         roomNumber: true,
         betsNumber: 'ab',
