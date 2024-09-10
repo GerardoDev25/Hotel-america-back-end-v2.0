@@ -13,12 +13,16 @@ import {
 
 describe('user.service.ts', () => {
   const mockUserRepository = {
-    getByParam: jest.fn().mockReturnValue({ ok: true, user: false }),
-    getAll: jest.fn(),
-    getById: jest.fn(),
-    create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    getByParam: jest.fn().mockReturnValue({ ok: true, user: false }),
+    getAll: jest.fn().mockResolvedValue({ ok: true, users: [] }),
+    getById: jest
+      .fn()
+      .mockResolvedValue({ ok: true, user: { password: '123' } }),
+    create: jest
+      .fn()
+      .mockResolvedValue({ ok: true, user: { password: '123' } }),
   } as unknown as UserRepository;
 
   it('should to have been called with parameter (getAll)', async () => {

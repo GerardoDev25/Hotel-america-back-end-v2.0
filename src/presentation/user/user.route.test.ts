@@ -38,7 +38,6 @@ describe('user.route.ts', () => {
       birdDate: expect.any(String),
       isActive: expect.any(Boolean),
       name: expect.any(String),
-      password: expect.any(String),
       phone: expect.any(String),
       role: expect.any(String),
       username: expect.any(String),
@@ -125,7 +124,7 @@ describe('user.route.ts', () => {
     expect(userTest.name).toBe(user.name);
     expect(userTest.phone).toBe(user.phone);
     expect(userTest.username).toBe(user.username);
-    expect(userTest.password).toBe(user.password);
+    expect(user.password).toBeUndefined();
     expect(userTest.isActive).toBe(user.isActive);
   });
 
@@ -155,7 +154,7 @@ describe('user.route.ts', () => {
     expect(userCreated.name).toBe(user.name);
     expect(userCreated.phone).toBe(user.phone);
     expect(userCreated.username).toBe(user.username);
-    expect(userCreated.password).toBe(user.password);
+    expect(user.password).toBeUndefined();
     expect(userCreated.isActive).toBe(user.isActive);
   });
 
