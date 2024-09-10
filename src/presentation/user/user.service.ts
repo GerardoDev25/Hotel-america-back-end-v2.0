@@ -8,11 +8,36 @@ export class UserService {
 
   async getAll(paginationDto: PaginationDto, isActive?: boolean) {
     const { page, limit } = paginationDto;
-    return this.userRepository.getAll(page, limit, isActive);
+
+    try {
+      const { users, ...rest } = await this.userRepository.getAll(
+        page,
+        limit,
+        isActive
+      );
+
+      const usersMapped = users.map((user) => {
+        const { password, ...restUser } = user;
+        return restUser;
+      });
+
+      return { ...rest, users: usersMapped };
+    } catch (error) {
+      if (error instanceof CustomError) throw error;
+      throw CustomError.internalServerError('Internal Server Error');
+    }
   }
 
   async getById(id: string) {
-    return this.userRepository.getById(id);
+    try {
+      const { ok, user } = await this.userRepository.getById(id);
+      const { password, ...rest } = user;
+
+      return { ok, user: { ...rest } };
+    } catch (error) {
+      if (error instanceof CustomError) throw error;
+      throw CustomError.internalServerError('Internal Server Error');
+    }
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -26,7 +51,15 @@ export class UserService {
       );
     }
 
-    return this.userRepository.create(createUserDto);
+    try {
+      const { ok, user } = await this.userRepository.create(createUserDto);
+      const { password, ...rest } = user;
+
+      return { ok, user: { ...rest } };
+    } catch (error) {
+      if (error instanceof CustomError) throw error;
+      throw CustomError.internalServerError('Internal Server Error');
+    }
   }
 
   async update(updateUserDto: UpdateUserDto) {

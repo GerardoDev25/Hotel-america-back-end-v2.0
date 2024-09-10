@@ -94,10 +94,13 @@ export class UserEntity implements IUser {
       isActive,
     });
 
+    const newBirdDate =
+      new Date(birdDate).toISOString().split('T').at(0) ?? birdDate;
+
     return new UserEntity({
       id,
       role,
-      birdDate,
+      birdDate: newBirdDate,
       name,
       phone,
       username,

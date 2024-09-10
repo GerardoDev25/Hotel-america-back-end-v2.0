@@ -36,7 +36,7 @@ export class UserDatasourceImpl extends UserDatasource {
     try {
       const user = await prisma.user.findFirst({ where: searchParam });
       if (!user) return { ok: false, user: null };
-      
+
       return { ok: true, user: UserEntity.fromObject(user) };
     } catch (error: any) {
       this.logger.error(error.message);
