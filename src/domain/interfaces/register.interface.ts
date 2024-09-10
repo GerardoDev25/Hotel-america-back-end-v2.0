@@ -8,3 +8,13 @@ export interface IRegister {
   userId: string;
   roomId: string;
 }
+
+
+export interface RegisterPagination {
+  registers: IRegister[];
+  total: number;
+  page: number;
+  limit: number;
+  prev: string | null;
+  next: string | null;
+}
