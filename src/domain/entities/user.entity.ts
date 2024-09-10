@@ -34,7 +34,7 @@ export class UserEntity implements IUser {
     // * id
     const idValidation = StringValidator.isValidUUID(id);
     if (idValidation !== true) {
-      throw CustomError.badRequest('id' + idValidation);
+      throw CustomError.badRequest('id ' + idValidation);
     }
     // * roomType
     const userRoleValid = StringValidator.mostBe({
