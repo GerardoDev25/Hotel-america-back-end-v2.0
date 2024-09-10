@@ -2,7 +2,7 @@ import { CreateRegisterDto, UpdateRegisterDto } from '../dtos/register';
 import { RegisterEntity } from '../entities';
 import { IRegister, RegisterPagination } from '../interfaces';
 
-export abstract class RegisterDatasource {
+export abstract class RegisterRepository {
   abstract getAll(page: number, limit: number): Promise<RegisterPagination>;
 
   abstract getById(
