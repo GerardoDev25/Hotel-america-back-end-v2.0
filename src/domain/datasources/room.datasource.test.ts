@@ -3,6 +3,7 @@ import { CreateRoomDto, UpdateRoomDto } from '../dtos/room';
 import { RoomEntity } from '../entities';
 import { RoomPagination, RoomTypesList } from '../interfaces';
 import { RoomDatasource } from './room.datasource';
+
 describe('room.database.ts', () => {
   const page = 2;
   const limit = 10;
@@ -132,7 +133,7 @@ describe('room.database.ts', () => {
   });
 
   test('test in function delete()', async () => {
-    const id = Uuid.v4()
+    const id = Uuid.v4();
     const mockRoomDataSource = new MockRoomDataSource();
     const { ok, message } = await mockRoomDataSource.delete(id);
 
