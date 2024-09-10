@@ -9,7 +9,6 @@ export interface IRegister {
   roomId: string;
 }
 
-
 export interface RegisterPagination {
   registers: IRegister[];
   total: number;
