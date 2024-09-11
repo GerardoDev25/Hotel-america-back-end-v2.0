@@ -1,15 +1,10 @@
 import { Uuid } from '../../adapters';
-import {
-  generateRandomDate,
-  generateRandomName,
-  generateRandomPassword,
-  generateRandomPhone,
-  generateRandomUsername,
-} from '../../utils/generator';
+import { Generator } from '../../utils/generator';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user';
 import { UserEntity } from '../entities';
 import { IUser, UserPagination } from '../interfaces';
 import { UserRepository } from './user.repository';
+
 describe('user.repository.ts', () => {
   const page = 2;
   const limit = 10;
@@ -17,22 +12,23 @@ describe('user.repository.ts', () => {
 
   const mockUser: UserEntity = new UserEntity({
     id: Uuid.v4(),
-    birdDate: generateRandomDate(),
-    name: generateRandomName(),
-    password: generateRandomPassword(),
-    phone: generateRandomPhone(),
+    birdDate: Generator.randomDate(),
+    name: Generator.randomName(),
+    password: Generator.randomPassword(),
+    phone: Generator.randomPhone(),
     role: 'admin',
-    username: generateRandomUsername(),
+    username: Generator.randomUsername(),
     isActive: true,
   });
+
   const mockUser2: UserEntity = new UserEntity({
     id: Uuid.v4(),
-    birdDate: generateRandomDate(),
-    name: generateRandomName(),
-    password: generateRandomPassword(),
-    phone: generateRandomPhone(),
+    birdDate: Generator.randomDate(),
+    name: Generator.randomDate(),
+    password: Generator.randomPassword(),
+    phone: Generator.randomPhone(),
     role: 'reception',
-    username: generateRandomUsername(),
+    username: Generator.randomUsername(),
     isActive: false,
   });
 
@@ -44,6 +40,7 @@ describe('user.repository.ts', () => {
     prev: '',
     total: 0,
   };
+
   class MockUserRepository implements UserRepository {
     async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
       return { ok: true, user: mockUser };

@@ -1,5 +1,5 @@
 import { Uuid } from '../../adapters';
-import { generateRandomDate } from '../../utils/generator';
+import { Generator } from '../../utils/generator';
 import { CreateRegisterDto, UpdateRegisterDto } from '../dtos/register';
 import { RegisterEntity } from '../entities/register.entity';
 import { IRegister, RegisterPagination } from '../interfaces';
@@ -11,8 +11,8 @@ describe('register.datasource.ts', () => {
 
   const mockRegister = new RegisterEntity({
     id: Uuid.v4(),
-    checkIn: generateRandomDate(),
-    checkOut: generateRandomDate(),
+    checkIn: Generator.randomDate(),
+    checkOut: Generator.randomDate(),
     guestsNumber: 0,
     discount: 0,
     price: 0,
@@ -22,7 +22,7 @@ describe('register.datasource.ts', () => {
 
   const mockRegister2 = new RegisterEntity({
     id: Uuid.v4(),
-    checkIn: generateRandomDate(),
+    checkIn: Generator.randomDate(),
     guestsNumber: 0,
     discount: 0,
     price: 0,

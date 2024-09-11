@@ -1,9 +1,6 @@
 import { Uuid } from '../../../adapters';
 import {
-  generateRandomDate,
-  generateRandomName,
-  generateRandomPassword,
-  generateRandomPhone,
+Generator
 } from '../../../utils/generator';
 import { UpdateUserDto } from './update-user.dto';
 
@@ -11,12 +8,12 @@ describe('update-user.dto.ts', () => {
   test('should create an instance of UpdateUserDto', () => {
     const data = {
       id: Uuid.v4(),
-      birdDate: generateRandomDate(),
-      name: generateRandomName(),
-      password: generateRandomPassword(),
-      phone: generateRandomPhone(),
+      birdDate:Generator.randomDate(),
+      name:Generator.randomName(),
+      password:Generator.randomPassword(),
+      phone:Generator.randomPhone(),
       role: 'admin',
-      username: generateRandomName(),
+      username:Generator.randomUsername(),
       isActive: true,
     };
 

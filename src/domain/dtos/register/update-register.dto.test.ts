@@ -1,13 +1,13 @@
 import { Uuid } from '../../../adapters';
-import { generateRandomDate } from '../../../utils/generator';
+import { Generator } from '../../../utils/generator';
 import { UpdateRegisterDto } from './update-register.dto';
 
 describe('update-register.dto.ts', () => {
   test('should create an instance if UpdateRegisterDto', () => {
     const data = {
       id: Uuid.v4(),
-      checkIn: generateRandomDate(),
-      checkOut: generateRandomDate(),
+      checkIn: Generator.randomDate(),
+      checkOut: Generator.randomDate(),
       guestsNumber: 4,
       discount: 0,
       price: 302,

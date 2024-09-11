@@ -1,12 +1,12 @@
 import { Uuid } from '../../adapters';
-import { generateRandomDate } from '../../utils/generator';
+import { Generator } from '../../utils/generator';
 import { IRegister } from '../interfaces';
 import { RegisterEntity } from './register.entity';
 
 describe('register.entity.ts', () => {
   const registerValid: IRegister = {
     id: Uuid.v4(),
-    checkIn: generateRandomDate(),
+    checkIn: Generator.randomDate(),
     guestsNumber: 3,
     discount: 0,
     price: 100,

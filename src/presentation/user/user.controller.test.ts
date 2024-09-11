@@ -3,32 +3,26 @@ import { UserController } from './user.controller';
 import { CustomError } from '../../domain/error';
 import { UserService } from './user.service';
 import { PaginationDto } from '../../domain/dtos/share';
-import {
-  generateRandomDate,
-  generateRandomName,
-  generateRandomPassword,
-  generateRandomPhone,
-  generateRandomUsername,
-} from '../../utils/generator';
+import { Generator } from '../../utils/generator';
 import { Uuid } from '../../adapters';
 
 describe('user.controller.ts', () => {
   const user1 = {
-    birdDate: generateRandomDate(),
-    name: generateRandomName(),
-    password: generateRandomPassword(),
-    phone: generateRandomPhone(),
+    birdDate: Generator.randomDate(),
+    name: Generator.randomName(),
+    password: Generator.randomPassword(),
+    phone: Generator.randomPhone(),
+    username: Generator.randomUsername(),
     role: 'admin',
-    username: generateRandomUsername(),
     isActive: true,
   };
   const user2 = {
-    birdDate: generateRandomDate(),
-    name: generateRandomName(),
-    password: generateRandomPassword(),
-    phone: generateRandomPhone(),
+    birdDate: Generator.randomDate(),
+    name: Generator.randomName(),
+    password: Generator.randomPassword(),
+    phone: Generator.randomPhone(),
+    username: Generator.randomUsername(),
     role: 'admin',
-    username: generateRandomUsername(),
     isActive: true,
   };
 

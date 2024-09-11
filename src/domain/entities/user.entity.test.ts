@@ -1,11 +1,5 @@
 import { Uuid } from '../../adapters';
-import {
-  generateRandomDate,
-  generateRandomPassword,
-  generateRandomPhone,
-  generateRandomUsername,
-  getRandomBoolean,
-} from '../../utils/generator';
+import { Generator } from '../../utils/generator';
 import { IUser, UserRolesList } from '../interfaces';
 import { UserEntity } from './user.entity';
 
@@ -13,12 +7,12 @@ describe('user.entity.ts', () => {
   const validUser: IUser = {
     id: Uuid.v4(),
     role: UserRolesList.ADMIN,
-    birdDate: generateRandomDate(),
-    name: generateRandomDate(),
-    phone: generateRandomPhone(),
-    username: generateRandomUsername(),
-    password: generateRandomPassword(),
-    isActive: getRandomBoolean(),
+    birdDate: Generator.randomDate(),
+    name: Generator.randomName(),
+    phone: Generator.randomPhone(),
+    username: Generator.randomUsername(),
+    password: Generator.randomPassword(),
+    isActive: Generator.randomBoolean(),
   };
 
   test('should return a UserEntity with valid object', () => {

@@ -1,12 +1,6 @@
 import { Request } from 'express';
 import { CheckDataUser } from './check-data-user';
-import {
-  generateRandomDate,
-  generateRandomName,
-  generateRandomPassword,
-  generateRandomPhone,
-  generateRandomUsername,
-} from '../../../utils/generator';
+import { Generator } from '../../../utils/generator';
 import { Uuid } from '../../../adapters';
 
 describe('CREATE check-data-user.ts', () => {
@@ -24,12 +18,12 @@ describe('CREATE check-data-user.ts', () => {
   test('should call next() when all inputs are valid', () => {
     const req = {
       body: {
-        birdDate: generateRandomDate(),
-        name: generateRandomName(),
-        password: generateRandomPassword(),
-        phone: generateRandomPhone(),
+        birdDate: Generator.randomDate(),
+        name: Generator.randomName(),
+        password: Generator.randomPassword(),
+        phone: Generator.randomPhone(),
         role: 'admin',
-        username: generateRandomUsername(),
+        username: Generator.randomUsername(),
         isActive: true,
       },
     } as Request;
@@ -45,12 +39,12 @@ describe('CREATE check-data-user.ts', () => {
   test('should return error when isActive property is not boolean', () => {
     const req = {
       body: {
-        birdDate: generateRandomDate(),
-        name: generateRandomName(),
-        password: generateRandomPassword(),
-        phone: generateRandomPhone(),
+        birdDate: Generator.randomDate(),
+        name: Generator.randomName(),
+        password: Generator.randomPassword(),
+        phone: Generator.randomPhone(),
         role: 'admin',
-        username: generateRandomUsername(),
+        username: Generator.randomUsername(),
         isActive: 12,
       },
     } as any;
@@ -114,12 +108,12 @@ describe('UPDATE check-data-user.ts', () => {
     const req = {
       body: {
         id: Uuid.v4(),
-        birdDate: generateRandomDate(),
-        name: generateRandomName(),
-        password: generateRandomPassword(),
-        phone: generateRandomPhone(),
+        birdDate: Generator.randomDate(),
+        name: Generator.randomName(),
+        password: Generator.randomPassword(),
+        phone: Generator.randomPhone(),
         role: 'admin',
-        username: generateRandomUsername(),
+        username: Generator.randomUsername(),
         isActive: true,
       },
     } as any;

@@ -3,13 +3,7 @@ import { PaginationDto } from '../../domain/dtos/share';
 import { UserRepository } from '../../domain/repositories';
 import { UserService } from './user.service';
 import { Uuid } from '../../adapters';
-import {
-  generateRandomDate,
-  generateRandomName,
-  generateRandomPassword,
-  generateRandomPhone,
-  generateRandomUsername,
-} from '../../utils/generator';
+import { Generator } from '../../utils/generator';
 
 describe('user.service.ts', () => {
   const mockUserRepository = {
@@ -52,12 +46,12 @@ describe('user.service.ts', () => {
 
   it('should to have been called with parameter (create)', async () => {
     const user = CreateUserDto.create({
-      birdDate: generateRandomDate(),
-      name: generateRandomName(),
-      password: generateRandomPassword(),
-      phone: generateRandomPhone(),
+      birdDate: Generator.randomDate(),
+      name: Generator.randomName(),
+      password: Generator.randomPassword(),
+      phone: Generator.randomPhone(),
+      username: Generator.randomUsername(),
       role: 'admin',
-      username: generateRandomUsername(),
       isActive: true,
     });
     const service = new UserService(mockUserRepository);
@@ -76,12 +70,12 @@ describe('user.service.ts', () => {
   it('should to have been called with parameter (update)', async () => {
     const user = UpdateUserDto.create({
       id: Uuid.v4(),
-      birdDate: generateRandomDate(),
-      name: generateRandomName(),
-      password: generateRandomPassword(),
-      phone: generateRandomPhone(),
+      birdDate: Generator.randomDate(),
+      name: Generator.randomName(),
+      password: Generator.randomPassword(),
+      phone: Generator.randomPhone(),
+      username: Generator.randomUsername(),
       role: 'admin',
-      username: generateRandomUsername(),
       isActive: true,
     });
     const service = new UserService(mockUserRepository);

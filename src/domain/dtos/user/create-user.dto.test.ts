@@ -1,20 +1,15 @@
-import {
-  generateRandomDate,
-  generateRandomName,
-  generateRandomPassword,
-  generateRandomPhone,
-} from '../../../utils/generator';
+import { Generator } from '../../../utils/generator';
 import { CreateUserDto } from './create-user.dto';
 
 describe('create-user.dto.ts', () => {
   test('should create an instance of CreateUserDto', () => {
     const data = {
-      birdDate: generateRandomDate(),
-      name: generateRandomName(),
-      password: generateRandomPassword(),
-      phone: generateRandomPhone(),
+      birdDate: Generator.randomDate(),
+      name: Generator.randomName(),
+      password: Generator.randomPassword(),
+      phone: Generator.randomPhone(),
       role: 'admin',
-      username: generateRandomName(),
+      username: Generator.randomUsername(),
       isActive: true,
     };
 

@@ -1,13 +1,7 @@
 import { Uuid } from '../../adapters';
 import { UserDatasource } from '../../domain/datasources';
 import { CreateUserDto, UpdateUserDto } from '../../domain/dtos/user';
-import {
-  generateRandomDate,
-  generateRandomName,
-  generateRandomPassword,
-  generateRandomPhone,
-  generateRandomUsername,
-} from '../../utils/generator';
+import { Generator } from '../../utils/generator';
 import { UserRepositoryImpl } from './user.repository.impl';
 
 describe('user.repository.impl.ts', () => {
@@ -37,7 +31,7 @@ describe('user.repository.impl.ts', () => {
   });
 
   test('should call getByParam', async () => {
-    const username = generateRandomUsername();
+    const username = Generator.randomUsername();
     await repository.getByParam({ username });
 
     expect(mockDatasource.getByParam).toHaveBeenCalledTimes(1);
@@ -64,12 +58,12 @@ describe('user.repository.impl.ts', () => {
 
   test('should call create with parameter', async () => {
     const createUser: CreateUserDto = {
-      birdDate: new Date(generateRandomDate()),
-      name: generateRandomName(),
-      password: generateRandomPassword(),
-      phone: generateRandomPhone(),
+      birdDate: new Date(Generator.randomDate()),
+      name: Generator.randomName(),
+      password: Generator.randomPassword(),
+      phone: Generator.randomPhone(),
       role: 'admin',
-      username: generateRandomUsername(),
+      username: Generator.randomUsername(),
       isActive: true,
     };
 
@@ -82,12 +76,12 @@ describe('user.repository.impl.ts', () => {
   test('should call update with parameter', async () => {
     const updateUser: UpdateUserDto = {
       id: Uuid.v4(),
-      birdDate: new Date(generateRandomDate()),
-      name: generateRandomName(),
-      password: generateRandomPassword(),
-      phone: generateRandomPhone(),
+      birdDate: new Date(Generator.randomDate()),
+      name: Generator.randomName(),
+      password: Generator.randomPassword(),
+      phone: Generator.randomPhone(),
       role: 'cafe',
-      username: generateRandomUsername(),
+      username: Generator.randomUsername(),
       isActive: true,
     };
 
