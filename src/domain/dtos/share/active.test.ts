@@ -2,31 +2,41 @@ import { ActiveDto } from './active';
 
 describe('active.ts', () => {
   test('should return truthy or flashy', () => {
-    const activeDto = ActiveDto.create(true);
-    const activeDto2 = ActiveDto.create('true');
+    const [error1, activeDto] = ActiveDto.create(true);
+    const [error2, activeDto2] = ActiveDto.create('true');
 
-    const activeDto3 = ActiveDto.create(false);
-    const activeDto4 = ActiveDto.create('false');
+    const [error3, activeDto3] = ActiveDto.create(false);
+    const [error4, activeDto4] = ActiveDto.create('false');
 
-    expect(activeDto[1]?.isActive).toBeTruthy();
-    expect(activeDto2[1]?.isActive).toBeTruthy();
-    expect(activeDto3[1]?.isActive).toBeFalsy();
-    expect(activeDto4[1]?.isActive).toBeFalsy();
+    expect(error1).toBeUndefined();
+    expect(error2).toBeUndefined();
+    expect(error3).toBeUndefined();
+    expect(error4).toBeUndefined();
+
+    expect(activeDto?.isActive).toBeTruthy();
+    expect(activeDto2?.isActive).toBeTruthy();
+    expect(activeDto3?.isActive).toBeFalsy();
+    expect(activeDto4?.isActive).toBeFalsy();
   });
 
   test('should return undefined', () => {
-    const activeDto = ActiveDto.create(undefined);
-    const activeDto2 = ActiveDto.create(null);
+    const [error1, activeDto] = ActiveDto.create(undefined);
+    const [error2, activeDto2] = ActiveDto.create(null);
 
-    expect(activeDto[1]?.isActive).toBeUndefined();
-    expect(activeDto2[1]?.isActive).toBeUndefined();
+    expect(error1).toBeUndefined();
+    expect(error2).toBeUndefined();
+    expect(activeDto?.isActive).toBeUndefined();
+    expect(activeDto2?.isActive).toBeUndefined();
   });
 
   test('should return error message', () => {
-    const activeDto = ActiveDto.create('no valid');
-    const activeDto2 = ActiveDto.create(12);
+    const [error1, activeDto] = ActiveDto.create('no valid');
+    const [error2, activeDto2] = ActiveDto.create(12);
 
-    expect(activeDto2[0]).toBe('isActive most be true or false');
-    expect(activeDto[1]).toBeUndefined();
+    expect(error1).toBe('isActive most be true or false');
+    expect(error2).toBe('isActive most be true or false');
+
+    expect(activeDto?.isActive).toBeUndefined();
+    expect(activeDto2?.isActive).toBeUndefined();
   });
 });

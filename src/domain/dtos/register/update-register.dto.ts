@@ -1,7 +1,7 @@
 import { RegisterValidator } from './register-validator-dtos';
 
 export class UpdateRegisterDto {
-  constructor(
+  private constructor(
     public readonly id: string,
     public readonly guestsNumber?: number,
     public readonly discount?: number,

@@ -1,7 +1,7 @@
 import { RegisterValidator } from './register-validator-dtos';
 
 export class CreateRegisterDto {
-  constructor(
+  private constructor(
     public readonly guestsNumber: number,
     public readonly discount: number,
     public readonly price: number,
