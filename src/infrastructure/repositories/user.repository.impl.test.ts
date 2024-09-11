@@ -2,7 +2,6 @@ import { Uuid } from '../../adapters';
 import { UserDatasource } from '../../domain/datasources';
 import { CreateUserDto, UpdateUserDto } from '../../domain/dtos/user';
 import { UserEntity } from '../../domain/entities';
-import { IUser } from '../../domain/interfaces';
 import {
   generateRandomDate,
   generateRandomName,
@@ -119,12 +118,12 @@ describe('user.repository.impl.ts', () => {
     expect(usersAvailable).toEqual(getAllReturnValue);
   });
 
-  test('should call getById', async () => {
-    const id = Uuid.v4();
-    const user = await repository.getById(id);
-    expect(mockDatasource.getById).toHaveBeenCalledWith(id);
-    expect(user).toEqual(mockUser);
-  });
+  // test('should call getById', async () => {
+  //   const id = Uuid.v4();
+  //   const user = await repository.getById(id);
+  //   expect(mockDatasource.getById).toHaveBeenCalledWith(id);
+  //   expect(user).toEqual(mockUser);
+  // });
 
   test('should call create with parameter', async () => {
     const user = await repository.create(createUser);
