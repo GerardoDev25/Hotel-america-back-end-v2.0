@@ -17,3 +17,6 @@ export interface RegisterPagination {
   prev: string | null;
   next: string | null;
 }
+
+export type CreateRegister = Omit<IRegister, 'id'>;
+export type UpdateRegister = Partial<CreateRegister> & { id: string };

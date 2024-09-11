@@ -1,3 +1,5 @@
+import { RegisterValidator } from './register-validator-dtos';
+
 export class UpdateRegisterDto {
   constructor(
     public readonly id: string,
@@ -10,7 +12,7 @@ export class UpdateRegisterDto {
     public readonly checkOut?: Date
   ) {}
 
-  static create(props: Record<string, any>): UpdateRegisterDto {
+  static create(props: Record<string, any>): [string[]?, UpdateRegisterDto?] {
     const {
       id,
       guestsNumber,
@@ -22,15 +24,31 @@ export class UpdateRegisterDto {
       checkOut,
     } = props;
 
-    return new UpdateRegisterDto(
+    const errors = RegisterValidator.update({
       id,
-      +guestsNumber,
-      +discount,
-      +price,
+      guestsNumber,
+      discount,
+      price,
       userId,
       roomId,
-      checkIn ? new Date(checkIn) : undefined,
-      checkOut ? new Date(checkOut) : undefined
-    );
+      checkIn,
+      checkOut,
+    });
+
+    if (errors.length > 0) return [errors, undefined];
+
+    return [
+      undefined,
+      new UpdateRegisterDto(
+        id,
+        +guestsNumber,
+        +discount,
+        +price,
+        userId,
+        roomId,
+        checkIn ? new Date(checkIn) : undefined,
+        checkOut ? new Date(checkOut) : undefined
+      ),
+    ];
   }
 }

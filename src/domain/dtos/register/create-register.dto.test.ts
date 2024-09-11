@@ -14,16 +14,39 @@ describe('create-register.dto.ts', () => {
       roomId: Uuid.v4(),
     };
 
-    const result = CreateRegisterDto.create(data);
+    const [_, registerDto] = CreateRegisterDto.create(data);
     const checkOut = data.checkOut ? new Date(data.checkOut) : undefined;
 
-    expect(result).toBeInstanceOf(CreateRegisterDto);
-    expect(result).toEqual(
+    expect(registerDto).toBeInstanceOf(CreateRegisterDto);
+    expect(registerDto).toEqual(
       expect.objectContaining({
         ...data,
         checkIn: new Date(data.checkIn),
         checkOut,
       })
     );
+  });
+  it('should get error if properties are wrong', () => {
+    const data = {
+      checkIn: 'no valid date',
+      checkOut: 'no valid date',
+      guestsNumber: '4',
+      discount: true,
+      price: null,
+      userId: 'no valid uuid',
+      roomId: 'no valid uuid',
+    };
+
+    const [errors] = CreateRegisterDto.create(data);
+
+    expect(errors).toBeInstanceOf(Array);
+    expect(errors?.length).toBeGreaterThan(0);
+    expect(errors).toEqual([
+      'discount property most be a number',
+      'userId is not a valid uuid',
+      'roomId is not a valid uuid',
+      'checkIn property most be a valid date',
+      'checkOut property most be a valid date',
+    ]);
   });
 });
