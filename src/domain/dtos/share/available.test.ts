@@ -2,31 +2,42 @@ import { AvailableDto } from './available';
 
 describe('available.ts', () => {
   test('should return truthy or flashy', () => {
-    const availableDto = AvailableDto.create(true);
-    const availableDto2 = AvailableDto.create('true');
+    const [error1, availableDto] = AvailableDto.create(true);
+    const [error2, availableDto2] = AvailableDto.create('true');
 
-    const availableDto3 = AvailableDto.create(false);
-    const availableDto4 = AvailableDto.create('false');
+    const [error3, availableDto3] = AvailableDto.create(false);
+    const [error4, availableDto4] = AvailableDto.create('false');
 
-    expect(availableDto[1]?.isAvailable).toBeTruthy();
-    expect(availableDto2[1]?.isAvailable).toBeTruthy();
-    expect(availableDto3[1]?.isAvailable).toBeFalsy();
-    expect(availableDto4[1]?.isAvailable).toBeFalsy();
+    expect(error1).toBeUndefined();
+    expect(error2).toBeUndefined();
+    expect(error3).toBeUndefined();
+    expect(error4).toBeUndefined();
+
+    expect(availableDto?.isAvailable).toBeTruthy();
+    expect(availableDto2?.isAvailable).toBeTruthy();
+    expect(availableDto3?.isAvailable).toBeFalsy();
+    expect(availableDto4?.isAvailable).toBeFalsy();
   });
 
   test('should return undefined', () => {
-    const availableDto = AvailableDto.create(undefined);
-    const availableDto2 = AvailableDto.create(null);
+    const [error1, availableDto] = AvailableDto.create(undefined);
+    const [error2, availableDto2] = AvailableDto.create(null);
 
-    expect(availableDto[1]?.isAvailable).toBeUndefined();
-    expect(availableDto2[1]?.isAvailable).toBeUndefined();
+    expect(error1).toBeUndefined();
+    expect(error2).toBeUndefined();
+
+    expect(availableDto?.isAvailable).toBeUndefined();
+    expect(availableDto2?.isAvailable).toBeUndefined();
   });
 
   test('should return error message', () => {
-    const availableDto = AvailableDto.create('no valid');
-    const availableDto2 = AvailableDto.create(12);
+    const [error1, availableDto] = AvailableDto.create('no valid');
+    const [error2, availableDto2] = AvailableDto.create(12);
 
-    expect(availableDto2[0]).toBe('isAvailable most be true or false');
-    expect(availableDto[1]).toBeUndefined();
+    expect(error1).toBe('isAvailable most be true or false');
+    expect(error2).toBe('isAvailable most be true or false');
+
+    expect(availableDto?.isAvailable).toBeUndefined();
+    expect(availableDto2?.isAvailable).toBeUndefined();
   });
 });
