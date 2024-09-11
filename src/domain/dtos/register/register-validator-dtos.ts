@@ -8,8 +8,6 @@ import { variables } from '../../variables';
 
 export class RegisterValidator {
   static create(object: CreateRegister): string[] {
-    // static create(object: Record<string, any>): string[] {
-
     const errors: string[] = [];
     const { guestsNumber, discount, price, userId, roomId, checkIn, checkOut } =
       object;
