@@ -15,10 +15,11 @@ describe('update-register.dto.ts', () => {
       roomId: Uuid.v4(),
     };
 
-    const [_, updateRegister] = UpdateRegisterDto.create(data);
+    const [errors, updateRegister] = UpdateRegisterDto.create(data);
     const checkOut = data.checkOut ? new Date(data.checkOut) : undefined;
     const checkIn = data.checkIn ? new Date(data.checkIn) : undefined;
 
+    expect(errors).toBeUndefined();
     expect(updateRegister).toBeInstanceOf(UpdateRegisterDto);
     expect(updateRegister).toEqual(
       expect.objectContaining({ ...data, checkIn, checkOut })
@@ -37,8 +38,9 @@ describe('update-register.dto.ts', () => {
       roomId: 'no valid uuid',
     };
 
-    const [errors] = UpdateRegisterDto.create(data);
+    const [errors, updateRegister] = UpdateRegisterDto.create(data);
 
+    expect(updateRegister).toBeUndefined();
     expect(errors).toBeInstanceOf(Array);
     expect(errors?.length).toBeGreaterThan(0);
     expect(errors).toEqual([

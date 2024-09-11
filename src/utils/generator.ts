@@ -2,6 +2,10 @@ export class Generator {
   static randomBoolean = (): boolean => Math.random() < 0.5;
 
   static randomNumberBetween = (min: number, max: number): number => {
+    if (min >= max) {
+      throw new Error('Min must be less than max.');
+    }
+
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 

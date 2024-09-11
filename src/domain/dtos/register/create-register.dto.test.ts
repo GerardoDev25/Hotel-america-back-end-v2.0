@@ -14,9 +14,10 @@ describe('create-register.dto.ts', () => {
       roomId: Uuid.v4(),
     };
 
-    const [_, registerDto] = CreateRegisterDto.create(data);
+    const [errors, registerDto] = CreateRegisterDto.create(data);
     const checkOut = data.checkOut ? new Date(data.checkOut) : undefined;
 
+    expect(errors).toBeUndefined();
     expect(registerDto).toBeInstanceOf(CreateRegisterDto);
     expect(registerDto).toEqual(
       expect.objectContaining({
@@ -37,8 +38,9 @@ describe('create-register.dto.ts', () => {
       roomId: 'no valid uuid',
     };
 
-    const [errors] = CreateRegisterDto.create(data);
+    const [errors, createRegister] = CreateRegisterDto.create(data);
 
+    expect(createRegister).toBeUndefined();
     expect(errors).toBeInstanceOf(Array);
     expect(errors?.length).toBeGreaterThan(0);
     expect(errors).toEqual([
