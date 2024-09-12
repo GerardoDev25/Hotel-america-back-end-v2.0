@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { UserRepositoryImpl } from '../../infrastructure/repositories';
 import { UserDatasourceImpl } from '../../infrastructure/datasource';
-import { CheckDataUser } from '../middlewares/check-data';
+import { Commons } from '../middlewares/';
 import { LoggerService } from '../services';
 export class UserRoute {
   constructor() {}
@@ -20,10 +20,10 @@ export class UserRoute {
     const controller = new UserController(service);
 
     route.get('/', controller.getAllUsers);
-    route.get('/:id', [CheckDataUser.isValidUUID], controller.getUserById);
-    route.post('/', [CheckDataUser.create], controller.createUser);
-    route.put('/', [CheckDataUser.update], controller.updateUser);
-    route.delete('/:id', [CheckDataUser.isValidUUID], controller.deleteUser);
+    route.get('/:id', [Commons.isValidUUID], controller.getUserById);
+    route.post('/', controller.createUser);
+    route.put('/', controller.updateUser);
+    route.delete('/:id', [Commons.isValidUUID], controller.deleteUser);
 
     return route;
   }

@@ -61,23 +61,15 @@ export class UserValidator {
   static update(object: UpdateUser): string[] {
     const errors: string[] = [];
 
-    const {
-      id,
-      role,
-      birdDate,
-      name,
-      phone,
-      username,
-      password,
-      isActive,
-    } = object;
+    const { id, role, birdDate, name, phone, username, password, isActive } =
+      object;
 
     // * id
     const idValid = StringValidator.isValidUUID(id);
     if (idValid !== true) errors.push('id ' + idValid);
 
     // * role
-    if (!!role) {
+    if (role !== undefined) {
       const roleValid = StringValidator.mostBe({
         value: role,
         allowValues: [
@@ -91,37 +83,36 @@ export class UserValidator {
     }
 
     // * birdDate
-    if (!!birdDate) {
+    if (birdDate !== undefined) {
       const birdDateValid = DateValidator.isValid(birdDate);
       if (birdDateValid !== true) errors.push('birdDate ' + birdDateValid);
     }
-
     // * name
-    if (!!name) {
+    if (name !== undefined) {
       const nameValid = StringValidator.isValid(name);
       if (nameValid !== true) errors.push('name ' + nameValid);
     }
 
     // * phone
-    if (!!phone) {
+    if (phone !== undefined) {
       const phoneValid = StringValidator.isValid(phone);
       if (phoneValid !== true) errors.push('phone ' + phoneValid);
     }
 
     // * username
-    if (!!username) {
+    if (username !== undefined) {
       const usernameValid = StringValidator.isValid(username);
       if (usernameValid !== true) errors.push('username ' + usernameValid);
     }
 
     // * password
-    if (!!password) {
+    if (password !== undefined) {
       const passwordValid = StringValidator.isValid(password);
       if (passwordValid !== true) errors.push('password ' + passwordValid);
     }
 
     // * isActive
-    if (!!isActive) {
+    if (isActive !== undefined) {
       const isActiveValid = BooleanValidator.isValid(isActive);
       if (isActiveValid !== true) errors.push('isActive ' + isActiveValid);
     }

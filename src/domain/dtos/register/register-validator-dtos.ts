@@ -52,7 +52,7 @@ export class RegisterValidator {
     }
 
     // * checkOut
-    if (!!checkOut) {
+    if (checkOut !== undefined) {
       const checkOutValid = DateValidator.isValid(checkOut);
       if (checkOutValid !== true) {
         errors.push(`checkOut ${checkOutValid}`);
@@ -82,7 +82,7 @@ export class RegisterValidator {
     }
 
     // * guestsNumber
-    if (!!guestsNumber) {
+    if (guestsNumber !== undefined) {
       const guestsNumberMinValueValid = NumberValidator.isMinValue({
         value: guestsNumber,
         minValue: variables.GUESTS_NUMBER_MIN_VALUE,
@@ -93,7 +93,7 @@ export class RegisterValidator {
     }
 
     // * discount
-    if (!!discount) {
+    if (discount !== undefined) {
       const discountValid = NumberValidator.isPositive(discount);
       if (discountValid !== true) {
         errors.push(`discount ${discountValid}`);
@@ -101,7 +101,7 @@ export class RegisterValidator {
     }
 
     // * price
-    if (!!price) {
+    if (price !== undefined) {
       const priceValid = NumberValidator.isPositive(price);
       if (priceValid !== true) {
         errors.push(`price ${priceValid}`);
@@ -109,7 +109,7 @@ export class RegisterValidator {
     }
 
     // * userId
-    if (!!userId) {
+    if (userId !== undefined) {
       const userIdValid = StringValidator.isValidUUID(userId);
       if (userIdValid !== true) {
         errors.push(`userId ${userIdValid}`);
@@ -117,7 +117,7 @@ export class RegisterValidator {
     }
 
     // * roomId
-    if (!!roomId) {
+    if (roomId !== undefined) {
       const roomIdValid = StringValidator.isValidUUID(roomId);
       if (roomIdValid !== true) {
         errors.push(`roomId ${roomIdValid}`);
@@ -125,7 +125,7 @@ export class RegisterValidator {
     }
 
     // * checkIn
-    if (!!checkIn) {
+    if (checkIn !== undefined) {
       const checkInValid = DateValidator.isValid(checkIn);
       if (checkInValid !== true) {
         errors.push(`checkIn ${checkInValid}`);
@@ -133,7 +133,7 @@ export class RegisterValidator {
     }
 
     // * checkOut
-    if (!!checkOut) {
+    if (checkOut !== undefined) {
       const checkOutValid = DateValidator.isValid(checkOut);
       if (checkOutValid !== true) {
         errors.push(`checkOut ${checkOutValid}`);
