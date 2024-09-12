@@ -26,3 +26,7 @@ export interface UserPagination {
   prev: string | null;
   next: string | null;
 }
+
+
+export type CreateUser = Omit<IUser, 'id'>;
+export type UpdateUser = Partial<CreateUser> & { id: string };

@@ -52,19 +52,27 @@ export class UserController {
   };
 
   public createUser = async (req: Request, res: Response) => {
-    const createUserDto = CreateUserDto.create(req.body);
+    const [errors, createUserDto] = CreateUserDto.create(req.body);
+
+    if (errors) {
+      return res.status(400).json({ ok: false, errors });
+    }
 
     this.userService
-      .create(createUserDto)
+      .create(createUserDto!)
       .then((data) => res.status(201).json(data))
       .catch((error) => this.handleError(res, error));
   };
 
   public updateUser = async (req: Request, res: Response) => {
-    const updateUserDto = UpdateUserDto.create(req.body);
+    const [errors, updateUserDto] = UpdateUserDto.create(req.body);
+
+    if (errors) {
+      return res.status(400).json({ ok: false, errors });
+    }
 
     this.userService
-      .update(updateUserDto)
+      .update(updateUserDto!)
       .then((data) => res.json(data))
       .catch((error) => this.handleError(res, error));
   };

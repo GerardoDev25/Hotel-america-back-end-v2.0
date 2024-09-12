@@ -13,8 +13,9 @@ describe('create-user.dto.ts', () => {
       isActive: true,
     };
 
-    const result = CreateUserDto.create(data);
+    const [errors, result] = CreateUserDto.create(data);
 
+    expect(errors).toBeUndefined();
     expect(result).toBeInstanceOf(CreateUserDto);
     expect(result).toEqual(
       expect.objectContaining({ ...data, birdDate: new Date(data.birdDate) })

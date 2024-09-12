@@ -1,5 +1,6 @@
 import { BooleanValidator, DateValidator } from '../../type-validators';
 import { UserRole } from '../../interfaces';
+import { UserValidator } from './user-validator-dtos';
 
 export class CreateUserDto {
   private constructor(
@@ -12,7 +13,7 @@ export class CreateUserDto {
     public readonly isActive: boolean
   ) {}
 
-  static create(props: Record<string, any>): CreateUserDto {
+  static create(props: Record<string, any>): [string[]?, CreateUserDto?] {
     const {
       role,
       birdDate,
@@ -23,14 +24,29 @@ export class CreateUserDto {
       isActive = false,
     } = props;
 
-    return new CreateUserDto(
+    const errors = UserValidator.create({
       role,
-      DateValidator.toDate(birdDate) ?? new Date(),
+      birdDate,
       name,
       phone,
       username,
       password,
-      !!BooleanValidator.toBoolean(isActive)
-    );
+      isActive,
+    });
+
+    if (errors.length > 0) return [errors, undefined];
+
+    return [
+      undefined,
+      new CreateUserDto(
+        role,
+        DateValidator.toDate(birdDate) ?? new Date(),
+        name,
+        phone,
+        username,
+        password,
+        !!BooleanValidator.toBoolean(isActive)
+      ),
+    ];
   }
 }
