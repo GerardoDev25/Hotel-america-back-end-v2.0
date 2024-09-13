@@ -35,7 +35,7 @@ describe('type-number.ts', () => {
     const result = NumberValidator.isMinValue({ value, minValue });
 
     expect(result).toBe(
-      'property most be a greater than or equal to ' + minValue
+      'property most be greater than or equal to ' + minValue
     );
   });
 

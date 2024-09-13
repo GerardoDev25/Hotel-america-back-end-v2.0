@@ -31,7 +31,7 @@ export class NumberValidator {
     if (isValidNumber !== true) return isValidNumber;
 
     if (value < minValue)
-      return 'property most be a greater than or equal to ' + minValue;
+      return 'property most be greater than or equal to ' + minValue;
 
     return true;
   };

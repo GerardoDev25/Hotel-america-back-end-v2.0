@@ -34,7 +34,7 @@ describe('register-validator-dtos.ts', () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors).toEqual([
-      'guestsNumber property most be a greater than or equal to 1',
+      'guestsNumber property most be greater than or equal to 1',
       'discount property most be a positive',
       'price property most be a positive',
       'userId is not a valid uuid',
@@ -78,7 +78,7 @@ describe('register-validator-dtos.ts', () => {
     expect(errors.length).toBeGreaterThan(0);
     expect(errors).toEqual([
       'id is not a valid uuid',
-      'guestsNumber property most be a greater than or equal to 1',
+      'guestsNumber property most be greater than or equal to 1',
       'discount property most be a positive',
       'price property most be a positive',
       'userId is not a valid uuid',

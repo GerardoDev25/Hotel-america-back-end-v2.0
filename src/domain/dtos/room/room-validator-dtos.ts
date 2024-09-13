@@ -1,10 +1,9 @@
+import { variables } from '../../variables';
 import {
   BooleanValidator,
-  DateValidator,
   NumberValidator,
   StringValidator,
 } from '../../type-validators';
-import { variables } from '../../variables';
 import {
   UpdateRoom,
   CreateRoom,
