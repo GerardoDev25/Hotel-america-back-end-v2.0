@@ -9,8 +9,9 @@ describe('create-room.dto.ts', () => {
       isAvailable: false,
     };
 
-    const result = CreateRoomDto.create(data);
+    const [errors, result] = CreateRoomDto.create(data);
 
+    expect(errors).toBeUndefined();
     expect(result).toBeInstanceOf(CreateRoomDto);
     expect(result).toEqual(expect.objectContaining(data));
   });

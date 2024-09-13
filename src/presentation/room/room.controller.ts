@@ -51,19 +51,26 @@ export class RoomController {
   };
 
   public createRoom = async (req: Request, res: Response) => {
-    const createRoomDto = CreateRoomDto.create(req.body);
+    const [errors, createRoomDto] = CreateRoomDto.create(req.body);
+
+    if (errors) {
+      return res.status(400).json({ ok: false, errors });
+    }
 
     this.roomService
-      .create(createRoomDto)
+      .create(createRoomDto!)
       .then((data) => res.status(201).json(data))
       .catch((error) => this.handleError(res, error));
   };
 
   public updateRoom = async (req: Request, res: Response) => {
-    const updateRoomDto = UpdateRoomDto.create(req.body);
+    const [errors, updateRoomDto] = UpdateRoomDto.create(req.body);
 
+    if (errors) {
+      return res.status(400).json({ ok: false, errors });
+    }
     this.roomService
-      .update(updateRoomDto)
+      .update(updateRoomDto!)
       .then((data) => res.json(data))
       .catch((error) => this.handleError(res, error));
   };

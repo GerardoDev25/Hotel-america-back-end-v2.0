@@ -38,7 +38,7 @@ describe('room.service.ts', () => {
   });
 
   it('should to have been called with parameter (create)', async () => {
-    const room = CreateRoomDto.create({
+    const [errors, room] = CreateRoomDto.create({
       roomType: 'normal',
       roomNumber: 129,
       betsNumber: 3,
@@ -46,28 +46,28 @@ describe('room.service.ts', () => {
     });
     const service = new RoomService(mockRoomRepository);
 
-    await service.create(room);
+    await service.create(room!);
 
     expect(mockRoomRepository.create).toHaveBeenCalledTimes(1);
     expect(mockRoomRepository.create).toHaveBeenCalledWith(room);
   });
 
   it('should to have been called with parameter (update)', async () => {
-    const room = UpdateRoomDto.create({
+    const [errors, room] = UpdateRoomDto.create({
       roomType: 'normal',
       roomNumber: 129,
       betsNumber: 3,
       isAvailable: true,
     });
     const service = new RoomService(mockRoomRepository);
-    await service.update(room);
+    await service.update(room!);
 
     expect(mockRoomRepository.update).toHaveBeenCalledTimes(1);
     expect(mockRoomRepository.update).toHaveBeenCalledWith(room);
   });
 
   it('should to have been called with parameter (delete)', async () => {
-    const id = 'some-id'
+    const id = 'some-id';
     const service = new RoomService(mockRoomRepository);
     await service.delete(id);
 

@@ -1,5 +1,6 @@
 import { BooleanValidator } from '../../type-validators';
 import { RoomType } from '../../interfaces/';
+import { RoomValidator } from './room-validator-dtos';
 
 export class UpdateRoomDto {
   private constructor(
@@ -10,15 +11,27 @@ export class UpdateRoomDto {
     public readonly isAvailable?: boolean
   ) {}
 
-  static create(props: Record<string, any>): UpdateRoomDto {
+  static create(props: Record<string, any>): [string[]?, UpdateRoomDto?] {
     let { id, roomType, roomNumber, betsNumber, isAvailable = false } = props;
 
-    return new UpdateRoomDto(
+    const errors = RoomValidator.update({
       id,
       roomType,
-      +roomNumber,
-      +betsNumber,
-      !!BooleanValidator.toBoolean(isAvailable)
-    );
+      roomNumber,
+      betsNumber,
+      isAvailable,
+    });
+
+    if (errors.length) return [errors, undefined];
+    return [
+      undefined,
+      new UpdateRoomDto(
+        id,
+        roomType,
+        +roomNumber,
+        +betsNumber,
+        !!BooleanValidator.toBoolean(isAvailable)
+      ),
+    ];
   }
 }

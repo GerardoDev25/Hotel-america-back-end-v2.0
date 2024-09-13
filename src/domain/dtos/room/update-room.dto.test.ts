@@ -11,8 +11,9 @@ describe('update-room.dto.ts', () => {
       isAvailable: false,
     };
 
-    const result = UpdateRoomDto.create(data);
+    const [errors, result] = UpdateRoomDto.create(data);
 
+    expect(errors).toBeUndefined();
     expect(result).toBeInstanceOf(UpdateRoomDto);
     expect(result).toEqual(data);
   });
@@ -22,8 +23,9 @@ describe('update-room.dto.ts', () => {
       id: Uuid.v4(),
     };
 
-    const result = UpdateRoomDto.create(data);
+    const [errors, result] = UpdateRoomDto.create(data);
 
+    expect(errors).toBeUndefined();
     expect(result).toBeInstanceOf(UpdateRoomDto);
     expect(result).toEqual(expect.objectContaining(data));
   });

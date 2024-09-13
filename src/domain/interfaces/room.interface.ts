@@ -21,3 +21,8 @@ export interface RoomPagination {
   prev: string | null;
   next: string | null;
 }
+
+
+
+export type CreateRoom = Omit<IRoom, 'id'>;
+export type UpdateRoom = Partial<CreateRoom> & { id: string };
