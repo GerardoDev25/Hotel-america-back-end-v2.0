@@ -1,9 +1,10 @@
+import { Uuid } from '../../../adapters';
 import { UpdateRoomDto } from './update-room.dto';
 
 describe('update-room.dto.ts', () => {
-  test('should create an instance of UpdateRoomDto', () => {
+  it('should create an instance of UpdateRoomDto', () => {
     const data = {
-      id: 'd9bbb473-09fa-4cc1-98ad-b2405550606f',
+      id: Uuid.v4(),
       roomType: 'suit',
       roomNumber: 12,
       betsNumber: 12,
@@ -16,9 +17,9 @@ describe('update-room.dto.ts', () => {
     expect(result).toEqual(data);
   });
 
-  test('should have all the properties as optional except id', () => {
+  it('should have all the properties as optional except id', () => {
     const data = {
-      id: 'd9bbb473-09fa-4cc1-98ad-b2405550606f',
+      id: Uuid.v4(),
     };
 
     const result = UpdateRoomDto.create(data);

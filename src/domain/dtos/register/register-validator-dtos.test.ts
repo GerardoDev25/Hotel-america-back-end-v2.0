@@ -32,7 +32,6 @@ describe('register-validator-dtos.ts', () => {
 
     const errors = RegisterValidator.create(data);
 
-    expect(errors).toBeInstanceOf(Array);
     expect(errors.length).toBeGreaterThan(0);
     expect(errors).toEqual([
       'guestsNumber property most be a greater than or equal to 1',
@@ -76,7 +75,6 @@ describe('register-validator-dtos.ts', () => {
 
     const errors = RegisterValidator.update(data);
 
-    expect(errors).toBeInstanceOf(Array);
     expect(errors.length).toBeGreaterThan(0);
     expect(errors).toEqual([
       'id is not a valid uuid',
