@@ -34,7 +34,14 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
         throw CustomError.notFound(`register with id ${id} not found`);
       }
 
-      return { ok: true, register: RegisterEntity.fromObject(register) };
+      return {
+        ok: true,
+        register: RegisterEntity.fromObject({
+          ...register,
+          checkIn: register.checkIn.toISOString(),
+          checkOut: register.checkOut?.toISOString() ?? null,
+        }),
+      };
     } catch (error: any) {
       throw this.handleError(error);
     }
@@ -50,7 +57,14 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
         return { ok: true, register: null };
       }
 
-      return { ok: true, register: RegisterEntity.fromObject(register) };
+      return {
+        ok: true,
+        register: RegisterEntity.fromObject({
+          ...register,
+          checkIn: register.checkIn.toISOString(),
+          checkOut: register.checkOut?.toISOString() ?? null,
+        }),
+      };
     } catch (error: any) {
       throw this.handleError(error);
     }
@@ -67,7 +81,11 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       ]);
 
       const registers = registersDb.map((register) =>
-        RegisterEntity.fromObject(register)
+        RegisterEntity.fromObject({
+          ...register,
+          checkIn: register.checkIn.toISOString(),
+          checkOut: register.checkOut?.toISOString() ?? null,
+        })
       );
 
       const { next, prev } = pagination({
@@ -90,7 +108,14 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
         data: createRegisterDto,
       });
 
-      return { ok: true, register: RegisterEntity.fromObject(newRegister) };
+      return {
+        ok: true,
+        register: RegisterEntity.fromObject({
+          ...newRegister,
+          checkIn: newRegister.checkIn.toISOString(),
+          checkOut: newRegister.checkOut?.toISOString() ?? null,
+        }),
+      };
     } catch (error: any) {
       throw this.handleError(error);
     }
