@@ -12,6 +12,15 @@ export class RoomDatasourceImpl extends RoomDatasource {
     super();
   }
 
+  private handleError(error: any) {
+    if (error instanceof CustomError) {
+      throw error;
+    } else {
+      this.logger.error((error as Error).message);
+      throw CustomError.internalServerError(`internal server error`);
+    }
+  }
+  
   async getAllAvailable(
     page: number,
     limit: number,
@@ -33,8 +42,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
 
       return { page, limit, total, next, prev, rooms };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 
@@ -54,8 +62,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
 
       return { page, limit, total, next, prev, rooms };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 
@@ -67,8 +74,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
 
       return { ok: true, room: RoomEntity.fromObject(newRoom) };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 
@@ -102,8 +108,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
       await prisma.room.update({ where: { id }, data });
       return { ok: true, message: 'room updated successfully' };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 
@@ -115,8 +120,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
 
       return { ok: true, message: 'room deleted successfully' };
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw CustomError.internalServerError(`internal server error`);
+      throw this.handleError(error);
     }
   }
 }

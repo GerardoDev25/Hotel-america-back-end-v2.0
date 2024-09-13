@@ -9,6 +9,7 @@ import {
 import { CustomError } from '../../domain/error';
 import { prisma } from '../../data/postgres';
 import { cleanObject, pagination } from '../../utils';
+import { Register } from '@prisma/client';
 
 export class RegisterDatasourceImpl extends RegisterDatasource {
   constructor(private readonly logger: LoggerService) {
@@ -24,6 +25,14 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     }
   }
 
+  private transformObject(entity: Register): RegisterEntity {
+    return RegisterEntity.fromObject({
+      ...entity,
+      checkIn: entity.checkIn.toISOString(),
+      checkOut: entity.checkOut?.toISOString() ?? null,
+    });
+  }
+
   async getById(
     id: string
   ): Promise<{ ok: boolean; register: RegisterEntity }> {
@@ -34,14 +43,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
         throw CustomError.notFound(`register with id ${id} not found`);
       }
 
-      return {
-        ok: true,
-        register: RegisterEntity.fromObject({
-          ...register,
-          checkIn: register.checkIn.toISOString(),
-          checkOut: register.checkOut?.toISOString() ?? null,
-        }),
-      };
+      return { ok: true, register: this.transformObject(register) };
     } catch (error: any) {
       throw this.handleError(error);
     }
@@ -57,14 +59,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
         return { ok: true, register: null };
       }
 
-      return {
-        ok: true,
-        register: RegisterEntity.fromObject({
-          ...register,
-          checkIn: register.checkIn.toISOString(),
-          checkOut: register.checkOut?.toISOString() ?? null,
-        }),
-      };
+      return { ok: true, register: this.transformObject(register) };
     } catch (error: any) {
       throw this.handleError(error);
     }
@@ -81,11 +76,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       ]);
 
       const registers = registersDb.map((register) =>
-        RegisterEntity.fromObject({
-          ...register,
-          checkIn: register.checkIn.toISOString(),
-          checkOut: register.checkOut?.toISOString() ?? null,
-        })
+        this.transformObject(register)
       );
 
       const { next, prev } = pagination({
@@ -94,6 +85,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
         total,
         path: 'register',
       });
+
       return { page, limit, total, next, prev, registers };
     } catch (error) {
       throw this.handleError(error);
@@ -108,14 +100,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
         data: createRegisterDto,
       });
 
-      return {
-        ok: true,
-        register: RegisterEntity.fromObject({
-          ...newRegister,
-          checkIn: newRegister.checkIn.toISOString(),
-          checkOut: newRegister.checkOut?.toISOString() ?? null,
-        }),
-      };
+      return { ok: true, register: this.transformObject(newRegister) };
     } catch (error: any) {
       throw this.handleError(error);
     }
