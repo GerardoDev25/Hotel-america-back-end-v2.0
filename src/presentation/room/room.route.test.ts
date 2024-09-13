@@ -3,6 +3,7 @@ import request from 'supertest';
 import { prisma } from '../../data/postgres';
 import { testServer } from '../../test-server';
 import { seedData } from '../../data/seed/data';
+import { Uuid } from '../../adapters';
 
 describe('room.route.ts', () => {
   beforeAll(async () => {
@@ -136,7 +137,7 @@ describe('room.route.ts', () => {
   });
 
   test('should get not found message (getById)', async () => {
-    const id = 'no-room';
+    const id = Uuid.v4();
     const { body } = await request(testServer.app)
       .get(`/api/room/${id}`)
       .expect(404);
@@ -171,9 +172,9 @@ describe('room.route.ts', () => {
     expect(body).toEqual({
       ok: false,
       errors: [
-        'roomType property is required',
-        'roomNumber property is required',
         'betsNumber property is required',
+        'roomNumber property is required',
+        'roomType property is required',
       ],
     });
   });
