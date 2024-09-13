@@ -7,7 +7,7 @@ export class StringValidator {
   static isValid = (value: any): true | string => {
     if (value === undefined) return 'property is required';
 
-    if (value === '') return 'property cannot be empty';
+    if (value === '') return 'property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format';
 
     if (typeof value !== 'string') return 'property most be a string';
 

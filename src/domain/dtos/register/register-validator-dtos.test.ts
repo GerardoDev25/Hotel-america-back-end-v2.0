@@ -2,7 +2,7 @@ import { Uuid } from '../../../adapters';
 import { Generator } from '../../../utils/generator';
 import { RegisterValidator } from './register-validator-dtos';
 
-describe('register-validator-dtos.ts create()', () => {
+describe('register-validator-dtos.ts', () => {
   it('should get empty array if pass a valid object create()', () => {
     const data = {
       checkIn: Generator.randomDate(),
@@ -40,12 +40,10 @@ describe('register-validator-dtos.ts create()', () => {
       'price property most be a positive',
       'userId is not a valid uuid',
       'roomId is not a valid uuid',
-      'checkIn property most be a valid date',
-      'checkOut property most be a valid date',
+      'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
+      'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
     ]);
   });
-
-
 
   it('should get empty array if pass a valid object update()', () => {
     const data = {
@@ -87,10 +85,8 @@ describe('register-validator-dtos.ts create()', () => {
       'price property most be a positive',
       'userId is not a valid uuid',
       'roomId is not a valid uuid',
-      'checkIn property most be a valid date',
-      'checkOut property most be a valid date',
+      'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
+      'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
     ]);
   });
-  
 });
-

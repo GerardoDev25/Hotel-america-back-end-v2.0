@@ -29,7 +29,13 @@ export class UserDatasourceImpl extends UserDatasource {
         throw CustomError.notFound(`user with id: ${id} not found`);
       }
 
-      return { ok: true, user: UserEntity.fromObject(user) };
+      return {
+        ok: true,
+        user: UserEntity.fromObject({
+          ...user,
+          birdDate: user.birdDate.toISOString(),
+        }),
+      };
     } catch (error) {
       throw this.handleError(error);
     }
@@ -42,7 +48,13 @@ export class UserDatasourceImpl extends UserDatasource {
       const user = await prisma.user.findFirst({ where: searchParam });
       if (!user) return { ok: false, user: null };
 
-      return { ok: true, user: UserEntity.fromObject(user) };
+      return {
+        ok: true,
+        user: UserEntity.fromObject({
+          ...user,
+          birdDate: user.birdDate.toISOString(),
+        }),
+      };
     } catch (error: any) {
       throw this.handleError(error);
     }
@@ -58,7 +70,12 @@ export class UserDatasourceImpl extends UserDatasource {
         }),
       ]);
 
-      const users = usersDb.map((user) => UserEntity.fromObject(user));
+      const users = usersDb.map((user) =>
+        UserEntity.fromObject({
+          ...user,
+          birdDate: user.birdDate.toISOString(),
+        })
+      );
       const { next, prev } = pagination({ page, limit, total, path: 'user' });
 
       return { page, limit, total, next, prev, users };
@@ -83,9 +100,14 @@ export class UserDatasourceImpl extends UserDatasource {
         }),
       ]);
 
-      const users = usersDb.map((user) => UserEntity.fromObject(user));
+      const users = usersDb.map((user) =>
+        UserEntity.fromObject({
+          ...user,
+          birdDate: user.birdDate.toISOString(),
+        })
+      );
       const { next, prev } = pagination({ page, limit, total, path: 'user' });
-      
+
       return { page, limit, total, next, prev, users };
     } catch (error: any) {
       throw this.handleError(error);
@@ -98,7 +120,13 @@ export class UserDatasourceImpl extends UserDatasource {
     try {
       const newUser = await prisma.user.create({ data: createUserDto });
 
-      return { ok: true, user: UserEntity.fromObject(newUser) };
+      return {
+        ok: true,
+        user: UserEntity.fromObject({
+          ...newUser,
+          birdDate: newUser.birdDate.toISOString(),
+        }),
+      };
     } catch (error: any) {
       throw this.handleError(error);
     }

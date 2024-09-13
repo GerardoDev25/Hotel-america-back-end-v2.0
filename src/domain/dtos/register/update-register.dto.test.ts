@@ -48,8 +48,8 @@ describe('update-register.dto.ts', () => {
       'discount property most be a number',
       'userId is not a valid uuid',
       'roomId is not a valid uuid',
-      'checkIn property most be a valid date',
-      'checkOut property most be a valid date',
+      'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
+      'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
     ]);
   });
 });

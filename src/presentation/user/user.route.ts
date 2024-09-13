@@ -5,8 +5,8 @@ import { UserRepositoryImpl } from '../../infrastructure/repositories';
 import { UserDatasourceImpl } from '../../infrastructure/datasource';
 import { Commons } from '../middlewares/';
 import { LoggerService } from '../services';
+
 export class UserRoute {
-  constructor() {}
 
   static get routes(): Router {
     const route = Router();

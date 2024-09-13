@@ -6,12 +6,12 @@ describe('type-date.ts', () => {
   });
 
   test('should get error message if is empty', () => {
-    expect(DateValidator.isValid('')).toBe('property cannot be empty');
+    expect(DateValidator.isValid('')).toBe('property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format');
   });
 
   test('should get error message if is not valid iso date', () => {
     expect(DateValidator.isValid('not-valid-date')).toBe(
-      'property most be a valid date'
+      'property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format'
     );
   });
 

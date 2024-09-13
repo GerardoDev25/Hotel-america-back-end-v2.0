@@ -187,7 +187,7 @@ describe('UPDATE check-data-user.ts', () => {
       ok: false,
       errors: [
         'role property most be a string',
-        'birdDate property most be a valid date',
+        'birdDate property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
         'name property most be a string',
         'phone property most be a string',
         'username property most be a string',
