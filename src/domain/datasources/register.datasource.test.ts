@@ -73,9 +73,10 @@ describe('register.datasource.ts', () => {
     }
   }
 
+  const mockRegisterDataSource = new MockRegisterDataSource();
+
   test('should get default value getById()', async () => {
     const id = Uuid.v4();
-    const mockRegisterDataSource = new MockRegisterDataSource();
     const { ok, register } = await mockRegisterDataSource.getById(id);
 
     expect(typeof mockRegisterDataSource.getById).toBe('function');
@@ -85,7 +86,6 @@ describe('register.datasource.ts', () => {
 
   test('should get default value getByParam()', async () => {
     const userId = Uuid.v4();
-    const mockRegisterDataSource = new MockRegisterDataSource();
     const { ok, register } = await mockRegisterDataSource.getByParam({
       userId,
     });
@@ -96,7 +96,6 @@ describe('register.datasource.ts', () => {
   });
 
   test('should get default value getAll()', async () => {
-    const mockRegisterDataSource = new MockRegisterDataSource();
     const { registers } = await mockRegisterDataSource.getAll(page, limit);
 
     expect(typeof mockRegisterDataSource.getAll).toBe('function');
@@ -108,8 +107,6 @@ describe('register.datasource.ts', () => {
   });
 
   test('should get default behavior create()', async () => {
-    const mockRegisterDataSource = new MockRegisterDataSource();
-
     const { id, ...rest } = mockRegister;
     const checkIn = new Date(rest.checkIn);
     const checkOut = rest.checkOut ? new Date(rest.checkOut) : undefined;
@@ -127,8 +124,6 @@ describe('register.datasource.ts', () => {
   });
 
   test('should get default behavior update()', async () => {
-    const mockRegisterDataSource = new MockRegisterDataSource();
-
     const checkIn = new Date(mockRegister.checkIn);
     const checkOut = mockRegister.checkOut
       ? new Date(mockRegister.checkOut)
@@ -148,7 +143,6 @@ describe('register.datasource.ts', () => {
 
   test('should get default behavior delete()', async () => {
     const id = Uuid.v4();
-    const mockRegisterDataSource = new MockRegisterDataSource();
 
     const { ok, message } = await mockRegisterDataSource.delete(id);
 

@@ -80,9 +80,9 @@ describe('user.database.ts', () => {
     }
   }
 
+  const mockUserDataSource = new MockUserDataSource();
   test('test in function getById()', async () => {
     const id = Uuid.v4();
-    const mockUserDataSource = new MockUserDataSource();
     expect(typeof mockUserDataSource.getById).toBe('function');
     expect(mockUserDataSource.getById(id)).resolves.toEqual({
       ok: true,
@@ -92,7 +92,6 @@ describe('user.database.ts', () => {
 
   test('test in function getWhere()', async () => {
     const username = Uuid.v4();
-    const mockUserDataSource = new MockUserDataSource();
     expect(typeof mockUserDataSource.getByParam).toBe('function');
     expect(mockUserDataSource.getByParam({ username })).resolves.toEqual({
       ok: true,
@@ -101,8 +100,6 @@ describe('user.database.ts', () => {
   });
 
   test('test in function getAll()', async () => {
-    const mockUserDataSource = new MockUserDataSource();
-
     expect(typeof mockUserDataSource.getAll).toBe('function');
     expect(mockUserDataSource.getAll(page, limit)).resolves.toEqual(
       getAllReturnValue
@@ -118,8 +115,6 @@ describe('user.database.ts', () => {
   });
 
   test('test in function getAllActive()', async () => {
-    const mockUserDataSource = new MockUserDataSource();
-
     expect(typeof mockUserDataSource.getAllActive).toBe('function');
     expect(
       mockUserDataSource.getAllActive(page, limit, isActive)
@@ -139,7 +134,6 @@ describe('user.database.ts', () => {
   });
 
   test('test in function create()', async () => {
-    const mockUserDataSource = new MockUserDataSource();
     const { id, ...rest } = mockUser;
     const createUser = {
       ...rest,
@@ -158,7 +152,6 @@ describe('user.database.ts', () => {
   });
 
   test('test in function update()', async () => {
-    const mockUserDataSource = new MockUserDataSource();
     const { birdDate, ...rest } = mockUser;
 
     const { ok, message } = await mockUserDataSource.update(rest);
@@ -174,7 +167,6 @@ describe('user.database.ts', () => {
 
   test('test in function delete()', async () => {
     const id = Uuid.v4();
-    const mockUserDataSource = new MockUserDataSource();
     const { ok, message } = await mockUserDataSource.delete(id);
 
     expect(ok).toBeTruthy();

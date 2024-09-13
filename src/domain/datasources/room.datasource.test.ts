@@ -67,8 +67,8 @@ describe('room.database.ts', () => {
     }
   }
 
+  const mockRoomDataSource = new MockRoomDataSource();
   test('test in function getAll()', async () => {
-    const mockRoomDataSource = new MockRoomDataSource();
     const { rooms } = await mockRoomDataSource.getAll(page, limit);
 
     expect(typeof mockRoomDataSource.getAll).toBe('function');
@@ -83,7 +83,6 @@ describe('room.database.ts', () => {
   });
 
   test('test in function getAllAvailable()', async () => {
-    const mockRoomDataSource = new MockRoomDataSource();
     const { rooms } = await mockRoomDataSource.getAllAvailable(
       page,
       limit,
@@ -103,8 +102,6 @@ describe('room.database.ts', () => {
   });
 
   test('test in function create()', async () => {
-    const mockRoomDataSource = new MockRoomDataSource();
-
     const { id, ...rest } = mockRoom;
 
     const { ok, room } = await mockRoomDataSource.create(rest);
@@ -119,8 +116,6 @@ describe('room.database.ts', () => {
   });
 
   test('test in function update()', async () => {
-    const mockRoomDataSource = new MockRoomDataSource();
-
     const { ok, message } = await mockRoomDataSource.update(mockRoom);
 
     expect(ok).toBeTruthy();
@@ -134,7 +129,6 @@ describe('room.database.ts', () => {
 
   test('test in function delete()', async () => {
     const id = Uuid.v4();
-    const mockRoomDataSource = new MockRoomDataSource();
     const { ok, message } = await mockRoomDataSource.delete(id);
 
     expect(ok).toBeTruthy();
