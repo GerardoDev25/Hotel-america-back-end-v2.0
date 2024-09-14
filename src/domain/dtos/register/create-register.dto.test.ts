@@ -27,6 +27,7 @@ describe('create-register.dto.ts', () => {
       })
     );
   });
+
   it('should get error if properties are wrong', () => {
     const data = {
       checkIn: 'no valid date',

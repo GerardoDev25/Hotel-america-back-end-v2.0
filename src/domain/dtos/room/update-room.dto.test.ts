@@ -1,4 +1,5 @@
 import { Uuid } from '../../../adapters';
+import { UpdateRoom } from '../../interfaces';
 import { UpdateRoomDto } from './update-room.dto';
 
 describe('update-room.dto.ts', () => {
@@ -28,5 +29,27 @@ describe('update-room.dto.ts', () => {
     expect(errors).toBeUndefined();
     expect(result).toBeInstanceOf(UpdateRoomDto);
     expect(result).toEqual(expect.objectContaining(data));
+  });
+
+  it('should get error if properties are wrong', () => {
+    const data: UpdateRoom = {
+      id: 'no valid uuid',
+      roomType: 'suitaa' as any,
+      roomNumber: -12,
+      betsNumber: -12,
+      isAvailable: 12 as any,
+    };
+    const [errors, result] = UpdateRoomDto.create(data);
+
+    expect(result).toBeUndefined();
+    expect(errors).toBeInstanceOf(Array);
+    expect(errors?.length).toBeGreaterThan(0);
+    expect(errors).toEqual([
+      'id is not a valid uuid',
+      'roomType most be: suit, normal',
+      'roomNumber property most be greater than or equal to 1',
+      'betsNumber property most be greater than or equal to 1',
+      'isAvailable property most be a boolean',
+    ]);
   });
 });
