@@ -96,6 +96,10 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     createRegisterDto: CreateRegisterDto
   ): Promise<{ ok: boolean; register: RegisterEntity }> {
     try {
+
+      // todo before change for a transaction
+      // todo change room isAvailable to false
+      
       const newRegister = await prisma.register.create({
         data: createRegisterDto,
       });

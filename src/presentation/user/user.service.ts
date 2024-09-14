@@ -6,6 +6,11 @@ import { CustomError } from '../../domain/error';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
+  private handleError(error: unknown) {
+    if (error instanceof CustomError) throw error;
+    throw CustomError.internalServerError('Internal Server Error');
+  }
+
   async getAll(paginationDto: PaginationDto, isActive?: boolean) {
     const { page, limit } = paginationDto;
 
@@ -23,8 +28,7 @@ export class UserService {
 
       return { ...rest, users: usersMapped };
     } catch (error) {
-      if (error instanceof CustomError) throw error;
-      throw CustomError.internalServerError('Internal Server Error');
+      throw this.handleError(error);
     }
   }
 
@@ -35,8 +39,7 @@ export class UserService {
 
       return { ok, user: { ...rest } };
     } catch (error) {
-      if (error instanceof CustomError) throw error;
-      throw CustomError.internalServerError('Internal Server Error');
+      throw this.handleError(error);
     }
   }
 
@@ -57,8 +60,7 @@ export class UserService {
 
       return { ok, user: { ...rest } };
     } catch (error) {
-      if (error instanceof CustomError) throw error;
-      throw CustomError.internalServerError('Internal Server Error');
+      throw this.handleError(error);
     }
   }
 

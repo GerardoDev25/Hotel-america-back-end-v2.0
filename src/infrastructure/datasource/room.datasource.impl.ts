@@ -20,7 +20,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
       throw CustomError.internalServerError(`internal server error`);
     }
   }
-  
+
   async getAllAvailable(
     page: number,
     limit: number,

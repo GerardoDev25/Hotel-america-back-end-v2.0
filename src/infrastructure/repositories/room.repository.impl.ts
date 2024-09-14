@@ -20,7 +20,9 @@ export class RoomRepositoryImpl extends RoomRepository {
     return this.roomDataSource.getAllAvailable(page, limit, isAvailable);
   }
 
-  async create(createRoomDto: CreateRoomDto): Promise<{ ok: boolean; room: RoomEntity }> {
+  async create(
+    createRoomDto: CreateRoomDto
+  ): Promise<{ ok: boolean; room: RoomEntity }> {
     return this.roomDataSource.create(createRoomDto);
   }
 
@@ -28,11 +30,13 @@ export class RoomRepositoryImpl extends RoomRepository {
     return this.roomDataSource.getById(id);
   }
 
-  async update(updateRoomDto: UpdateRoomDto): Promise<{ ok: boolean; message: string }> {
+  async update(
+    updateRoomDto: UpdateRoomDto
+  ): Promise<{ ok: boolean; message: string }> {
     return this.roomDataSource.update(updateRoomDto);
   }
 
-  async delete(id: string): Promise<{ ok: boolean; message: string }>{
+  async delete(id: string): Promise<{ ok: boolean; message: string }> {
     return this.roomDataSource.delete(id);
   }
 }
