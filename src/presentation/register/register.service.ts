@@ -28,11 +28,14 @@ export class RegisterService {
 
   async create(createRegisterDto: CreateRegisterDto) {
     try {
-      const { room } = await this.roomRepository.getById(
-        createRegisterDto.roomId
-      );
+      const [register, { room }] = await Promise.all([
+        this.registerRepository.getByParam({
+          roomId: createRegisterDto.roomId,
+        }),
+        this.roomRepository.getById(createRegisterDto.roomId),
+      ]);
 
-      if (!room.isAvailable) {
+      if (!room.isAvailable || register) {
         throw CustomError.conflict(
           `room with id ${createRegisterDto.roomId} is not available`
         );
