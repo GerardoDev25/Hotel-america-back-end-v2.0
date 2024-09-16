@@ -39,6 +39,10 @@ export class StringValidator {
   }
 
   static isJWT(token: string): boolean {
+    if (typeof StringValidator.isValid(token) === 'string') {
+      return false;
+    }
+
     const parts = token.split('.');
     if (parts.length !== 3) return false;
 
