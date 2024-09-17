@@ -101,10 +101,10 @@ export class UserEntity implements IUser {
       id,
       role,
       birdDate: newBirdDate,
-      name,
-      phone,
-      username,
-      password,
+      name: (name as string).trim(),
+      phone: (phone as string).trim(),
+      username: (username as string).trim().toLowerCase(),
+      password: (password as string).trim(),
       isActive: BooleanValidator.toBoolean(isActive) ?? false,
     });
   }
