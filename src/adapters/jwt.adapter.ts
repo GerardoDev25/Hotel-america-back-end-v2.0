@@ -6,16 +6,17 @@ const jwt_duration = envs.JWT_DURATION;
 
 interface GenerateProps {
   payload: any;
-  duration?: string;
+  expiresIn?: string;
 }
 
 export class JwtAdapter {
   static async generateToken(param: GenerateProps): Promise<string> {
-    const { payload, duration = jwt_duration } = param;
+    const { payload, expiresIn = '10h' } = param;
 
     return new Promise((resolve, reject) => {
-      jwt.sign(payload, jwt_seed, { expiresIn: duration }, (err, token) => {
-        if (err) return reject(null);
+      jwt.sign(payload, jwt_seed, { expiresIn: 36000 }, (err, token) => {
+        console.log({ err, payload, expiresIn });
+        if (err) return reject('error white create token');
         return resolve(token!);
       });
     });

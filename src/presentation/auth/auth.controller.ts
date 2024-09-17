@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { UserLoginDto, UserRefreshTokenDto } from '../../domain/dtos/auth';
 import { CustomError } from '../../domain/error';
+import { AuthService } from './auth.service';
 
 export class AuthController {
-  constructor() {}
+  constructor(private readonly authService: AuthService) {}
 
   private handleError = (res: Response, error: unknown) => {
     if (error instanceof CustomError) {
@@ -23,9 +24,11 @@ export class AuthController {
       return res.status(400).json({ ok: false, errors });
     }
 
-    return res.json(userLoginDto);
+    return this.authService
+      .login(userLoginDto!)
+      .then((data) => res.status(201).json(data))
+      .catch((error) => this.handleError(res, error));
   };
-
 
   refreshToken = (req: Request, res: Response) => {
     const [errors, userRefreshTokenDto] = UserRefreshTokenDto.create(req.body);
@@ -33,8 +36,9 @@ export class AuthController {
     if (errors) {
       return res.status(400).json({ ok: false, errors });
     }
-
-    return res.json(userRefreshTokenDto);
-  }
-  
+    return this.authService
+      .refreshToken(userRefreshTokenDto!)
+      .then((data) => res.status(201).json(data))
+      .catch((error) => this.handleError(res, error));
+  };
 }
