@@ -9,14 +9,14 @@ describe('room.database.ts', () => {
   const limit = 10;
   const isAvailable = true;
 
-  const mockRoom: RoomEntity = new RoomEntity({
+  const mockRoom = new RoomEntity({
     id: 'abc',
     roomType: RoomTypesList.NORMAL,
     roomNumber: 12,
     betsNumber: 12,
     isAvailable: true,
   });
-  const mockRoom2: RoomEntity = new RoomEntity({
+  const mockRoom2 = new RoomEntity({ 
     id: 'abc',
     roomType: RoomTypesList.NORMAL,
     roomNumber: 12,
@@ -24,7 +24,7 @@ describe('room.database.ts', () => {
     isAvailable: true,
   });
 
-  const getAllReturnValue = {
+  const roomPagination = {
     rooms: [mockRoom, mockRoom2],
     limit,
     next: '',
@@ -39,11 +39,11 @@ describe('room.database.ts', () => {
       limit: number,
       isAvailable: boolean
     ): Promise<RoomPagination> {
-      return getAllReturnValue;
+      return roomPagination;
     }
 
     async getAll(page: number, limit: number): Promise<RoomPagination> {
-      return getAllReturnValue;
+      return roomPagination;
     }
 
     async create(
@@ -73,7 +73,7 @@ describe('room.database.ts', () => {
 
     expect(typeof mockRoomDataSource.getAll).toBe('function');
     expect(mockRoomDataSource.getAll(page, limit)).resolves.toEqual(
-      getAllReturnValue
+      roomPagination
     );
     expect(rooms).toBeInstanceOf(Array);
     expect(rooms).toHaveLength(2);
@@ -92,7 +92,7 @@ describe('room.database.ts', () => {
     expect(typeof mockRoomDataSource.getAllAvailable).toBe('function');
     expect(
       mockRoomDataSource.getAllAvailable(page, limit, isAvailable)
-    ).resolves.toEqual(getAllReturnValue);
+    ).resolves.toEqual(roomPagination);
 
     expect(rooms).toBeInstanceOf(Array);
     expect(rooms).toHaveLength(2);
@@ -101,6 +101,20 @@ describe('room.database.ts', () => {
     });
   });
 
+
+  test('test in function getById()', async () => {
+    const id = Uuid.v4();
+    const { ok, room } = await mockRoomDataSource.getById(id);
+
+    expect(ok).toBeTruthy();
+    expect(room).toBeInstanceOf(RoomEntity);
+    expect(typeof mockRoomDataSource.getById).toBe('function');
+    expect(mockRoomDataSource.getById(id)).resolves.toEqual({
+      ok: true,
+      room: expect.any(RoomEntity),
+    });
+  });
+  
   test('test in function create()', async () => {
     const { id, ...rest } = mockRoom;
 

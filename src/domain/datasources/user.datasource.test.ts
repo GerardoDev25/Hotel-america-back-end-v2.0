@@ -10,7 +10,7 @@ describe('user.database.ts', () => {
   const limit = 10;
   const isActive = true;
 
-  const mockUser: UserEntity = new UserEntity({
+  const mockUser = new UserEntity({
     id: Uuid.v4(),
     birdDate: Generator.randomDate(),
     name: Generator.randomName(),
@@ -20,7 +20,7 @@ describe('user.database.ts', () => {
     username: Generator.randomUsername(),
     isActive: true,
   });
-  const mockUser2: UserEntity = new UserEntity({
+  const mockUser2 = new UserEntity({
     id: Uuid.v4(),
     birdDate: Generator.randomDate(),
     name: Generator.randomName(),
@@ -31,7 +31,7 @@ describe('user.database.ts', () => {
     isActive: false,
   });
 
-  const getAllReturnValue = {
+  const userPagination = {
     users: [mockUser, mockUser2],
     limit,
     next: '',
@@ -52,7 +52,7 @@ describe('user.database.ts', () => {
     }
 
     async getAll(page: number, limit: number): Promise<UserPagination> {
-      return getAllReturnValue;
+      return userPagination;
     }
 
     async getAllActive(
@@ -60,7 +60,7 @@ describe('user.database.ts', () => {
       limit: number,
       isActive: boolean
     ): Promise<UserPagination> {
-      return getAllReturnValue;
+      return userPagination;
     }
 
     async create(
@@ -83,6 +83,7 @@ describe('user.database.ts', () => {
   const mockUserDataSource = new MockUserDataSource();
   test('test in function getById()', async () => {
     const id = Uuid.v4();
+
     expect(typeof mockUserDataSource.getById).toBe('function');
     expect(mockUserDataSource.getById(id)).resolves.toEqual({
       ok: true,
@@ -90,8 +91,9 @@ describe('user.database.ts', () => {
     });
   });
 
-  test('test in function getWhere()', async () => {
-    const username = Uuid.v4();
+  test('test in function getByParam()', async () => {
+    const username = Generator.randomUsername();
+
     expect(typeof mockUserDataSource.getByParam).toBe('function');
     expect(mockUserDataSource.getByParam({ username })).resolves.toEqual({
       ok: true,
@@ -100,12 +102,12 @@ describe('user.database.ts', () => {
   });
 
   test('test in function getAll()', async () => {
+    const { users } = await mockUserDataSource.getAll(page, limit);
+
     expect(typeof mockUserDataSource.getAll).toBe('function');
     expect(mockUserDataSource.getAll(page, limit)).resolves.toEqual(
-      getAllReturnValue
+      userPagination
     );
-
-    const { users } = await mockUserDataSource.getAll(page, limit);
 
     expect(users).toBeInstanceOf(Array);
     expect(users).toHaveLength(2);
@@ -115,16 +117,16 @@ describe('user.database.ts', () => {
   });
 
   test('test in function getAllActive()', async () => {
-    expect(typeof mockUserDataSource.getAllActive).toBe('function');
-    expect(
-      mockUserDataSource.getAllActive(page, limit, isActive)
-    ).resolves.toEqual(getAllReturnValue);
-
     const { users } = await mockUserDataSource.getAllActive(
       page,
       limit,
       isActive
     );
+
+    expect(typeof mockUserDataSource.getAllActive).toBe('function');
+    expect(
+      mockUserDataSource.getAllActive(page, limit, isActive)
+    ).resolves.toEqual(userPagination);
 
     expect(users).toBeInstanceOf(Array);
     expect(users).toHaveLength(2);

@@ -16,7 +16,7 @@
     "docker:test-up": "docker compose -f docker-compose.test.yml --env-file .env.test up -d",
     "docker:test-down": "COMPOSE_FILE=docker-compose.test.yml docker compose down",
     "test": "npm run docker:test-up && jest",
-    "test:watch": "jest --watch --runInBand",
+    "test:watch": "jest --watch --runInBand --coverage",
     "test:coverage": "jest --coverage --runInBand",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate",
