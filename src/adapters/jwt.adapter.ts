@@ -11,11 +11,10 @@ interface GenerateProps {
 
 export class JwtAdapter {
   static async generateToken(param: GenerateProps): Promise<string> {
-    const { payload, expiresIn = '10h' } = param;
+    const { payload, expiresIn = jwt_duration } = param;
 
     return new Promise((resolve, reject) => {
-      jwt.sign(payload, jwt_seed, { expiresIn: 36000 }, (err, token) => {
-        console.log({ err, payload, expiresIn });
+      jwt.sign(payload, jwt_seed, { expiresIn }, (err, token) => {
         if (err) return reject('error white create token');
         return resolve(token!);
       });
