@@ -1,6 +1,6 @@
-import bcrypt from 'bcrypt';
 import { IUser, UserRolesList } from '../../domain/interfaces';
 import { Generator } from '../../utils/generator';
+import { BcryptAdapter } from '../../adapters';
 
 export interface IUserSeed extends Omit<IUser, 'id' | 'birdDate'> {
   birdDate: Date;
@@ -13,7 +13,7 @@ export const users: IUserSeed[] = [
     name: 'John Doe',
     phone: '+1234567890',
     username: 'John_Doe@username',
-    password: bcrypt.hashSync('123456', 10),
+    password: BcryptAdapter.hash('123456'),
     isActive: true,
   },
   {
@@ -22,7 +22,7 @@ export const users: IUserSeed[] = [
     name: 'Jane Smith',
     phone: '+0987654321',
     username: 'Jane_Smith@username',
-    password: bcrypt.hashSync('123456', 10),
+    password: BcryptAdapter.hash('123456'),
     isActive: true,
   },
   {
@@ -31,7 +31,7 @@ export const users: IUserSeed[] = [
     name: 'Alice Johnson',
     phone: '+1122334455',
     username: 'Alice_Johnson@username',
-    password: bcrypt.hashSync('123456', 10),
+    password: BcryptAdapter.hash('123456'),
     isActive: true,
   },
   {
@@ -40,7 +40,7 @@ export const users: IUserSeed[] = [
     name: 'Bob Brown',
     phone: '+5566778899',
     username: 'Bob_Brown@username',
-    password: bcrypt.hashSync('123456', 10),
+    password: BcryptAdapter.hash('123456'),
     isActive: true,
   },
   {
@@ -49,7 +49,7 @@ export const users: IUserSeed[] = [
     name: 'Emily White',
     phone: '+9988776655',
     username: 'Emily_White@username',
-    password: bcrypt.hashSync('123456', 10),
+    password: BcryptAdapter.hash('123456'),
     isActive: false,
   },
 
@@ -59,7 +59,7 @@ export const users: IUserSeed[] = [
     name: 'Maria Smith',
     phone: '+098765434',
     username: 'Maria_Smith@username',
-    password: bcrypt.hashSync('123456', 10),
+    password: BcryptAdapter.hash('123456'),
     isActive: false,
   },
 ];

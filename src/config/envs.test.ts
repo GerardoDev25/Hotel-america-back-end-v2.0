@@ -5,6 +5,8 @@ describe('envs.tets.ts', () => {
     expect(envs).toEqual({
       PORT: 3000,
       POSTGRES_USER: process.env.POSTGRES_USER,
+      JWT_DURATION: process.env.JWT_DURATION,
+      JWT_SEED: process.env.JWT_SEED,
       POSTGRES_DB: process.env.POSTGRES_DB,
       POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
       DB_PORT: 5430,

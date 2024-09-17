@@ -19,7 +19,7 @@ describe('type-string.ts', () => {
 
   test('should return a error message if value is empty', () => {
     const result = StringValidator.isValid('');
-    expect(result).toBe('property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format');
+    expect(result).toBe('property is empty');
   });
 
   test('should return true is value is allow', () => {
