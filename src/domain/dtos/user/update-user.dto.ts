@@ -39,10 +39,10 @@ export class UpdateUserDto {
         id,
         role,
         DateValidator.toDate(birdDate) ?? undefined,
-        name,
-        phone,
-        username,
-        password,
+        name ? (name as string).trim() : undefined,
+        phone ? (phone as string).trim() : undefined,
+        username ? (username as string).trim().toLowerCase() : undefined,
+        password ? (password as string).trim() : undefined,
         !!BooleanValidator.toBoolean(isActive)
       ),
     ];
