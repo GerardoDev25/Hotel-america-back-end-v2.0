@@ -1,7 +1,7 @@
-import { CreateUserDto, UpdateUserDto } from '../../domain/dtos/user';
-import { PaginationDto } from '../../domain/dtos/share';
-import { UserRepository } from '../../domain/repositories';
-import { CustomError } from '../../domain/error';
+import { CreateUserDto, UpdateUserDto } from '../../../domain/dtos/user';
+import { PaginationDto } from '../../../domain/dtos/share';
+import { UserRepository } from '../../../domain/repositories';
+import { CustomError } from '../../../domain/error';
 
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}

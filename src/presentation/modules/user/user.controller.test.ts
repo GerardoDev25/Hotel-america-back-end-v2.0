@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { UserController } from './user.controller';
-import { CustomError } from '../../domain/error';
+import { CustomError } from '../../../domain/error';
 import { UserService } from './user.service';
-import { PaginationDto } from '../../domain/dtos/share';
-import { Generator } from '../../utils/generator';
-import { Uuid } from '../../adapters';
+import { PaginationDto } from '../../../domain/dtos/share';
+import { Generator } from '../../../utils/generator';
+import { Uuid } from '../../../adapters';
 
 describe('user.controller.ts', () => {
   const user1 = {

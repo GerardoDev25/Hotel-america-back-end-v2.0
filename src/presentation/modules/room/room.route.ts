@@ -1,11 +1,10 @@
 import { Router } from 'express';
 import { RoomService } from './room.service';
 import { RoomController } from './room.controller';
-import { RoomRepositoryImpl } from '../../infrastructure/repositories/';
-import { RoomDatasourceImpl } from '../../infrastructure/datasource/';
-// import { CheckDataRoom } from '../middlewares/check-data';
-import { LoggerService } from '../services';
-import { Commons } from '../middlewares';
+import { RoomRepositoryImpl } from '../../../infrastructure/repositories/';
+import { RoomDatasourceImpl } from '../../../infrastructure/datasource/';
+import { LoggerService } from '../../services';
+import { Commons } from '../../middlewares';
 export class RoomRoute {
   constructor() {}
 

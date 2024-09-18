@@ -1,9 +1,9 @@
 import request from 'supertest';
 
-import { prisma } from '../../data/postgres';
-import { testServer } from '../../test-server';
-import { seedData } from '../../data/seed/data';
-import { Uuid } from '../../adapters';
+import { prisma } from '../../../data/postgres';
+import { testServer } from '../../../test-server';
+import { seedData } from '../../../data/seed/data';
+import { Uuid } from '../../../adapters';
 
 describe('user.route.ts', () => {
   beforeAll(async () => {

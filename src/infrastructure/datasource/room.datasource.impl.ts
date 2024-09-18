@@ -91,7 +91,6 @@ export class RoomDatasourceImpl extends RoomDatasource {
       if (error instanceof CustomError) {
         throw error;
       }
-      console.log(error);
       throw CustomError.internalServerError(`internal server error`);
     }
   }

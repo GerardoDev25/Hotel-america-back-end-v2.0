@@ -1,11 +1,11 @@
 import {
   CreateRegisterDto,
   UpdateRegisterDto,
-} from '../../domain/dtos/register';
-import { PaginationDto } from '../../domain/dtos/share';
-import { CustomError } from '../../domain/error';
-import { RegisterRepository } from '../../domain/repositories/register.repository';
-import { RoomRepository } from '../../domain/repositories/room.repository';
+} from '../../../domain/dtos/register';
+import { PaginationDto } from '../../../domain/dtos/share';
+import { CustomError } from '../../../domain/error';
+import { RegisterRepository } from '../../../domain/repositories/register.repository';
+import { RoomRepository } from '../../../domain/repositories/room.repository';
 export class RegisterService {
   constructor(
     private readonly registerRepository: RegisterRepository,

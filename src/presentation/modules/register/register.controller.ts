@@ -2,11 +2,11 @@ import { Response, Request } from 'express';
 import {
   CreateRegisterDto,
   UpdateRegisterDto,
-} from '../../domain/dtos/register';
-import { PaginationDto } from '../../domain/dtos/share';
-import { CustomError } from '../../domain/error';
+} from '../../../domain/dtos/register';
+import { PaginationDto } from '../../../domain/dtos/share';
+import { CustomError } from '../../../domain/error';
 import { RegisterService } from './register.service';
-import { variables } from '../../domain/variables';
+import { variables } from '../../../domain/variables';
 
 export class RegisterController {
   constructor(private readonly registerService: RegisterService) {}

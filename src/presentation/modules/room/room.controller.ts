@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
-import { CustomError } from '../../domain/error';
+import { CreateRoomDto, UpdateRoomDto } from '../../../domain/dtos/room';
+import { CustomError } from '../../../domain/error';
 import { RoomService } from './room.service';
-import { AvailableDto, PaginationDto } from '../../domain/dtos/share';
-import { variables } from '../../domain/variables';
+import { AvailableDto, PaginationDto } from '../../../domain/dtos/share';
+import { variables } from '../../../domain/variables';
 
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}

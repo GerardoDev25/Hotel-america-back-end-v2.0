@@ -1,6 +1,6 @@
-import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
-import { PaginationDto } from '../../domain/dtos/share';
-import { RoomRepository } from '../../domain/repositories';
+import { CreateRoomDto, UpdateRoomDto } from '../../../domain/dtos/room';
+import { PaginationDto } from '../../../domain/dtos/share';
+import { RoomRepository } from '../../../domain/repositories';
 import { RoomService } from './room.service';
 
 describe('room.service.ts', () => {

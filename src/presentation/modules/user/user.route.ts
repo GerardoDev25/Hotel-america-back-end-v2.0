@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { UserRepositoryImpl } from '../../infrastructure/repositories';
-import { UserDatasourceImpl } from '../../infrastructure/datasource';
-import { Commons } from '../middlewares/';
-import { LoggerService } from '../services';
+import { UserRepositoryImpl } from '../../../infrastructure/repositories';
+import { UserDatasourceImpl } from '../../../infrastructure/datasource';
+import { Commons } from '../../middlewares/';
+import { LoggerService } from '../../services';
 
 export class UserRoute {
 

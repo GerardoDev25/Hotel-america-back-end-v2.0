@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { RoomController } from './room.controller';
-import { CustomError } from '../../domain/error';
+import { CustomError } from '../../../domain/error';
 import { RoomService } from './room.service';
-import { PaginationDto } from '../../domain/dtos/share';
+import { PaginationDto } from '../../../domain/dtos/share';
 
 describe('room.controller.ts', () => {
   const room1 = {
@@ -182,7 +182,6 @@ describe('room.controller.ts', () => {
 
     expect(mockRoomService.create).toHaveBeenCalledWith(room1);
   });
-
 
   // todo this test use to run correctly but not any more check later
   it.skip('should update a room when updateRoom is called (update)', async () => {
