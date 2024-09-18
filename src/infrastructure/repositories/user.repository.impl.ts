@@ -24,10 +24,9 @@ export class UserRepositoryImpl extends UserRepository {
     limit: number,
     isActive?: boolean
   ): Promise<UserPagination> {
-    if (isActive === undefined) {
-      return this.userDataSource.getAll(page, limit);
-    }
-    return this.userDataSource.getAllActive(page, limit, isActive);
+    return isActive === undefined
+      ? this.userDataSource.getAll(page, limit)
+      : this.userDataSource.getAllActive(page, limit, isActive);
   }
 
   async create(

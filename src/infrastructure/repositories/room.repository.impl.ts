@@ -14,10 +14,9 @@ export class RoomRepositoryImpl extends RoomRepository {
     limit: number,
     isAvailable?: boolean
   ): Promise<RoomPagination> {
-    if (isAvailable === undefined) {
-      return this.roomDataSource.getAll(page, limit);
-    }
-    return this.roomDataSource.getAllAvailable(page, limit, isAvailable);
+    return isAvailable === undefined
+      ? this.roomDataSource.getAll(page, limit)
+      : this.roomDataSource.getAllAvailable(page, limit, isAvailable);
   }
 
   async create(
