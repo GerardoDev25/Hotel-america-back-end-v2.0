@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UserLoginDto, UserRefreshTokenDto } from '../../domain/dtos/auth';
+import { AuthLoginDto, AuthRefreshTokenDto } from '../../domain/dtos/auth';
 import { CustomError } from '../../domain/error';
 import { AuthService } from './auth.service';
 
@@ -18,7 +18,7 @@ export class AuthController {
   };
 
   login = (req: Request, res: Response) => {
-    const [errors, userLoginDto] = UserLoginDto.create(req.body);
+    const [errors, userLoginDto] = AuthLoginDto.create(req.body);
 
     if (errors) {
       return res.status(400).json({ ok: false, errors });
@@ -31,7 +31,7 @@ export class AuthController {
   };
 
   refreshToken = (req: Request, res: Response) => {
-    const [errors, userRefreshTokenDto] = UserRefreshTokenDto.create(req.body);
+    const [errors, userRefreshTokenDto] = AuthRefreshTokenDto.create(req.body);
 
     if (errors) {
       return res.status(400).json({ ok: false, errors });

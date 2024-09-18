@@ -6,7 +6,9 @@ describe('type-date.ts', () => {
   });
 
   test('should get error message if is empty', () => {
-    expect(DateValidator.isValid('')).toBe('property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format');
+    expect(DateValidator.isValid('')).toBe(
+      'property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format'
+    );
   });
 
   test('should get error message if is not valid iso date', () => {

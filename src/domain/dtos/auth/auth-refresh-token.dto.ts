@@ -1,11 +1,11 @@
 import { StringValidator } from '../../type-validators';
 
-export class UserRefreshTokenDto {
+export class AuthRefreshTokenDto {
   constructor(public readonly token: string) {}
 
   static create(
     obj: Record<string, string>
-  ): [string[]?, UserRefreshTokenDto?] {
+  ): [string[]?, AuthRefreshTokenDto?] {
     const { token } = obj;
 
     const errors: string[] = [];
@@ -15,6 +15,6 @@ export class UserRefreshTokenDto {
 
     if (errors.length > 0) return [errors, undefined];
 
-    return [undefined, new UserRefreshTokenDto(token)];
+    return [undefined, new AuthRefreshTokenDto(token)];
   }
 }

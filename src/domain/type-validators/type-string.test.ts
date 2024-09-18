@@ -64,4 +64,17 @@ describe('type-string.ts', () => {
     const validId = StringValidator.isValidUUID(id);
     expect(validId).toBe('is not a valid uuid');
   });
+
+  test('should get true if is valid JWT', async () => {
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTcyNjYxMzMzNSwiZXhwIjoxNzI2NjIwNTM1fQ.kqsrsYiL21dpGw4SLkA56fU03CyuNuaEwfga1l00KP0';
+
+    expect(StringValidator.isJWT(token)).toBeTruthy();
+  });
+
+  test('should get false if is not valid JWT', async () => {
+    const token = '';
+
+    expect(StringValidator.isJWT(token)).toBeFalsy();
+  });
 });

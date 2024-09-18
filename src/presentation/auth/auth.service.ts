@@ -1,5 +1,5 @@
 import { BcryptAdapter, JwtAdapter } from '../../adapters';
-import { UserLoginDto, UserRefreshTokenDto } from '../../domain/dtos/auth';
+import { AuthLoginDto, AuthRefreshTokenDto } from '../../domain/dtos/auth';
 import { CustomError } from '../../domain/error';
 import { UserRepository } from '../../domain/repositories/user.repository';
 
@@ -11,7 +11,7 @@ export class AuthService {
     throw CustomError.internalServerError('Internal Server Error');
   }
 
-  login = async (userLoginDto: UserLoginDto) => {
+  login = async (userLoginDto: AuthLoginDto) => {
     const { username, password } = userLoginDto;
 
     try {
@@ -39,7 +39,7 @@ export class AuthService {
     }
   };
 
-  refreshToken = async (userRefreshTokenDto: UserRefreshTokenDto) => {
+  refreshToken = async (userRefreshTokenDto: AuthRefreshTokenDto) => {
     const { token } = userRefreshTokenDto;
 
     const payload = await JwtAdapter.verifyToken<{ id: string }>(token);

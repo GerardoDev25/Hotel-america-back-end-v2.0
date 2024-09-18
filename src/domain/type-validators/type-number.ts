@@ -1,8 +1,3 @@
-// interface IsValidParams {
-//   value: any;
-//   isRequired?: boolean;
-// }
-
 interface MinValueParams {
   value: number;
   minValue: number;
@@ -10,12 +5,9 @@ interface MinValueParams {
 
 export class NumberValidator {
   static isValid = (value: any): true | string => {
-    // const { value, isRequired = false } = params;
     const exertionLists = ['', false, true];
 
-    if (value === undefined) {
-      return 'property is required';
-    }
+    if (value === undefined) return 'property is required';
 
     if (isNaN(value)) return 'property most be a number';
 

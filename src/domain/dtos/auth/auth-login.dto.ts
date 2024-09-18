@@ -5,7 +5,7 @@ interface Params {
   password: string;
 }
 
-export class UserLoginDto {
+export class AuthLoginDto {
   constructor(public username: string, public password: string) {}
 
   private static verifyFields = ({ username, password }: Params): string[] => {
@@ -24,13 +24,16 @@ export class UserLoginDto {
     return errors;
   };
 
-  static create(object: Record<string, string>): [string[]?, UserLoginDto?] {
+  static create(object: Record<string, string>): [string[]?, AuthLoginDto?] {
     const { username, password } = object;
 
     const errors = this.verifyFields({ username, password });
 
     if (errors.length > 0) return [errors, undefined];
 
-    return [undefined, new UserLoginDto(username, password)];
+    return [
+      undefined,
+      new AuthLoginDto(username.trim().toLowerCase(), password.trim()),
+    ];
   }
 }
