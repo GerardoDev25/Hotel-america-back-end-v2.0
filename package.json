@@ -7,15 +7,15 @@
   "license": "MIT",
   "scripts": {
     "seed": "ts-node-dev ./src/data/seed/seed.ts",
-    "dev": "tsnd --respawn --clear src/app.ts",
-    "build": "rimraf ./dist && tsc",
+    "dev": "tsnd -r tsconfig-paths/register --respawn --clear src/app.ts",
+    "build": "rimraf ./dist && tsc && tsc-alias -p tsconfig.json",
     "delete-logs": "rimraf ./logs",
     "start": "npm run build && node dist/app.js",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:test-up": "docker compose -f docker-compose.test.yml --env-file .env.test up -d",
     "docker:test-down": "COMPOSE_FILE=docker-compose.test.yml docker compose down",
-    "test": "npm run docker:test-up && jest",
+    "test": "jest --runInBand",
     "test:watch": "jest --watch --runInBand --coverage",
     "test:coverage": "jest --coverage --runInBand",
     "prisma:migrate": "prisma migrate dev",
@@ -39,6 +39,8 @@
     "ts-jest": "^29.2.4",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.10",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.4"
   },
   "dependencies": {

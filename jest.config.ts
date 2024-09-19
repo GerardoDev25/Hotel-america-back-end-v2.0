@@ -3,10 +3,15 @@
  * https://jestjs.io/docs/configuration
  */
 
-import type { Config } from 'jest';
 import path from 'node:path';
+import type { Config } from 'jest';
+
+import { pathsToModuleNameMapper } from 'ts-jest';
+import { compilerOptions } from './tsconfig.json';
 
 const config: Config = {
+  modulePaths: [compilerOptions.baseUrl],
+
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -91,7 +96,9 @@ const config: Config = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: '<rootDir>/',
+  }),
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -164,6 +171,7 @@ const config: Config = {
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   testPathIgnorePatterns: [
     '/node_modules/',
+    path.resolve(__dirname, 'dist'),
     path.resolve(__dirname, 'postgres'),
     path.resolve(__dirname, 'postgres_test'),
   ],
@@ -194,6 +202,7 @@ const config: Config = {
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
   watchPathIgnorePatterns: [
+    path.resolve(__dirname, 'dist'),
     path.resolve(__dirname, 'postgres'),
     path.resolve(__dirname, 'postgres_test'),
   ],
