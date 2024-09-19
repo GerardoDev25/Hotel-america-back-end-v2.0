@@ -1,10 +1,13 @@
 import { Router } from 'express';
+
+import { RoomRepositoryImpl } from '@infrastructure/repositories/';
+import { RoomDatasourceImpl } from '@infrastructure/datasource/';
+
+import { Commons } from '@presentation/middlewares';
+import { LoggerService } from '@presentation/services';
 import { RoomService } from './room.service';
 import { RoomController } from './room.controller';
-import { RoomRepositoryImpl } from '../../../infrastructure/repositories/';
-import { RoomDatasourceImpl } from '../../../infrastructure/datasource/';
-import { LoggerService } from '../../services';
-import { Commons } from '../../middlewares';
+
 export class RoomRoute {
   constructor() {}
 

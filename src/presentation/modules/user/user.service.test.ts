@@ -1,9 +1,11 @@
-import { CreateUserDto, UpdateUserDto } from '../../../domain/dtos/user';
-import { PaginationDto } from '../../../domain/dtos/share';
-import { UserRepository } from '../../../domain/repositories';
+import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { PaginationDto } from '@domain/dtos/share';
+import { UserRepository } from '@domain/repositories';
+
+import { Uuid } from '@src/adapters';
+import { Generator } from '@src/utils/generator';
+
 import { UserService } from './user.service';
-import { Uuid } from '../../../adapters';
-import { Generator } from '../../../utils/generator';
 
 describe('user.service.ts', () => {
   const mockUserRepository = {

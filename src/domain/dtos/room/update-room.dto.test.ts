@@ -1,5 +1,5 @@
-import { Uuid } from '../../../adapters';
-import { UpdateRoom } from '../../interfaces';
+import { UpdateRoom } from '@domain/interfaces';
+import { Uuid } from '@src/adapters';
 import { UpdateRoomDto } from './update-room.dto';
 
 describe('update-room.dto.ts', () => {

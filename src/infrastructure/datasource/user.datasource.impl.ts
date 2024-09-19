@@ -1,12 +1,15 @@
 import { User } from '@prisma/client';
-import { prisma } from '../../data/postgres';
-import { UserDatasource } from '../../domain/datasources';
-import { CreateUserDto, UpdateUserDto } from '../../domain/dtos/user';
-import { UserEntity } from '../../domain/entities';
-import { CustomError } from '../../domain/error';
-import { IUser, UserPagination } from '../../domain/interfaces';
-import { LoggerService } from '../../presentation/services';
-import { cleanObject, pagination } from '../../utils';
+
+import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { CustomError } from '@domain/error';
+import { IUser, UserPagination } from '@domain/interfaces';
+import { UserDatasource } from '@domain/datasources';
+import { UserEntity } from '@domain/entities';
+
+import { LoggerService } from '@presentation/services';
+
+import { cleanObject, pagination } from '@src/utils';
+import { prisma } from '@src/data/postgres';
 
 export class UserDatasourceImpl extends UserDatasource {
   constructor(private readonly logger: LoggerService) {

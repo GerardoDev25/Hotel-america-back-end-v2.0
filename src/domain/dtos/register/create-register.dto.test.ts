@@ -1,5 +1,6 @@
-import { Uuid } from '../../../adapters';
-import { Generator } from '../../../utils/generator';
+import { Generator } from '@src/utils/generator';
+import { Uuid } from '@src/adapters';
+
 import { CreateRegisterDto } from './create-register.dto';
 
 describe('create-register.dto.ts', () => {

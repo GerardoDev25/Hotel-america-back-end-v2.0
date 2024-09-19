@@ -1,6 +1,6 @@
-import { Uuid } from '../../adapters';
-import { Generator } from '../../utils/generator';
-import { IUser, UserRolesList } from '../interfaces';
+import { Uuid } from '@src/adapters';
+import { Generator } from '@src/utils/generator';
+import { IUser, UserRolesList } from '@domain/interfaces';
 import { UserEntity } from './user.entity';
 
 describe('user.entity.ts', () => {

@@ -1,4 +1,4 @@
-import { variables } from "../../variables";
+import { variables } from "@domain/variables";
 
 export class PaginationDto {
   private constructor(

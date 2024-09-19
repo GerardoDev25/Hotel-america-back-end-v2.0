@@ -1,9 +1,9 @@
-import { CreateUser, UpdateUser, UserRolesList } from '../../interfaces/';
+import { CreateUser, UpdateUser, UserRolesList } from '@domain/interfaces';
 import {
   StringValidator,
   DateValidator,
   BooleanValidator,
-} from '../../type-validators';
+} from '@domain/type-validators';
 
 export class UserValidator {
   static create(object: CreateUser): string[] {

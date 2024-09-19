@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
+
+import { CustomError } from '@domain/error';
+import { PaginationDto } from '@domain/dtos/share';
+
 import { RoomController } from './room.controller';
-import { CustomError } from '../../../domain/error';
 import { RoomService } from './room.service';
-import { PaginationDto } from '../../../domain/dtos/share';
 
 describe('room.controller.ts', () => {
   const room1 = {

@@ -1,6 +1,6 @@
-import { Uuid } from '../../adapters';
-import { Generator } from '../../utils/generator';
-import { IRegister } from '../interfaces';
+import { Uuid } from '@src/adapters';
+import { Generator } from '@src/utils/generator';
+import { IRegister } from '@domain/interfaces';
 import { RegisterEntity } from './register.entity';
 
 describe('register.entity.ts', () => {

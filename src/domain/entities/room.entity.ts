@@ -1,11 +1,11 @@
-import { variables } from '../variables';
-import { CustomError } from '../error/';
-import { IRoom, RoomType, RoomTypesList } from '../interfaces/';
+import { variables } from '@domain/variables';
+import { CustomError } from '@domain/error/';
+import { IRoom, RoomType, RoomTypesList } from '@domain/interfaces/';
 import {
   BooleanValidator,
   NumberValidator,
   StringValidator,
-} from '../type-validators';
+} from '@domain/type-validators';
 
 export class RoomEntity implements IRoom {
   id: string;

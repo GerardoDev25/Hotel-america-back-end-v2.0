@@ -1,4 +1,4 @@
-import { BooleanValidator } from '../../type-validators';
+import { BooleanValidator } from '@domain/type-validators';
 
 export class ActiveDto {
   private constructor(public readonly isActive: boolean | undefined) {}

@@ -1,6 +1,6 @@
-import { envs } from './config';
-import { Server } from '../src/presentation/server';
-import { LoggerService } from './presentation/services';
+import { envs } from '@src/config';
+import { Server } from '@src/presentation/server';
+import { LoggerService } from '@presentation/services';
 
 jest.mock('../src/presentation/server');
 

@@ -1,8 +1,11 @@
 import { Router } from 'express';
+
+import { UserDatasourceImpl } from '@infrastructure/datasource';
+import { UserRepositoryImpl } from '@infrastructure/repositories';
+
+import { LoggerService } from '@presentation/services';
+
 import { AuthController, AuthService } from '.';
-import { UserDatasourceImpl } from '../../../infrastructure/datasource';
-import { UserRepositoryImpl } from '../../../infrastructure/repositories';
-import { LoggerService } from '../../services';
 
 export class AuthRoute {
   constructor() {}
@@ -13,7 +16,7 @@ export class AuthRoute {
     const logger = new LoggerService('user.datasource.impl.ts');
     const userDatasource = new UserDatasourceImpl(logger);
     const userRepository = new UserRepositoryImpl(userDatasource);
-    
+
     const authService = new AuthService(userRepository);
     const authController = new AuthController(authService);
 

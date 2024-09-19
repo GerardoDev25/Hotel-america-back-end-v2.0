@@ -1,8 +1,9 @@
-import { Uuid } from '../../adapters';
-import { CreateRoomDto, UpdateRoomDto } from '../dtos/room';
-import { RoomEntity } from '../entities';
-import { RoomPagination, RoomTypesList } from '../interfaces';
+import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
+import { RoomEntity } from '@domain/entities';
+import { RoomPagination, RoomTypesList } from '@domain/interfaces';
+
 import { RoomDatasource } from './room.datasource';
+import { Uuid } from '@src/adapters';
 
 describe('room.database.ts', () => {
   const page = 2;

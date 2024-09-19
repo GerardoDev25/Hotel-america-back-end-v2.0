@@ -1,9 +1,8 @@
-import { Uuid } from '../../adapters';
-import { RegisterDatasource } from '../../domain/datasources';
-import {
-  CreateRegisterDto,
-  UpdateRegisterDto,
-} from '../../domain/dtos/register';
+import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
+import { RegisterDatasource } from '@domain/datasources';
+
+import { Uuid } from '@src/adapters';
+
 import { RegisterRepositoryImpl } from './register.repository.impl';
 
 describe('register.repository.impl.ts', () => {

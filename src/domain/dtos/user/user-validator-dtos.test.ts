@@ -1,8 +1,6 @@
-import { Uuid } from '../../../adapters';
-import { Generator } from '../../../utils/generator';
-import { CreateUser, UpdateUser, UserRolesList } from '../../interfaces';
-import { CreateUserDto } from './create-user.dto';
-import { UpdateUserDto } from './update-user.dto';
+import { UserRolesList } from '@domain/interfaces';
+import { Generator } from '@src/utils/generator';
+import { Uuid } from '@src/adapters';
 import { UserValidator } from './user-validator-dtos';
 
 describe('user-validator-dtos.ts', () => {

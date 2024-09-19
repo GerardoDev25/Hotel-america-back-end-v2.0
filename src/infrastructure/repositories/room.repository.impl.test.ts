@@ -1,7 +1,9 @@
-import { Uuid } from '../../adapters';
-import { RoomDatasource } from '../../domain/datasources';
-import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
-import { RoomTypesList } from '../../domain/interfaces';
+import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
+import { RoomDatasource } from '@domain/datasources';
+import { RoomTypesList } from '@domain/interfaces';
+
+import { Uuid } from '@src/adapters';
+
 import { RoomRepositoryImpl } from './room.repository.impl';
 
 describe('room.repository.impl.ts', () => {

@@ -1,5 +1,5 @@
-import { Uuid } from '../../../adapters';
-import { Generator } from '../../../utils/generator';
+import { Generator } from '@src/utils/generator';
+import { Uuid } from '@src/adapters';
 import { UpdateUserDto } from './update-user.dto';
 
 describe('update-user.dto.ts', () => {

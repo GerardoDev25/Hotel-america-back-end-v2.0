@@ -1,4 +1,4 @@
-import { IRoom } from '../../domain/interfaces';
+import { IRoom } from '@domain/interfaces';
 
 export const rooms: Omit<IRoom, 'id'>[] = [
   { roomType: 'normal', roomNumber: 100, betsNumber: 2, isAvailable: true },

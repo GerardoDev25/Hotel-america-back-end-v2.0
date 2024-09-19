@@ -1,5 +1,5 @@
-import { Uuid } from '../../../adapters';
-import { Generator } from '../../../utils/generator';
+import { Uuid } from '@src/adapters';
+import { Generator } from '@src/utils/generator';
 import { RegisterValidator } from './register-validator-dtos';
 
 describe('register-validator-dtos.ts', () => {

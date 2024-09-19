@@ -1,10 +1,10 @@
-import { CustomError } from '../error';
-import { IUser, UserRolesList, UserRole } from '../interfaces';
+import { CustomError } from '@domain/error';
+import { IUser, UserRolesList, UserRole } from '@domain/interfaces';
 import {
   BooleanValidator,
   DateValidator,
   StringValidator,
-} from '../type-validators';
+} from '@domain/type-validators';
 
 export class UserEntity implements IUser {
   id: string;

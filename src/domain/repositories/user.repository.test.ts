@@ -1,8 +1,9 @@
-import { Uuid } from '../../adapters';
-import { Generator } from '../../utils/generator';
-import { CreateUserDto, UpdateUserDto } from '../dtos/user';
-import { UserEntity } from '../entities';
-import { IUser, UserPagination } from '../interfaces';
+import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { IUser, UserPagination } from '@domain/interfaces';
+import { UserEntity } from '@domain/entities';
+
+import { Generator } from '@src/utils/generator';
+import { Uuid } from '@src/adapters';
 import { UserRepository } from './user.repository';
 
 describe('user.repository.ts', () => {

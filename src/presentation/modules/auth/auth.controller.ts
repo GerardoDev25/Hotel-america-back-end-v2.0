@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
-import { AuthLoginDto, AuthRefreshTokenDto } from '../../../domain/dtos/auth';
-import { CustomError } from '../../../domain/error';
+
+import { AuthLoginDto, AuthRefreshTokenDto } from '@domain/dtos/auth';
+import { CustomError } from '@domain/error';
+
 import { AuthService } from './auth.service';
 
 export class AuthController {

@@ -1,8 +1,8 @@
-import { UserDatasource } from '../../domain/datasources';
-import { CreateUserDto, UpdateUserDto } from '../../domain/dtos/user';
-import { UserEntity } from '../../domain/entities';
-import { IUser, UserPagination } from '../../domain/interfaces';
-import { UserRepository } from '../../domain/repositories';
+import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { IUser, UserPagination } from '@domain/interfaces';
+import { UserDatasource } from '@domain/datasources';
+import { UserEntity } from '@domain/entities';
+import { UserRepository } from '@domain/repositories';
 
 export class UserRepositoryImpl extends UserRepository {
   constructor(private readonly userDataSource: UserDatasource) {

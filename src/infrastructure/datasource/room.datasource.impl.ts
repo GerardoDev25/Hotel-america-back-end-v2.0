@@ -1,13 +1,13 @@
-// import { prisma } from '../../data/postgres';
-import { prisma } from '@src/data/postgres';
-// import { RoomDatasource } from '@domain/datasources';
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
-import { RoomEntity } from '@domain/entities';
 import { CustomError } from '@domain/error';
-import { RoomPagination } from '@domain/interfaces';
-import { LoggerService } from '../../presentation/services';
-import { cleanObject, pagination } from '../../utils';
 import { RoomDatasource } from '@domain/datasources';
+import { RoomEntity } from '@domain/entities';
+import { RoomPagination } from '@domain/interfaces';
+
+import { LoggerService } from '@presentation/services';
+
+import { prisma } from '@src/data/postgres';
+import { cleanObject, pagination } from '@src/utils';
 
 export class RoomDatasourceImpl extends RoomDatasource {
   constructor(private readonly logger: LoggerService) {

@@ -1,14 +1,14 @@
-import { variables } from '../../variables';
+import { variables } from '@domain/variables';
 import {
   BooleanValidator,
   NumberValidator,
   StringValidator,
-} from '../../type-validators';
+} from '@domain/type-validators';
 import {
   UpdateRoom,
   CreateRoom,
   RoomTypesList,
-} from '../../interfaces/room.interface';
+} from '@domain/interfaces/room.interface';
 
 export class RoomValidator {
   static create(object: CreateRoom): string[] {

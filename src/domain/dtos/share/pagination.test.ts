@@ -1,4 +1,4 @@
-import { variables } from '../../variables';
+import { variables } from '@domain/variables';
 import { PaginationDto } from './pagination';
 
 describe('pagination.ts', () => {

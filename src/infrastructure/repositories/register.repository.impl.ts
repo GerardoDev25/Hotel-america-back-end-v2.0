@@ -1,11 +1,8 @@
-import { RegisterDatasource } from '../../domain/datasources';
-import {
-  CreateRegisterDto,
-  UpdateRegisterDto,
-} from '../../domain/dtos/register';
-import { RegisterEntity } from '../../domain/entities';
-import { RegisterPagination, IRegister } from '../../domain/interfaces';
-import { RegisterRepository } from '../../domain/repositories/register.repository';
+import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
+import { RegisterDatasource } from '@domain/datasources';
+import { RegisterEntity } from '@domain/entities';
+import { RegisterPagination, IRegister } from '@domain/interfaces';
+import { RegisterRepository } from '@domain/repositories';
 
 export class RegisterRepositoryImpl extends RegisterRepository {
   constructor(private readonly registerDataSource: RegisterDatasource) {

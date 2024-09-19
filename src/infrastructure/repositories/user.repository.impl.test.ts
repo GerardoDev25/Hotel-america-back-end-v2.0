@@ -1,7 +1,9 @@
-import { Uuid } from '../../adapters';
-import { UserDatasource } from '../../domain/datasources';
-import { CreateUserDto, UpdateUserDto } from '../../domain/dtos/user';
-import { Generator } from '../../utils/generator';
+import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { UserDatasource } from '@domain/datasources';
+
+import { Generator } from '@src/utils/generator';
+import { Uuid } from '@src/adapters';
+
 import { UserRepositoryImpl } from './user.repository.impl';
 
 describe('user.repository.impl.ts', () => {

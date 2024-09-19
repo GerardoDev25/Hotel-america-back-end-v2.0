@@ -1,5 +1,5 @@
 import { Commons } from './commons';
-import { Uuid } from '../../adapters';
+import { Uuid } from '@src/adapters';
 
 describe('commons.ts', () => {
   const res = {

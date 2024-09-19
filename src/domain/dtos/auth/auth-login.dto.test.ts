@@ -1,4 +1,4 @@
-import { Generator } from '../../../utils/generator';
+import { Generator } from '@src/utils/generator';
 import { AuthLoginDto } from './auth-login.dto';
 
 describe('auth-login.dto.ts', () => {

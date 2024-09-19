@@ -1,8 +1,10 @@
 import path from 'node:path';
 import express, { Router } from 'express';
-import { checkDatabaseConnection } from '../data/postgres';
-import { LoggerService } from './services';
-import { envs } from '../config';
+
+import { LoggerService } from '@presentation/services';
+
+import { checkDatabaseConnection } from '@src/data/postgres';
+import { envs } from '@src/config';
 
 interface Options {
   port: number;

@@ -1,15 +1,15 @@
-import { RegisterEntity } from '../../domain/entities';
-import { LoggerService } from '../../presentation/services';
-import { RegisterDatasource } from '../../domain/datasources';
-import { RegisterPagination, IRegister } from '../../domain/interfaces';
-import {
-  CreateRegisterDto,
-  UpdateRegisterDto,
-} from '../../domain/dtos/register';
-import { CustomError } from '../../domain/error';
-import { prisma } from '../../data/postgres';
-import { cleanObject, pagination } from '../../utils';
 import { Register } from '@prisma/client';
+
+import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
+import { CustomError } from '@domain/error';
+import { RegisterDatasource } from '@domain/datasources';
+import { RegisterEntity } from '@domain/entities';
+import { RegisterPagination, IRegister } from '@domain/interfaces';
+
+import { LoggerService } from '@presentation/services';
+
+import { cleanObject, pagination } from '@src/utils';
+import { prisma } from '@src/data/postgres';
 
 export class RegisterDatasourceImpl extends RegisterDatasource {
   constructor(private readonly logger: LoggerService) {
@@ -96,10 +96,9 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     createRegisterDto: CreateRegisterDto
   ): Promise<{ ok: boolean; register: RegisterEntity }> {
     try {
-
       // todo before change for a transaction
       // todo change room isAvailable to false
-      
+
       const newRegister = await prisma.register.create({
         data: createRegisterDto,
       });

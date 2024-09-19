@@ -1,5 +1,5 @@
-import { BooleanValidator, DateValidator } from '../../type-validators';
-import { UserRole } from '../../interfaces';
+import { BooleanValidator, DateValidator } from '@domain/type-validators';
+import { UserRole } from '@domain/interfaces';
 import { UserValidator } from './user-validator-dtos';
 
 export class UpdateUserDto {

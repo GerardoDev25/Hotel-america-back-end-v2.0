@@ -1,10 +1,10 @@
-import { CustomError } from '../error';
-import { IRegister } from '../interfaces';
+import { CustomError } from '@domain/error';
+import { IRegister } from '@domain/interfaces';
 import {
   DateValidator,
   NumberValidator,
   StringValidator,
-} from '../type-validators';
+} from '@domain/type-validators';
 
 export class RegisterEntity implements IRegister {
   id: string;

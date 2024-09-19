@@ -1,8 +1,8 @@
-import { Uuid } from '../../adapters';
-import { Generator } from '../../utils/generator';
-import { CreateRegisterDto, UpdateRegisterDto } from '../dtos/register';
-import { RegisterEntity } from '../entities/register.entity';
-import { IRegister, RegisterPagination } from '../interfaces';
+import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
+import { IRegister, RegisterPagination } from '@domain/interfaces';
+import { RegisterEntity } from '@domain/entities/register.entity';
+import { Uuid } from '@src/adapters';
+import { Generator } from '@src/utils/generator';
 import { RegisterRepository } from './register.repository';
 
 describe('register.repository.ts', () => {

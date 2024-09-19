@@ -1,4 +1,4 @@
-import { JwtAdapter } from '../../../adapters';
+import { JwtAdapter } from '@src/adapters';
 import { AuthRefreshTokenDto } from './auth-refresh-token.dto';
 
 describe('auth-refresh-token.dto.ts', () => {

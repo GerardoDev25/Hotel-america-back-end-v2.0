@@ -1,6 +1,6 @@
-import { CreateRoomDto, UpdateRoomDto } from '../dtos/room';
-import { RoomEntity } from '../entities';
-import { RoomPagination } from '../interfaces';
+import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
+import { RoomEntity } from '@domain/entities';
+import { RoomPagination } from '@domain/interfaces';
 
 export abstract class RoomDatasource {
   abstract getAll(page: number, limit: number): Promise<RoomPagination>;

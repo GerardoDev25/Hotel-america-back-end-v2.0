@@ -1,5 +1,5 @@
-import { Uuid } from '../../adapters';
-import { RoomTypesList } from '../interfaces';
+import { Uuid } from '@src/adapters';
+import { RoomTypesList } from '@domain/interfaces';
 import { RoomEntity } from './room.entity';
 
 describe('room.entity.ts', () => {

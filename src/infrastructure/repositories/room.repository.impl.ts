@@ -1,8 +1,8 @@
-import { RoomDatasource } from '../../domain/datasources';
-import { CreateRoomDto, UpdateRoomDto } from '../../domain/dtos/room';
-import { RoomEntity } from '../../domain/entities';
-import { RoomPagination } from '../../domain/interfaces';
-import { RoomRepository } from '../../domain/repositories';
+import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
+import { RoomDatasource } from '@domain/datasources';
+import { RoomEntity } from '@domain/entities';
+import { RoomPagination } from '@domain/interfaces';
+import { RoomRepository } from '@domain/repositories';
 
 export class RoomRepositoryImpl extends RoomRepository {
   constructor(private readonly roomDataSource: RoomDatasource) {

@@ -1,13 +1,14 @@
 import { Router } from 'express';
+
+import { UserRepositoryImpl } from '@infrastructure/repositories';
+import { UserDatasourceImpl } from '@infrastructure/datasource';
+
+import { Commons } from '@presentation/middlewares';
+import { LoggerService } from '@presentation/services';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { UserRepositoryImpl } from '../../../infrastructure/repositories';
-import { UserDatasourceImpl } from '../../../infrastructure/datasource';
-import { Commons } from '../../middlewares/';
-import { LoggerService } from '../../services';
 
 export class UserRoute {
-
   static get routes(): Router {
     const route = Router();
 

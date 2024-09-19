@@ -1,16 +1,17 @@
 import { Router } from 'express';
-import { RegisterService } from './register.service';
-import { RegisterController } from './register.controller';
 import {
   RegisterRepositoryImpl,
   RoomRepositoryImpl,
-} from '../../../infrastructure/repositories';
+} from '@infrastructure/repositories';
 import {
   RegisterDatasourceImpl,
   RoomDatasourceImpl,
-} from '../../../infrastructure/datasource';
-import { LoggerService } from '../../services';
-import { Commons } from '../../middlewares';
+} from '@infrastructure/datasource';
+
+import { LoggerService } from '@presentation/services';
+import { Commons } from '@presentation/middlewares';
+import { RegisterService } from './register.service';
+import { RegisterController } from './register.controller';
 
 export class RegisterRoute {
   constructor() {}

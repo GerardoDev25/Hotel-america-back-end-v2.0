@@ -1,4 +1,4 @@
-import { StringValidator } from '../../type-validators';
+import { StringValidator } from '@domain/type-validators';
 
 export class AuthRefreshTokenDto {
   constructor(public readonly token: string) {}

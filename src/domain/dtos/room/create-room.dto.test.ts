@@ -1,4 +1,4 @@
-import { CreateRoom } from '../../interfaces';
+import { CreateRoom } from '@domain/interfaces';
 import { CreateRoomDto } from './create-room.dto';
 
 describe('create-room.dto.ts', () => {

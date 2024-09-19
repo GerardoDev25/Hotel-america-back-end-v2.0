@@ -1,5 +1,5 @@
-import { BooleanValidator } from '../../type-validators';
-import { RoomType } from '../../interfaces/room.interface';
+import { BooleanValidator } from '@domain/type-validators';
+import { RoomType } from '@domain/interfaces/room.interface';
 import { RoomValidator } from './room-validator-dtos';
 
 export class CreateRoomDto {

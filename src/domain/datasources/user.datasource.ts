@@ -1,6 +1,6 @@
-import { CreateUserDto, UpdateUserDto } from '../dtos/user';
-import { UserEntity } from '../entities';
-import { IUser, UserPagination } from '../interfaces';
+import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { IUser, UserPagination } from '@domain/interfaces';
+import { UserEntity } from '@domain/entities';
 
 export abstract class UserDatasource {
   abstract getById(id: string): Promise<{ ok: boolean; user: UserEntity }>;

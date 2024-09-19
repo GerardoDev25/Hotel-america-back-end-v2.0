@@ -1,6 +1,6 @@
-import { CreateRegisterDto, UpdateRegisterDto } from '../dtos/register';
-import { RegisterEntity } from '../entities';
-import { IRegister, RegisterPagination } from '../interfaces';
+import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
+import { IRegister, RegisterPagination } from '@domain/interfaces';
+import { RegisterEntity } from '@domain/entities';
 
 export abstract class RegisterDatasource {
   abstract getAll(page: number, limit: number): Promise<RegisterPagination>;

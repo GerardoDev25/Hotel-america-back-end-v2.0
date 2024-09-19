@@ -1,10 +1,10 @@
-import { CreateRegister, UpdateRegister } from '../../interfaces';
+import { CreateRegister, UpdateRegister } from '@domain/interfaces';
 import {
   DateValidator,
   NumberValidator,
   StringValidator,
-} from '../../type-validators';
-import { variables } from '../../variables';
+} from '@domain/type-validators';
+import { variables } from '@domain/variables';
 
 export class RegisterValidator {
   static create(object: CreateRegister): string[] {

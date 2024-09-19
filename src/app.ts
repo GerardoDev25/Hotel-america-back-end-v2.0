@@ -1,7 +1,7 @@
-import { envs } from './config/envs';
-import { AppRoute } from './presentation/routes';
-import { Server } from './presentation/server';
-import { LoggerService } from './presentation/services';
+import { envs } from '@src/config/envs';
+import { AppRoute } from '@presentation/routes';
+import { Server } from '@presentation/server';
+import { LoggerService } from '@presentation/services';
 
 (async () => {
   main();

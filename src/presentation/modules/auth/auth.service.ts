@@ -1,7 +1,8 @@
-import { BcryptAdapter, JwtAdapter } from '../../../adapters';
-import { AuthLoginDto, AuthRefreshTokenDto } from '../../../domain/dtos/auth';
-import { CustomError } from '../../../domain/error';
-import { UserRepository } from '../../../domain/repositories/user.repository';
+import { AuthLoginDto, AuthRefreshTokenDto } from '@domain/dtos/auth';
+import { CustomError } from '@domain/error';
+import { UserRepository } from '@domain/repositories/user.repository';
+
+import { BcryptAdapter, JwtAdapter } from '@src/adapters';
 
 export class AuthService {
   constructor(private readonly userRepository: UserRepository) {}

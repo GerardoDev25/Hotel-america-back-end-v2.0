@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { AuthRoute, RegisterRoute, RoomRoute, UserRoute } from './modules';
+import {
+  AuthRoute,
+  RegisterRoute,
+  RoomRoute,
+  UserRoute,
+} from '@presentation/modules';
 
 export class AppRoute {
   constructor() {}

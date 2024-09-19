@@ -1,5 +1,5 @@
-import { Uuid } from '../../../adapters';
-import { CreateRoom, UpdateRoom } from '../../interfaces';
+import { CreateRoom, UpdateRoom } from '@domain/interfaces';
+import { Uuid } from '@src/adapters';
 import { RoomValidator } from './room-validator-dtos';
 
 describe('RoomValidator', () => {

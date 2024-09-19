@@ -1,5 +1,6 @@
 import winston from 'winston';
-import { logger } from '../../adapters';
+import { logger } from '@src/adapters';
+
 export class LoggerService {
   constructor(
     private readonly service: string,

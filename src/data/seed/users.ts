@@ -1,6 +1,6 @@
-import { IUser, UserRolesList } from '../../domain/interfaces';
-import { Generator } from '../../utils/generator';
-import { BcryptAdapter } from '../../adapters';
+import { BcryptAdapter } from '@src/adapters';
+import { Generator } from '@src/utils/generator';
+import { IUser, UserRolesList } from '@domain/interfaces';
 
 export interface IUserSeed extends Omit<IUser, 'id' | 'birdDate'> {
   birdDate: Date;

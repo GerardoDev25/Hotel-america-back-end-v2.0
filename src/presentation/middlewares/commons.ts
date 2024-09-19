@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { StringValidator } from '../../domain/type-validators';
+import { StringValidator } from '@domain/type-validators';
 
 export class Commons {
   static isValidUUID(req: Request, res: Response, next: NextFunction) {
