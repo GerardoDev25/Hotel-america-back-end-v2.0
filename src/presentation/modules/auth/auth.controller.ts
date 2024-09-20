@@ -28,7 +28,7 @@ export class AuthController {
 
     return this.authService
       .login(userLoginDto!)
-      .then((data) => res.status(201).json(data))
+      .then((data) => res.status(200).json(data))
       .catch((error) => this.handleError(res, error));
   };
 
@@ -40,7 +40,7 @@ export class AuthController {
     }
     return this.authService
       .refreshToken(userRefreshTokenDto!)
-      .then((data) => res.status(201).json(data))
+      .then((data) => res.status(200).json(data))
       .catch((error) => this.handleError(res, error));
   };
 }
