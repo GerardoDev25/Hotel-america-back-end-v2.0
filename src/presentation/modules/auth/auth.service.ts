@@ -1,6 +1,6 @@
 import { AuthLoginDto, AuthRefreshTokenDto } from '@domain/dtos/auth';
 import { CustomError } from '@domain/error';
-import { UserRepository } from '@domain/repositories/user.repository';
+import { UserRepository } from '@domain/repositories';
 
 import { BcryptAdapter, JwtAdapter } from '@src/adapters';
 
