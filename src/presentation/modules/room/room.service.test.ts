@@ -48,6 +48,7 @@ describe('room.service.ts', () => {
 
     await service.create(room!);
 
+    expect(errors).toBeUndefined();
     expect(mockRoomRepository.create).toHaveBeenCalledTimes(1);
     expect(mockRoomRepository.create).toHaveBeenCalledWith(room);
   });
@@ -62,6 +63,7 @@ describe('room.service.ts', () => {
     const service = new RoomService(mockRoomRepository);
     await service.update(room!);
 
+    expect(errors).toBeDefined();
     expect(mockRoomRepository.update).toHaveBeenCalledTimes(1);
     expect(mockRoomRepository.update).toHaveBeenCalledWith(room);
   });

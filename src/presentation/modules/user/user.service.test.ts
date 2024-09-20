@@ -60,6 +60,7 @@ describe('user.service.ts', () => {
 
     await service.create(user!);
 
+    expect(errors).toBeUndefined();
     expect(mockUserRepository.create).toHaveBeenCalledTimes(1);
     expect(mockUserRepository.create).toHaveBeenCalledWith(user);
 
@@ -83,6 +84,7 @@ describe('user.service.ts', () => {
     const service = new UserService(mockUserRepository);
     await service.update(user!);
 
+    expect(errors).toBeUndefined();
     expect(mockUserRepository.update).toHaveBeenCalledTimes(1);
     expect(mockUserRepository.update).toHaveBeenCalledWith(user);
   });

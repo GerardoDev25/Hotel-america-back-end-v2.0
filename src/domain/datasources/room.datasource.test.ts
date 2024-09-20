@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomEntity } from '@domain/entities';
 import { RoomPagination, RoomTypesList } from '@domain/interfaces';
@@ -17,7 +18,7 @@ describe('room.database.ts', () => {
     betsNumber: 12,
     isAvailable: true,
   });
-  const mockRoom2 = new RoomEntity({ 
+  const mockRoom2 = new RoomEntity({
     id: 'abc',
     roomType: RoomTypesList.NORMAL,
     roomNumber: 12,
@@ -102,7 +103,6 @@ describe('room.database.ts', () => {
     });
   });
 
-
   test('test in function getById()', async () => {
     const id = Uuid.v4();
     const { ok, room } = await mockRoomDataSource.getById(id);
@@ -115,7 +115,7 @@ describe('room.database.ts', () => {
       room: expect.any(RoomEntity),
     });
   });
-  
+
   test('test in function create()', async () => {
     const { id, ...rest } = mockRoom;
 

@@ -25,13 +25,12 @@ describe('auth-login.dto.ts', () => {
 
     const [errors, instance] = AuthLoginDto.create(data);
 
-
     expect(instance).toBeUndefined();
     expect(errors).toBeInstanceOf(Array);
     expect(errors?.length).toBeGreaterThan(0);
     expect(errors).toEqual([
       'username property most be a string',
-      'password property most be a string'
+      'password property most be a string',
     ]);
   });
 });

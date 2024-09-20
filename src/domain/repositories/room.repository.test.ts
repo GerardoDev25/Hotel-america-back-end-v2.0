@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomEntity } from '@domain/entities';
 import { RoomPagination, RoomTypesList } from '@domain/interfaces';
@@ -68,7 +69,6 @@ describe('room.repository.ts', () => {
       mockRoomRepository.getAll(page, limit, isAvailable)
     ).resolves.toEqual(getAllReturnValue);
 
-
     expect(rooms).toBeInstanceOf(Array);
     expect(rooms).toHaveLength(2);
     rooms.forEach((room) => {
@@ -107,7 +107,7 @@ describe('room.repository.ts', () => {
   });
 
   test('test in function delete()', async () => {
-    const id = Uuid.v4()
+    const id = Uuid.v4();
     const mockRoomRepository = new MockRoomRepository();
     const { ok, message } = await mockRoomRepository.delete(id);
 
@@ -119,6 +119,4 @@ describe('room.repository.ts', () => {
       message: expect.any(String),
     });
   });
-
-  
 });

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { IRegister, RegisterPagination } from '@domain/interfaces';
 import { RegisterEntity } from '@domain/entities/';

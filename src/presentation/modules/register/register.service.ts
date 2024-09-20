@@ -1,8 +1,7 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
-import { RegisterRepository } from '@domain/repositories';
-import { RoomRepository } from '@domain/repositories';
+import { RegisterRepository, RoomRepository } from '@domain/repositories';
 
 export class RegisterService {
   constructor(

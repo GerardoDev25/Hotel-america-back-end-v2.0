@@ -2,12 +2,12 @@ import { Commons } from './commons';
 import { Uuid } from '@src/adapters';
 
 describe('commons.ts', () => {
-  const res = {
-    status: jest.fn().mockReturnThis(),
-    json: jest.fn(),
-  } as any;
+  // const res = {
+  //   status: jest.fn().mockReturnThis(),
+  //   json: jest.fn()
+  // } as any;
 
-  const next = jest.fn();
+  // const next = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();

@@ -1,4 +1,4 @@
-import { variables } from "@domain/variables";
+import { variables } from '@domain/variables';
 
 export class PaginationDto {
   private constructor(
@@ -9,7 +9,6 @@ export class PaginationDto {
   static create(
     page: number = variables.PAGINATION_PAGE_DEFAULT,
     limit: number = variables.PAGINATION_LIMIT_DEFAULT
-    
   ): [string?, PaginationDto?] {
     if (isNaN(page) || isNaN(limit)) {
       return ['Page and limit must be a number', undefined];

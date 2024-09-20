@@ -6,7 +6,10 @@ interface Params {
 }
 
 export class AuthLoginDto {
-  constructor(public username: string, public password: string) {}
+  constructor(
+    public username: string,
+    public password: string
+  ) {}
 
   private static verifyFields = ({ username, password }: Params): string[] => {
     const errors: string[] = [];

@@ -1,11 +1,5 @@
 {
-  "conventionalCommits.scopes": [
-    "config",
-    "dev",
-    "test",
-    "refactor",
-    "doc"
-  ],
+  "conventionalCommits.scopes": ["config", "dev", "test", "refactor", "doc"],
   "cSpell.words": [
     "datasource",
     "datasources",
@@ -18,6 +12,7 @@
     "kqsrs",
     "pkey",
     "suitass",
+    "tseslint",
     "tsnd",
     "XVCJ",
     "ZSIs"

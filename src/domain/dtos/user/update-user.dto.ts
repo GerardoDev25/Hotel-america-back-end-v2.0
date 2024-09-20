@@ -15,7 +15,7 @@ export class UpdateUserDto {
   ) {}
 
   static create(props: Record<string, any>): [string[]?, UpdateUserDto?] {
-    let { id, role, birdDate, name, phone, username, password, isActive } =
+    const { id, role, birdDate, name, phone, username, password, isActive } =
       props;
 
     const errors = UserValidator.update({

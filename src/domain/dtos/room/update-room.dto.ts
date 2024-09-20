@@ -12,7 +12,7 @@ export class UpdateRoomDto {
   ) {}
 
   static create(props: Record<string, any>): [string[]?, UpdateRoomDto?] {
-    let { id, roomType, roomNumber, betsNumber, isAvailable = false } = props;
+    const { id, roomType, roomNumber, betsNumber, isAvailable = false } = props;
 
     const errors = RoomValidator.update({
       id,

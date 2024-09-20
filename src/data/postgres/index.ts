@@ -10,6 +10,7 @@ export const checkDatabaseConnection = async () => {
     return true;
   } catch (error: any) {
     prismaCheck.$disconnect();
+    // eslint-disable-next-line no-console
     console.error('Error connecting to the database:', error.message);
     return false;
   }

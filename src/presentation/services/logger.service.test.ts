@@ -25,6 +25,9 @@ describe('logger.service.ts', () => {
 
     expect(localLogger.error).toHaveBeenCalled();
     expect(localLogger.error).toHaveBeenCalledTimes(1);
-    expect(localLogger.error).toHaveBeenCalledWith('error', { message, service });
+    expect(localLogger.error).toHaveBeenCalledWith('error', {
+      message,
+      service,
+    });
   });
 });

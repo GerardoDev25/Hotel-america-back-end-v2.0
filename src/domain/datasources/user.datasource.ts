@@ -4,7 +4,7 @@ import { UserEntity } from '@domain/entities';
 
 export abstract class UserDatasource {
   abstract getById(id: string): Promise<{ ok: boolean; user: UserEntity }>;
-  
+
   abstract getByParam(
     searchParam: Partial<Pick<IUser, keyof IUser>>
   ): Promise<{ ok: boolean; user: UserEntity | null }>;

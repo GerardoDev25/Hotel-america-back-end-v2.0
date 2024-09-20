@@ -49,7 +49,10 @@ describe('room.entity.ts', () => {
       RoomEntity.fromObject({ ...validObject, betsNumber: betsNumberInvalid })
     ).toThrow();
     expect(() =>
-      RoomEntity.fromObject({ ...validObject, isAvailable: isAvailableInvalid })
+      RoomEntity.fromObject({
+        ...validObject,
+        isAvailable: isAvailableInvalid,
+      })
     ).toThrow();
   });
 });

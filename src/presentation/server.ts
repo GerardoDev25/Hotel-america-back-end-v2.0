@@ -58,6 +58,7 @@ export class Server {
       this.loadMiddleware();
       this.serverListener = this.app.listen(this.port, () => {
         if (envs.NODE_ENV !== 'test') {
+          // eslint-disable-next-line no-console
           console.log(`Server running on port ${this.port}`);
         }
       });

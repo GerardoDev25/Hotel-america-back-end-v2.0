@@ -22,7 +22,9 @@ export class UserService {
       );
 
       const usersMapped = users.map((user) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...restUser } = user;
+
         return restUser;
       });
 
@@ -35,6 +37,7 @@ export class UserService {
   async getById(id: string) {
     try {
       const { ok, user } = await this.userRepository.getById(id);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = user;
 
       return { ok, user: { ...rest } };
@@ -56,6 +59,7 @@ export class UserService {
 
     try {
       const { ok, user } = await this.userRepository.create(createUserDto);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = user;
 
       return { ok, user: { ...rest } };

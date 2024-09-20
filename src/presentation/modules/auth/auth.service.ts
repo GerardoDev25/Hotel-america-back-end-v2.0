@@ -32,6 +32,7 @@ export class AuthService {
         payload: { id: user.id },
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _, ...userWithoutPassword } = user;
 
       return { ok, user: userWithoutPassword, token };
@@ -59,6 +60,7 @@ export class AuthService {
       const token = await JwtAdapter.generateToken({
         payload: { id: user.id },
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _, ...userWithoutPassword } = user;
 
       return { ok, user: userWithoutPassword, token };

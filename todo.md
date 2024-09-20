@@ -1,1 +1,1 @@
-verify if exist same username when creating or updating user
+config slint

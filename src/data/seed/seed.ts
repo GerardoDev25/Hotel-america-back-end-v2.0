@@ -5,10 +5,12 @@ import { seedData } from './data';
   try {
     await main();
 
+    // eslint-disable-next-line no-console
     console.log('initial data seeded');
 
     process.exit(0);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(error);
     await prisma.$disconnect();
     process.exit(1);
