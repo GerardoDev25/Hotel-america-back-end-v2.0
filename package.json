@@ -6,7 +6,7 @@
   "author": "Gerardo Miranda <gerardodev25@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "seed": "ts-node-dev ./src/data/seed/seed.ts",
+    "seed": "ts-node-dev -r tsconfig-paths/register ./src/data/seed/seed.ts",
     "dev": "npm run docker:up && tsnd -r tsconfig-paths/register --respawn --clear src/app.ts",
     "build": "rimraf ./dist && tsc  --project tsconfig.prod.json && tsc-alias",
     "start": "npm run build && node dist/app.js",
