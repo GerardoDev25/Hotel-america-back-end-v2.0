@@ -41,30 +41,30 @@ export class RegisterRoute {
     );
     const registerController = new RegisterController(registerService);
 
+    // * endpoints
+
     route.get('/', registerController.getAll);
+
     route.get('/:id', [Commons.isValidUUID], registerController.getById);
+
     route.post(
       '/',
-      [
-        authMiddleware.validateJwt,
-        authMiddleware.verifyRole(UserRolesList.RECEPTION),
-      ],
+      [authMiddleware.validateJwt, Auth.verifyRole([UserRolesList.RECEPTION])],
       registerController.create
     );
+
     route.put(
       '/',
-      [
-        authMiddleware.validateJwt,
-        authMiddleware.verifyRole(UserRolesList.RECEPTION),
-      ],
+      [authMiddleware.validateJwt, Auth.verifyRole([UserRolesList.RECEPTION])],
       registerController.update
     );
+
     route.delete(
       '/:id',
       [
         Commons.isValidUUID,
         authMiddleware.validateJwt,
-        authMiddleware.verifyRole(UserRolesList.RECEPTION),
+        Auth.verifyRole([UserRolesList.RECEPTION]),
       ],
       registerController.deleted
     );
