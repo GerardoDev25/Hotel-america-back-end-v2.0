@@ -3,7 +3,7 @@ import request from 'supertest';
 import { prisma } from '@src/data/postgres';
 import { seedData } from '@src/data/seed/data';
 import { testServer } from '@src/test-server';
-import { Uuid } from '@src/adapters';
+import { JwtAdapter, Uuid } from '@src/adapters';
 
 describe('room.route.ts', () => {
   beforeAll(async () => {
@@ -16,6 +16,7 @@ describe('room.route.ts', () => {
 
   beforeEach(async () => {
     await prisma.room.deleteMany();
+    await prisma.user.deleteMany();
   });
 
   test('should get all room (getAll)', async () => {
@@ -147,9 +148,14 @@ describe('room.route.ts', () => {
   });
 
   test('should create a room (create)', async () => {
+    const user = await prisma.user.create({ data: seedData.users[0] });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+
     const roomCreated = seedData.rooms[0];
+
     const { body } = await request(testServer.app)
       .post('/api/room')
+      .set('Authorization', `Bearer ${token}`)
       .send(roomCreated)
       .expect(201);
 
@@ -164,8 +170,12 @@ describe('room.route.ts', () => {
   });
 
   test('should get error white create room (create)', async () => {
+    const user = await prisma.user.create({ data: seedData.users[0] });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+
     const { body } = await request(testServer.app)
       .post('/api/room')
+      .set('Authorization', `Bearer ${token}`)
       .send({})
       .expect(400);
 
@@ -180,11 +190,15 @@ describe('room.route.ts', () => {
   });
 
   test('should update a room (update)', async () => {
+    const user = await prisma.user.create({ data: seedData.users[0] });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+
     const roomCreated = await prisma.room.create({ data: seedData.rooms[0] });
     const betsNumber = 1000;
 
     const { body } = await request(testServer.app)
       .put(`/api/room/`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ id: roomCreated.id, betsNumber })
       .expect(200);
     const { ok, message } = body;
@@ -194,11 +208,15 @@ describe('room.route.ts', () => {
   });
 
   test('should get and error while updating a room (update)', async () => {
+    const user = await prisma.user.create({ data: seedData.users[0] });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+
     const roomCreated = await prisma.room.create({ data: seedData.rooms[0] });
     const betsNumber = 'not-valid';
 
     const { body } = await request(testServer.app)
       .put(`/api/room/`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ id: roomCreated.id, betsNumber })
       .expect(400);
 
@@ -209,10 +227,14 @@ describe('room.route.ts', () => {
   });
 
   test('should delete a room by id (delete)', async () => {
+    const user = await prisma.user.create({ data: seedData.users[0] });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+
     const room = await prisma.room.create({ data: seedData.rooms[0] });
 
     const { body } = await request(testServer.app)
       .delete(`/api/room/${room.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send()
       .expect(200);
 
