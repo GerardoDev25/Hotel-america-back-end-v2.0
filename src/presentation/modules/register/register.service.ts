@@ -25,7 +25,7 @@ export class RegisterService {
 
   async create(createRegisterDto: CreateRegisterDto) {
     try {
-      const [register, { room }] = await Promise.all([
+      const [{ register }, { room }] = await Promise.all([
         this.registerRepository.getByParam({
           roomId: createRegisterDto.roomId,
         }),
