@@ -3,7 +3,10 @@ import { RegisterEntity } from '@domain/entities';
 import { RegisterPagination } from '@domain/interfaces';
 import { Generator } from '@src/utils/generator';
 import { RegisterController } from './';
-import { CreateRegisterDto } from '@src/domain/dtos/register';
+import {
+  CreateRegisterDto,
+  UpdateRegisterDto,
+} from '@src/domain/dtos/register';
 
 describe('register.controller.ts', () => {
   const registerEntity: RegisterEntity = {
@@ -25,7 +28,7 @@ describe('register.controller.ts', () => {
     next: null,
   };
 
-  test('should return all register (getAll)', async () => {
+  it('should return all register (getAll)', async () => {
     const res = { json: jest.fn() } as any;
     const req = { query: { page: 1, limit: 10 } } as any;
 
@@ -40,7 +43,7 @@ describe('register.controller.ts', () => {
     expect(res.json).toHaveBeenCalledWith(pagination);
   });
 
-  test('should throw error if not well paginated (getAll)', async () => {
+  it('should throw error if not well paginated (getAll)', async () => {
     const req = { query: { page: false, limit: null } } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
@@ -57,7 +60,7 @@ describe('register.controller.ts', () => {
     });
   });
 
-  test('should return a register by id (getById)', async () => {
+  it('should return a register by id (getById)', async () => {
     const id = registerEntity.id;
     const req = { params: { id } } as any;
     const res = { json: jest.fn() } as any;
@@ -73,7 +76,7 @@ describe('register.controller.ts', () => {
     expect(res.json).toHaveBeenCalledWith(registerEntity);
   });
 
-  test('should create a register', async () => {
+  it('should create a register (create)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...body } = registerEntity;
 
@@ -93,21 +96,69 @@ describe('register.controller.ts', () => {
     );
   });
 
-  // // todo fix this test
-  // test.skip('should throw error if not well create (create)', async () => {
-  //   const req = { body: {} } as any;
-  //   const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+  it('should throw error if not well create (create)', async () => {
+    const req = { body: {} } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
-  //   const mockService = { create: jest.fn() } as any;
+    const mockService = { create: jest.fn() } as any;
 
-  //   const registerController = new RegisterController(mockService);
-  //   await registerController.create(req, res);
+    const registerController = new RegisterController(mockService);
+    await registerController.create(req, res);
 
-  //   expect(mockService.create).not.toHaveBeenCalled();
-  //   expect(res.status).toHaveBeenCalledWith(400);
-  //   expect(res.json).toHaveBeenCalledWith({
-  //     ok: false,
-  //     errors: expect.any(Array),
-  //   });
-  // });
+    expect(mockService.create).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      ok: false,
+      errors: expect.any(Array),
+    });
+  });
+
+  it('should update a register (update)', async () => {
+    const req = { body: { id: registerEntity.id } } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const mockService = {
+      update: jest.fn().mockResolvedValue({ ok: true, message: '' }),
+    } as any;
+
+    const registerController = new RegisterController(mockService);
+    await registerController.update(req, res);
+
+    expect(res.json).toHaveBeenCalledWith({ ok: true, message: '' });
+    expect(mockService.update).toHaveBeenCalledWith(
+      expect.any(UpdateRegisterDto)
+    );
+  });
+
+  it('should throw error if not valid object (update)', async () => {
+    const req = { body: {} } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const mockService = { update: jest.fn() } as any;
+
+    const registerController = new RegisterController(mockService);
+    await registerController.update(req, res);
+
+    expect(mockService.update).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      errors: ['id property is required'],
+      ok: false,
+    });
+  });
+
+  it('should call delete function service (delete)', async () => {
+    const req = { params: { id: registerEntity.id } } as any;
+    const res = { json: jest.fn() } as any;
+
+    const mockService = {
+      delete: jest.fn().mockResolvedValue({ ok: true, message: '' }),
+    } as any;
+
+    const registerController = new RegisterController(mockService);
+    await registerController.deleted(req, res);
+
+    expect(mockService.delete).toHaveBeenCalledWith(registerEntity.id);
+    expect(res.json).toHaveBeenCalledWith({ ok: true, message: '' });
+  });
 });

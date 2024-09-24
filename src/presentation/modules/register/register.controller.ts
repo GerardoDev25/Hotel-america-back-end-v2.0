@@ -64,6 +64,7 @@ export class RegisterController {
     if (errors) {
       return res.status(400).json({ ok: false, errors });
     }
+
     this.registerService
       .update(updateRegisterDto!)
       .then((data) => res.json(data))
