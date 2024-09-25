@@ -67,6 +67,7 @@ export class Auth {
           .json({ ok: false, errors: ['resource forbidden for the user'] });
       }
 
+      req.body.userId = user.id;
       next();
     };
   };
