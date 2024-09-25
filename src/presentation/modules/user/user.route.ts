@@ -1,13 +1,11 @@
 import { Router } from 'express';
 
+import { UserRolesList } from '@domain/interfaces';
 import { UserRepositoryImpl } from '@infrastructure/repositories';
 import { UserDatasourceImpl } from '@infrastructure/datasource';
-
 import { Auth, Commons } from '@presentation/middlewares';
 import { LoggerService } from '@presentation/services';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
-import { UserRolesList } from '@src/domain/interfaces';
+import { UserService, UserController } from './';
 
 export class UserRoute {
   static get routes(): Router {

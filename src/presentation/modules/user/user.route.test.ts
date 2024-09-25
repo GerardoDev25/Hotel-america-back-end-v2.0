@@ -1,11 +1,25 @@
 import request from 'supertest';
 
+import { UserRolesList } from '@domain/interfaces';
+import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
+import { Generator } from '@src/utils/generator';
 import { prisma } from '@src/data/postgres';
 import { seedData } from '@src/data/seed/data';
 import { testServer } from '@src/test-server';
-import { Uuid } from '@src/adapters';
 
 describe('user.route.ts', () => {
+  const rawUser = {
+    role: UserRolesList.ADMIN,
+    birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
+    name: 'John Doe'.trim(),
+    phone: '+1234567890'.trim(),
+    username: 'test@username'.trim().toLowerCase(),
+    password: BcryptAdapter.hash('123456'),
+    isActive: true,
+  };
+
+  let token: string;
+
   beforeAll(async () => {
     await testServer.start();
   });
@@ -16,6 +30,10 @@ describe('user.route.ts', () => {
 
   beforeEach(async () => {
     await prisma.user.deleteMany();
+
+    // * create auth token
+    const user = await prisma.user.create({ data: rawUser });
+    token = await JwtAdapter.generateToken({ payload: { id: user.id } });
   });
 
   test('should get all users (getAll)', async () => {
@@ -142,6 +160,7 @@ describe('user.route.ts', () => {
     const userCreated = seedData.users[0];
     const { body } = await request(testServer.app)
       .post('/api/user')
+      .set('Authorization', `Bearer ${token}`)
       .send(userCreated)
       .expect(201);
 
@@ -164,6 +183,7 @@ describe('user.route.ts', () => {
 
     const { body } = await request(testServer.app)
       .post('/api/user')
+      .set('Authorization', `Bearer ${token}`)
       .send(userCreated)
       .expect(409);
 
@@ -176,6 +196,7 @@ describe('user.route.ts', () => {
   test('should get error white create user (create)', async () => {
     const { body } = await request(testServer.app)
       .post('/api/user')
+      .set('Authorization', `Bearer ${token}`)
       .send({})
       .expect(400);
 
@@ -198,6 +219,7 @@ describe('user.route.ts', () => {
 
     const { body } = await request(testServer.app)
       .put(`/api/user/`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ id: userCreated.id, name })
       .expect(200);
     const { ok, message } = body;
@@ -212,6 +234,7 @@ describe('user.route.ts', () => {
 
     const { body } = await request(testServer.app)
       .put(`/api/user/`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ id: userCreated.id, name })
       .expect(400);
 
@@ -226,6 +249,7 @@ describe('user.route.ts', () => {
 
     const { body } = await request(testServer.app)
       .delete(`/api/user/${user.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send()
       .expect(200);
 
