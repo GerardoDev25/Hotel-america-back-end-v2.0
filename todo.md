@@ -1,1 +1,1 @@
-config slint
+add auth to user

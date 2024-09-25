@@ -3,28 +3,50 @@ import { Router } from 'express';
 import { UserRepositoryImpl } from '@infrastructure/repositories';
 import { UserDatasourceImpl } from '@infrastructure/datasource';
 
-import { Commons } from '@presentation/middlewares';
+import { Auth, Commons } from '@presentation/middlewares';
 import { LoggerService } from '@presentation/services';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
+import { UserRolesList } from '@src/domain/interfaces';
 
 export class UserRoute {
   static get routes(): Router {
     const route = Router();
 
-    const datasourceLogger = new LoggerService('user.datasource.impl.ts');
+    // * auth
+    const userLogger = new LoggerService('user.datasource.impl.ts');
+    const userDatasource = new UserDatasourceImpl(userLogger);
+    const authMiddleware = new Auth(userDatasource);
 
-    const datasource = new UserDatasourceImpl(datasourceLogger);
+    // * user
+    const datasource = new UserDatasourceImpl(userLogger);
     const repository = new UserRepositoryImpl(datasource);
-
     const service = new UserService(repository);
     const controller = new UserController(service);
 
+    const middleware = {
+      getById: [Commons.isValidUUID],
+      create: [
+        authMiddleware.validateJwt,
+        Auth.verifyRole([UserRolesList.ADMIN]),
+      ],
+      update: [
+        authMiddleware.validateJwt,
+        Auth.verifyRole([UserRolesList.ADMIN]),
+      ],
+      delete: [
+        Commons.isValidUUID,
+        authMiddleware.validateJwt,
+        Auth.verifyRole([UserRolesList.ADMIN]),
+      ],
+    };
+
+    // * endpoints
     route.get('/', controller.getAllUsers);
-    route.get('/:id', [Commons.isValidUUID], controller.getUserById);
-    route.post('/', controller.createUser);
-    route.put('/', controller.updateUser);
-    route.delete('/:id', [Commons.isValidUUID], controller.deleteUser);
+    route.get('/:id', middleware.getById, controller.getUserById);
+    route.post('/', middleware.create, controller.createUser);
+    route.put('/', middleware.update, controller.updateUser);
+    route.delete('/:id', middleware.delete, controller.deleteUser);
 
     return route;
   }
