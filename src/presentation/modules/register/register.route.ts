@@ -41,33 +41,29 @@ export class RegisterRoute {
     );
     const registerController = new RegisterController(registerService);
 
-    // * endpoints
-
-    route.get('/', registerController.getAll);
-
-    route.get('/:id', [Commons.isValidUUID], registerController.getById);
-
-    route.post(
-      '/',
-      [authMiddleware.validateJwt, Auth.verifyRole([UserRolesList.RECEPTION])],
-      registerController.create
-    );
-
-    route.put(
-      '/',
-      [authMiddleware.validateJwt, Auth.verifyRole([UserRolesList.RECEPTION])],
-      registerController.update
-    );
-
-    route.delete(
-      '/:id',
-      [
+    const middleware = {
+      getById: [Commons.isValidUUID],
+      create: [
+        authMiddleware.validateJwt,
+        Auth.verifyRole([UserRolesList.RECEPTION]),
+      ],
+      update: [
+        authMiddleware.validateJwt,
+        Auth.verifyRole([UserRolesList.RECEPTION]),
+      ],
+      delete: [
         Commons.isValidUUID,
         authMiddleware.validateJwt,
         Auth.verifyRole([UserRolesList.RECEPTION]),
       ],
-      registerController.deleted
-    );
+    };
+
+    // * endpoints
+    route.get('/', registerController.getAll);
+    route.get('/:id', middleware.getById, registerController.getById);
+    route.post('/', middleware.create, registerController.create);
+    route.put('/', middleware.update, registerController.update);
+    route.delete('/:id', middleware.delete, registerController.deleted);
 
     return route;
   }

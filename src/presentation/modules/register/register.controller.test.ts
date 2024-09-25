@@ -1,12 +1,9 @@
-import { Uuid } from '@src/adapters';
+import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { RegisterEntity } from '@domain/entities';
 import { RegisterPagination } from '@domain/interfaces';
+import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 import { RegisterController } from './';
-import {
-  CreateRegisterDto,
-  UpdateRegisterDto,
-} from '@src/domain/dtos/register';
 
 describe('register.controller.ts', () => {
   const registerEntity: RegisterEntity = {

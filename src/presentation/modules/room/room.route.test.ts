@@ -19,7 +19,7 @@ describe('room.route.ts', () => {
     await prisma.user.deleteMany();
   });
 
-  test('should get all room (getAll)', async () => {
+  it('should get all room (getAll)', async () => {
     const page = 1;
     const limit = 10;
     await prisma.room.createMany({ data: seedData.rooms });
@@ -41,7 +41,7 @@ describe('room.route.ts', () => {
     });
   });
 
-  test('should get all room with pagination (getAll)', async () => {
+  it('should get all room with pagination (getAll)', async () => {
     const page = 2;
     const limit = 7;
     await prisma.room.createMany({ data: seedData.rooms });
@@ -56,7 +56,7 @@ describe('room.route.ts', () => {
     expect(body.prev).toBe(`/api/room?page=${page - 1}&limit=${limit}`);
   });
 
-  test('should get all rooms Available (getAll)', async () => {
+  it('should get all rooms Available (getAll)', async () => {
     const page = 1;
     const limit = 10;
     const isAvailable = true;
@@ -70,7 +70,7 @@ describe('room.route.ts', () => {
     });
   });
 
-  test('should get all rooms not Available (getAll)', async () => {
+  it('should get all rooms not Available (getAll)', async () => {
     const page = 1;
     const limit = 10;
     const isAvailable = false;
@@ -84,7 +84,7 @@ describe('room.route.ts', () => {
     });
   });
 
-  test('should get error message if isAvailable is not a boolean (getAll)', async () => {
+  it('should get error message if isAvailable is not a boolean (getAll)', async () => {
     const page = 1;
     const limit = 10;
     const isAvailable = 'not-boolean';
@@ -97,10 +97,10 @@ describe('room.route.ts', () => {
     expect(body.errors[0]).toBe('isAvailable most be true or false');
   });
 
-  test('should get error message if pagination is grown (getAll)', async () => {
+  it('should get error message if pagination is grown (getAll)', async () => {
     const page = 'page';
     const limit = 'limit';
-    await prisma.room.createMany({ data: seedData.rooms });
+    // await prisma.room.createMany({ data: seedData.rooms });
     const { body } = await request(testServer.app)
       .get(`/api/room?page=${page}&limit=${limit}`)
       .expect(400);
@@ -109,10 +109,10 @@ describe('room.route.ts', () => {
     expect(body.errors[0]).toBe('Page and limit must be a number');
   });
 
-  test('should get error message if pagination contain negative numbers (getAll)', async () => {
+  it('should get error message if pagination contain negative numbers (getAll)', async () => {
     const page = -1;
     const limit = -3;
-    await prisma.room.createMany({ data: seedData.rooms });
+    // await prisma.room.createMany({ data: seedData.rooms });
     const { body } = await request(testServer.app)
       .get(`/api/room?page=${page}&limit=${limit}`)
       .expect(400);
@@ -121,7 +121,7 @@ describe('room.route.ts', () => {
     expect(body.errors[0]).toBe('Page must be greaten than 0');
   });
 
-  test('should get a room by id (getById)', async () => {
+  it('should get a room by id (getById)', async () => {
     const roomTest = await prisma.room.create({ data: seedData.rooms[0] });
     const { body } = await request(testServer.app)
       .get(`/api/room/${roomTest.id}`)
@@ -137,7 +137,7 @@ describe('room.route.ts', () => {
     expect(roomTest.isAvailable).toBe(room.isAvailable);
   });
 
-  test('should get not found message (getById)', async () => {
+  it('should get not found message (getById)', async () => {
     const id = Uuid.v4();
     const { body } = await request(testServer.app)
       .get(`/api/room/${id}`)
@@ -147,7 +147,7 @@ describe('room.route.ts', () => {
     expect(body.errors[0]).toEqual(`room with id: ${id} not found`);
   });
 
-  test('should create a room (create)', async () => {
+  it('should create a room (create)', async () => {
     const user = await prisma.user.create({ data: seedData.users[0] });
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
 
@@ -169,7 +169,7 @@ describe('room.route.ts', () => {
     expect(room.isAvailable).toBe(roomCreated.isAvailable);
   });
 
-  test('should get error white create room (create)', async () => {
+  it('should get error white create room (create)', async () => {
     const user = await prisma.user.create({ data: seedData.users[0] });
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
 
@@ -189,7 +189,7 @@ describe('room.route.ts', () => {
     });
   });
 
-  test('should update a room (update)', async () => {
+  it('should update a room (update)', async () => {
     const user = await prisma.user.create({ data: seedData.users[0] });
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
 
@@ -207,7 +207,7 @@ describe('room.route.ts', () => {
     expect(message).toBe('room updated successfully');
   });
 
-  test('should get and error while updating a room (update)', async () => {
+  it('should get and error while updating a room (update)', async () => {
     const user = await prisma.user.create({ data: seedData.users[0] });
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
 
@@ -226,7 +226,7 @@ describe('room.route.ts', () => {
     });
   });
 
-  test('should delete a room by id (delete)', async () => {
+  it('should delete a room by id (delete)', async () => {
     const user = await prisma.user.create({ data: seedData.users[0] });
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
 
