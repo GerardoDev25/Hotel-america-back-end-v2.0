@@ -26,8 +26,9 @@ enum RoleType {
 }
 
 model Country {
-  id   String @id
-  name String
+  id    String  @id
+  name  String
+  Guest Guest[]
 }
 
 model Room {
@@ -75,4 +76,25 @@ model Register {
   // ? one to one
   room   Room   @relation(fields: [roomId], references: [id])
   roomId String @unique
+
+  Guest Guest[]
+}
+
+model Guest {
+  id          String    @id @default(uuid())
+  di          String    @unique
+  checkIn     DateTime  @default(now())
+  checkOut    DateTime?
+  dateOfBirth DateTime
+  city        String
+  name        String
+  lastName    String
+  phone       String
+  roomNumber  Int
+
+  country   Country @relation(fields: [countryId], references: [id])
+  countryId String
+
+  register   Register @relation(fields: [registerId], references: [id])
+  registerId String
 }
