@@ -25,6 +25,11 @@ enum RoleType {
   cafe
 }
 
+model Country {
+  id   String @id
+  name String
+}
+
 model Room {
   id          String   @id @default(uuid())
   roomType    RoomType
@@ -53,9 +58,9 @@ model User {
 }
 
 model Register {
-  id          String    @id @default(uuid())
-  checkIn     DateTime  @default(now())
-  checkOut    DateTime?
+  id           String    @id @default(uuid())
+  checkIn      DateTime  @default(now())
+  checkOut     DateTime?
   guestsNumber Int
 
   // ? discount and price will be manage on cents
