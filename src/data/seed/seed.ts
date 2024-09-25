@@ -1,5 +1,6 @@
 import { checkDatabaseConnection, prisma } from '../postgres';
 import { seedData } from './data';
+import { generateGuestsToDB } from './guest';
 
 (async () => {
   try {
@@ -21,6 +22,7 @@ async function main() {
   await checkDatabaseConnection();
 
   // * delete data
+  await prisma.guest.deleteMany();
   await prisma.country.deleteMany();
   await prisma.register.deleteMany();
   await prisma.room.deleteMany();
@@ -64,4 +66,18 @@ async function main() {
       })),
     });
   });
+
+  const registersDB = await prisma.register.findMany({
+    where: { userId: user!.id },
+    select: {
+      id: true,
+      guestsNumber: true,
+      checkOut: true,
+      checkIn: true,
+      room: { select: { roomNumber: true } },
+    },
+  });
+
+  const guests = generateGuestsToDB(registersDB);
+  await prisma.guest.createMany({ data: guests });
 }

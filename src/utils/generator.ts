@@ -1,3 +1,5 @@
+import { citiesList, countries } from '@src/data/seed';
+
 export class Generator {
   static randomBoolean = (): boolean => Math.random() < 0.5;
 
@@ -59,4 +61,29 @@ export class Generator {
   static randomPassword = (): string => {
     return Math.random().toString(36).slice(-8);
   };
+
+  static randomIdentityNumber(length: number = 9): string {
+    if (length <= 0) length = 9;
+
+    const randomIdentity = Math.floor(Math.random() * Math.pow(10, length))
+      .toString()
+      .padStart(length, '0');
+
+    return randomIdentity;
+  }
+
+  static randomCity(cities = citiesList): string {
+    const randomIndex = Math.floor(Math.random() * cities.length);
+
+    return cities[randomIndex];
+  }
+
+  static randomCountryId(c = countries): string {
+    const randomIndex = Math.floor(Math.random() * c.length);
+    return c[randomIndex].id;
+  }
+  static randomCountryName(c = countries): string {
+    const randomIndex = Math.floor(Math.random() * c.length);
+    return c[randomIndex].name;
+  }
 }
