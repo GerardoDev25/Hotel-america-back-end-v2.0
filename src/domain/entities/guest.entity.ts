@@ -53,9 +53,9 @@ export class GuestEntity implements IGuest {
     } = properties;
 
     // * id
-    const idValid = StringValidator.isValidUUID(id);
-    if (idValid !== true) {
-      throw CustomError.badRequest('id ' + idValid);
+    const idValidation = StringValidator.isValidUUID(id);
+    if (idValidation !== true) {
+      throw CustomError.badRequest('id ' + idValidation);
     }
 
     // * di
@@ -150,14 +150,30 @@ export class GuestEntity implements IGuest {
       registerId,
     } = object;
 
-    const newDateOfBirth =
+    this.verifyProperties({
+      id,
+      di,
+      checkIn,
+      checkOut,
+      dateOfBirth,
+      city,
+      name,
+      lastName,
+      phone,
+      roomNumber,
+      countryId,
+      registerId,
+    });
+
+    const dateOfBirthValid =
       new Date(dateOfBirth).toISOString().split('T').at(0) ?? dateOfBirth;
 
-    const newCheckIn =
+    const checkInValid =
       new Date(checkIn).toISOString().split('T').at(0) ?? checkIn;
 
-    const newCheckOut =
-      new Date(checkOut).toISOString().split('T').at(0) ?? undefined;
+    const checkOutValid = checkOut
+      ? new Date(checkOut).toISOString().split('T').at(0)
+      : undefined;
 
     return new GuestEntity({
       id,
@@ -169,9 +185,9 @@ export class GuestEntity implements IGuest {
       roomNumber,
       countryId,
       registerId,
-      checkIn: newCheckIn,
-      checkOut: newCheckOut,
-      dateOfBirth: newDateOfBirth,
+      checkIn: checkInValid,
+      checkOut: checkOutValid,
+      dateOfBirth: dateOfBirthValid,
     });
   }
 }
