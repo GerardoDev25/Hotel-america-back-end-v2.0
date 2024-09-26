@@ -103,6 +103,7 @@ export class GuestValidator {
   static update(object: UpdateGuest) {
     const errors: string[] = [];
     const {
+      id,
       di,
       city,
       name,
@@ -115,6 +116,12 @@ export class GuestValidator {
       checkIn,
       checkOut,
     } = object;
+
+    // * id
+    const idValid = StringValidator.isValidUUID(id);
+    if (idValid !== true) {
+      errors.push(`id ${idValid}`);
+    }
 
     // * di
     if (di !== undefined) {
