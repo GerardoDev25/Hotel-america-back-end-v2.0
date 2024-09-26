@@ -12,3 +12,4 @@ export interface IGuest {
   countryId: string;
   registerId: string;
 }
+export type CreateGuest = Omit<IGuest, 'id'>;

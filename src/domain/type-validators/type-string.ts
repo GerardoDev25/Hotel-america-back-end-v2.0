@@ -56,4 +56,13 @@ export class StringValidator {
       base64urlPattern.test(signature)
     );
   }
+
+  static isValidPhoneNumber(phone: string): true | string {
+    const isValidString = StringValidator.isValid(phone);
+    if (isValidString !== true) return isValidString;
+
+    const phoneRegex = /^\+\d{10,15}$/;
+
+    return phoneRegex.test(phone) ? true : 'property most have a valid format';
+  }
 }
