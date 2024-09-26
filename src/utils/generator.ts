@@ -1,4 +1,7 @@
-import { citiesList, countries } from '@src/data/seed';
+type Country = {
+  name: string;
+  id: string;
+};
 
 export class Generator {
   static randomBoolean = (): boolean => Math.random() < 0.5;
@@ -72,17 +75,17 @@ export class Generator {
     return randomIdentity;
   }
 
-  static randomCity(cities = citiesList): string {
+  static randomCity(cities: string[]): string {
     const randomIndex = Math.floor(Math.random() * cities.length);
 
     return cities[randomIndex];
   }
 
-  static randomCountryId(c = countries): string {
-    const randomIndex = Math.floor(Math.random() * c.length);
-    return c[randomIndex].id;
+  static randomCountryId(countries: Country[]): string {
+    const randomIndex = Math.floor(Math.random() * countries.length);
+    return countries[randomIndex].id;
   }
-  static randomCountryName(c = countries): string {
+  static randomCountryName(c: Country[]): string {
     const randomIndex = Math.floor(Math.random() * c.length);
     return c[randomIndex].name;
   }

@@ -1,4 +1,6 @@
 import { Generator } from '@src/utils/generator';
+import { citiesList } from './city';
+import { countries } from './country';
 
 const generateGuest = (register: Registers, index: number) => {
   const di = Generator.randomIdentityNumber(8) + index;
@@ -16,12 +18,12 @@ const generateGuest = (register: Registers, index: number) => {
     checkIn: new Date(register.checkIn).toISOString(),
     checkOut,
     dateOfBirth,
-    city: Generator.randomCity(),
+    city: Generator.randomCity(citiesList),
     name: fullName.split(' ').at(0)!,
     lastName: fullName.split(' ').at(1)!,
     phone: Generator.randomPhone(),
     roomNumber: register.room.roomNumber,
-    countryId: Generator.randomCountryId(),
+    countryId: Generator.randomCountryId(countries),
     registerId: register.id,
   };
   return guest;

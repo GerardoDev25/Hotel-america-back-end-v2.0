@@ -1,4 +1,4 @@
-import { GuestValidator } from './guest-validator';
+import { GuestValidator } from './guest-validator.dto';
 
 export class CreateGuestDto {
   private constructor(
