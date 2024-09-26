@@ -13,3 +13,4 @@ export interface IGuest {
   registerId: string;
 }
 export type CreateGuest = Omit<IGuest, 'id'>;
+export type UpdateGuest = Partial<CreateGuest> & { id: string };
