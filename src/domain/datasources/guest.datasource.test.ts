@@ -32,7 +32,7 @@ describe('guest.datasource.ts', () => {
     guests: [mockGuest],
     total: 0,
     page: 0,
-    ulimit: 0,
+    limit: 0,
     prev: null,
     next: null,
   };

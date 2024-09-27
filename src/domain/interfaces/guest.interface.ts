@@ -17,7 +17,7 @@ export interface GuestPagination {
   guests: IGuest[];
   total: number;
   page: number;
-  ulimit: number;
+  limit: number;
   prev: string | null;
   next: string | null;
 }
