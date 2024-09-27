@@ -1,14 +1,14 @@
 import { Uuid } from '@src/adapters';
 import { citiesList } from '@src/data/seed';
-import { PaginationDto } from '@src/domain/dtos/share';
-import { GuestEntity } from '@src/domain/entities';
-import { GuestPagination } from '@src/domain/interfaces';
-import { GuestRepository, RegisterRepository } from '@src/domain/repositories';
-import { variables } from '@src/domain/variables';
+import { PaginationDto } from '@domain/dtos/share';
+import { GuestEntity } from '@domain/entities';
+import { GuestPagination } from '@domain/interfaces';
+import { GuestRepository, RegisterRepository } from '@domain/repositories';
+import { variables } from '@domain/variables';
 import { Generator } from '@src/utils/generator';
-import { GuestService } from './guest.service';
-import { CreateGuestDto } from '@src/domain/dtos/guest';
-import { CustomError } from '@src/domain/error';
+import { CreateGuestDto } from '@domain/dtos/guest';
+import { CustomError } from '@domain/error';
+import { GuestService } from '.';
 
 describe('guest.service.ts', () => {
   const fullName = Generator.randomName();

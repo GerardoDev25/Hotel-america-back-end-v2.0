@@ -1,23 +1,32 @@
-import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
-import { RegisterEntity } from '@domain/entities';
-import { RegisterPagination } from '@domain/interfaces';
+import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
+import { GuestEntity } from '@domain/entities';
+import { GuestPagination } from '@domain/interfaces';
+import { variables } from '@domain/variables';
 import { Uuid } from '@src/adapters';
+import { citiesList } from '@src/data/seed';
 import { Generator } from '@src/utils/generator';
-import { RegisterController } from './';
+import { GuestController } from '.';
 
-describe('register.controller.ts', () => {
-  const registerEntity: RegisterEntity = {
+describe('guest.controller.ts', () => {
+  const fullName = Generator.randomName();
+
+  const guestEntity: GuestEntity = {
     id: Uuid.v4(),
+    di: Generator.randomIdentityNumber(),
     checkIn: Generator.randomDate(),
-    guestsNumber: 1,
-    discount: 0,
-    price: 0,
-    userId: Uuid.v4(),
-    roomId: Uuid.v4(),
+    checkOut: Generator.randomDate(),
+    dateOfBirth: Generator.randomDate(),
+    city: Generator.randomCity(citiesList),
+    name: fullName.split(' ').at(0)!,
+    lastName: fullName.split(' ').at(1)!,
+    phone: Generator.randomPhone(),
+    roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
+    countryId: 'AR',
+    registerId: Uuid.v4(),
   };
 
-  const pagination: RegisterPagination = {
-    registers: [registerEntity],
+  const pagination: GuestPagination = {
+    guests: [guestEntity],
     total: 0,
     page: 0,
     limit: 0,
@@ -32,9 +41,9 @@ describe('register.controller.ts', () => {
     const mockService = {
       getAll: jest.fn().mockResolvedValue(pagination),
     } as any;
-    const registerController = new RegisterController(mockService);
+    const guestController = new GuestController(mockService);
 
-    await registerController.getAll(req, res);
+    await guestController.getAll(req, res);
 
     expect(mockService.getAll).toHaveBeenCalled();
     expect(res.json).toHaveBeenCalledWith(pagination);
@@ -45,9 +54,9 @@ describe('register.controller.ts', () => {
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = { getAll: jest.fn() } as any;
-    const registerController = new RegisterController(mockService);
+    const guestController = new GuestController(mockService);
 
-    await registerController.getAll(req, res);
+    await guestController.getAll(req, res);
 
     expect(mockService.getAll).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
@@ -58,39 +67,37 @@ describe('register.controller.ts', () => {
   });
 
   it('should return a register by id (getById)', async () => {
-    const id = registerEntity.id;
+    const id = guestEntity.id;
     const req = { params: { id } } as any;
     const res = { json: jest.fn() } as any;
 
     const mockService = {
-      getById: jest.fn().mockResolvedValue(registerEntity),
+      getById: jest.fn().mockResolvedValue(guestEntity),
     } as any;
-    const registerController = new RegisterController(mockService);
+    const guestController = new GuestController(mockService);
 
-    await registerController.getById(req, res);
+    await guestController.getById(req, res);
 
     expect(mockService.getById).toHaveBeenCalledWith(id);
-    expect(res.json).toHaveBeenCalledWith(registerEntity);
+    expect(res.json).toHaveBeenCalledWith(guestEntity);
   });
 
   it('should create a register (create)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...body } = registerEntity;
+    const { id, ...body } = guestEntity;
 
     const req = { body } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = {
-      create: jest.fn().mockResolvedValue(registerEntity),
+      create: jest.fn().mockResolvedValue(guestEntity),
     } as any;
-    const registerController = new RegisterController(mockService);
+    const guestController = new GuestController(mockService);
 
-    await registerController.create(req, res);
+    await guestController.create(req, res);
 
-    expect(res.json).toHaveBeenCalledWith(registerEntity);
-    expect(mockService.create).toHaveBeenCalledWith(
-      expect.any(CreateRegisterDto)
-    );
+    expect(res.json).toHaveBeenCalledWith(guestEntity);
+    expect(mockService.create).toHaveBeenCalledWith(expect.any(CreateGuestDto));
   });
 
   it('should throw error if not well create (create)', async () => {
@@ -98,9 +105,9 @@ describe('register.controller.ts', () => {
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = { create: jest.fn() } as any;
-    const registerController = new RegisterController(mockService);
+    const guestController = new GuestController(mockService);
 
-    await registerController.create(req, res);
+    await guestController.create(req, res);
 
     expect(mockService.create).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
@@ -111,20 +118,18 @@ describe('register.controller.ts', () => {
   });
 
   it('should update a register (update)', async () => {
-    const req = { body: { id: registerEntity.id } } as any;
+    const req = { body: { id: guestEntity.id } } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = {
       update: jest.fn().mockResolvedValue({ ok: true, message: '' }),
     } as any;
-    const registerController = new RegisterController(mockService);
+    const guestController = new GuestController(mockService);
 
-    await registerController.update(req, res);
+    await guestController.update(req, res);
 
     expect(res.json).toHaveBeenCalledWith({ ok: true, message: '' });
-    expect(mockService.update).toHaveBeenCalledWith(
-      expect.any(UpdateRegisterDto)
-    );
+    expect(mockService.update).toHaveBeenCalledWith(expect.any(UpdateGuestDto));
   });
 
   it('should throw error if not valid object (update)', async () => {
@@ -132,9 +137,9 @@ describe('register.controller.ts', () => {
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = { update: jest.fn() } as any;
-    const registerController = new RegisterController(mockService);
+    const guestController = new GuestController(mockService);
 
-    await registerController.update(req, res);
+    await guestController.update(req, res);
 
     expect(mockService.update).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
@@ -145,17 +150,17 @@ describe('register.controller.ts', () => {
   });
 
   it('should call delete function service (delete)', async () => {
-    const req = { params: { id: registerEntity.id } } as any;
+    const req = { params: { id: guestEntity.id } } as any;
     const res = { json: jest.fn() } as any;
 
     const mockService = {
       delete: jest.fn().mockResolvedValue({ ok: true, message: '' }),
     } as any;
-    const registerController = new RegisterController(mockService);
+    const guestController = new GuestController(mockService);
 
-    await registerController.deleted(req, res);
+    await guestController.delete(req, res);
 
-    expect(mockService.delete).toHaveBeenCalledWith(registerEntity.id);
+    expect(mockService.delete).toHaveBeenCalledWith(guestEntity.id);
     expect(res.json).toHaveBeenCalledWith({ ok: true, message: '' });
   });
 });
