@@ -12,5 +12,15 @@ export interface IGuest {
   countryId: string;
   registerId: string;
 }
+
+export interface GuestPagination {
+  guests: IGuest[];
+  total: number;
+  page: number;
+  ulimit: number;
+  prev: string | null;
+  next: string | null;
+}
+
 export type CreateGuest = Omit<IGuest, 'id'>;
 export type UpdateGuest = Partial<CreateGuest> & { id: string };

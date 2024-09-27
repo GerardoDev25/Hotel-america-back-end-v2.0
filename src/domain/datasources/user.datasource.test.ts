@@ -6,7 +6,7 @@ import { UserEntity } from '@domain/entities';
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 
-import { UserDatasource } from './user.datasource';
+import { UserDatasource } from '.';
 
 describe('user.database.ts', () => {
   const page = 2;
