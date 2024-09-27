@@ -1,7 +1,7 @@
 import { GuestRepository, RegisterRepository } from '@domain/repositories';
 import { CustomError } from '@domain/error';
-import { PaginationDto } from '@src/domain/dtos/share';
-import { CreateGuestDto, UpdateGuestDto } from '@src/domain/dtos/guest';
+import { PaginationDto } from '@domain/dtos/share';
+import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
 
 export class GuestService {
   constructor(
