@@ -16,6 +16,10 @@ describe('auth.route.ts', () => {
   });
 
   beforeEach(async () => {
+    await prisma.guest.deleteMany();
+    await prisma.register.deleteMany();
+    await prisma.room.deleteMany();
+    await prisma.country.deleteMany();
     await prisma.user.deleteMany();
   });
 

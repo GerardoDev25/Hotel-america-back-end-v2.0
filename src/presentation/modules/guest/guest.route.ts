@@ -14,7 +14,9 @@ import { UserRolesList } from '@domain/interfaces';
 import { GuestController, GuestService } from '.';
 
 export class GuestRoute {
-  static routes(): Router {
+  constructor() {}
+
+  static get routes(): Router {
     const route = Router();
 
     // * auth

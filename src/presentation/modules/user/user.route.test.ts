@@ -29,6 +29,10 @@ describe('user.route.ts', () => {
   });
 
   beforeEach(async () => {
+    await prisma.guest.deleteMany();
+    await prisma.register.deleteMany();
+    await prisma.room.deleteMany();
+    await prisma.country.deleteMany();
     await prisma.user.deleteMany();
 
     // * create auth token
@@ -228,7 +232,7 @@ describe('user.route.ts', () => {
     expect(message).toBe('user updated successfully');
   });
 
-  test('should get and error while updating a (update)', async () => {
+  test('should get and error while updating a user (update)', async () => {
     const userCreated = await prisma.user.create({ data: seedData.users[0] });
     const name = false;
 
