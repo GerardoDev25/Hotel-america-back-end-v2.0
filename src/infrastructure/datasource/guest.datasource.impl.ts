@@ -78,7 +78,15 @@ export class GuestDatasourceImpl extends GuestDatasource {
     createGuestDto: CreateGuestDto
   ): Promise<{ ok: boolean; guest: GuestEntity }> {
     try {
-      const newGuest = await prisma.guest.create({ data: createGuestDto });
+      // const newGuest = await prisma.guest.create({ data: createGuestDto });
+
+      const newGuest = await prisma.$transaction(async (tx) => {
+        await tx.register.update({
+          where: { id: createGuestDto.registerId },
+          data: { guestsNumber: { increment: 1 } },
+        });
+        return await tx.guest.create({ data: createGuestDto });
+      });
 
       return { ok: true, guest: this.transformObject(newGuest) };
     } catch (error: any) {
@@ -96,6 +104,7 @@ export class GuestDatasourceImpl extends GuestDatasource {
 
     try {
       await prisma.guest.update({ where: { id }, data });
+
       return { ok: true, message: 'guest updated successfully' };
     } catch (error: any) {
       throw this.handleError(error);
