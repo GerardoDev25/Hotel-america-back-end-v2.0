@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { IRegister, RegisterPagination } from '@domain/interfaces';
-import { RegisterEntity } from '@domain/entities/';
+import { GuestEntity, RegisterEntity } from '@domain/entities/';
+import { CreateGuestDto } from '@domain/dtos/guest';
+import { variables } from '@domain/variables';
 
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 
-import { RegisterDatasource } from './register.datasource';
+import { citiesList } from '@src/data/seed';
+import { RegisterDatasource } from '.';
 
 describe('register.datasource.ts', () => {
   const page = 2;
@@ -33,6 +36,22 @@ describe('register.datasource.ts', () => {
     roomId: Uuid.v4(),
   });
 
+  const fullName = Generator.randomName();
+
+  const mockGuest = new GuestEntity({
+    id: Uuid.v4(),
+    di: Generator.randomIdentityNumber(),
+    checkIn: Generator.randomDate(),
+    dateOfBirth: Generator.randomDate(),
+    city: Generator.randomCity(citiesList),
+    name: fullName.split(' ').at(0)!,
+    lastName: fullName.split(' ').at(1)!,
+    phone: Generator.randomPhone(),
+    roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
+    countryId: 'BO',
+    registerId: Uuid.v4(),
+  });
+
   const registerPagination: RegisterPagination = {
     registers: [mockRegister, mockRegister2],
     total: 0,
@@ -43,6 +62,16 @@ describe('register.datasource.ts', () => {
   };
 
   class MockRegisterDataSource implements RegisterDatasource {
+    async checkIn(data: {
+      registerDto: CreateRegisterDto;
+      guestDtos: CreateGuestDto[];
+    }): Promise<{
+      ok: boolean;
+      register: RegisterEntity;
+      guests: GuestEntity[];
+    }> {
+      return { ok: true, register: mockRegister, guests: [mockGuest] };
+    }
     async getById(
       id: string
     ): Promise<{ ok: boolean; register: RegisterEntity }> {
@@ -123,6 +152,49 @@ describe('register.datasource.ts', () => {
     expect(mockRegisterDataSource.create(newRegister)).resolves.toEqual({
       ok: true,
       register: mockRegister,
+    });
+  });
+
+  test('should get default behavior checkIn()', async () => {
+    const { id, ...restRegister } = mockRegister;
+    const checkIn = new Date(restRegister.checkIn);
+    const checkOut = restRegister.checkOut
+      ? new Date(restRegister.checkOut)
+      : undefined;
+    const registerDto = { ...restRegister, checkIn, checkOut };
+
+    const { id: guestId, ...restGuest } = mockGuest;
+    const guestDateOfBirth = new Date(restGuest.dateOfBirth);
+    const guestCheckIn = new Date(restGuest.checkIn);
+    const guestCheckOut = restGuest.checkOut
+      ? new Date(restGuest.checkOut)
+      : undefined;
+
+    const guestDto: CreateGuestDto = {
+      ...restGuest,
+      dateOfBirth: guestDateOfBirth,
+      checkIn: guestCheckIn,
+      checkOut: guestCheckOut,
+    };
+
+    const { ok, register, guests } = await mockRegisterDataSource.checkIn({
+      registerDto,
+      guestDtos: [guestDto],
+    });
+
+    expect(typeof mockRegisterDataSource.checkIn).toBe('function');
+    expect(ok).toBeTruthy();
+    expect(register).toBeInstanceOf(RegisterEntity);
+    expect(guests[0]).toBeInstanceOf(GuestEntity);
+    expect(
+      mockRegisterDataSource.checkIn({
+        registerDto,
+        guestDtos: [guestDto],
+      })
+    ).resolves.toEqual({
+      ok: true,
+      register: mockRegister,
+      guests: [mockGuest],
     });
   });
 
