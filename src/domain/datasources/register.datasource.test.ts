@@ -62,16 +62,6 @@ describe('register.datasource.ts', () => {
   };
 
   class MockRegisterDataSource implements RegisterDatasource {
-    async checkIn(data: {
-      registerDto: CreateRegisterDto;
-      guestDtos: CreateGuestDto[];
-    }): Promise<{
-      ok: boolean;
-      register: RegisterEntity;
-      guests: GuestEntity[];
-    }> {
-      return { ok: true, register: mockRegister, guests: [mockGuest] };
-    }
     async getById(
       id: string
     ): Promise<{ ok: boolean; register: RegisterEntity }> {
@@ -92,6 +82,17 @@ describe('register.datasource.ts', () => {
       createRegisterDto: CreateRegisterDto
     ): Promise<{ ok: boolean; register: RegisterEntity }> {
       return { ok: true, register: mockRegister };
+    }
+
+    async checkIn(data: {
+      registerDto: CreateRegisterDto;
+      guestDtos: CreateGuestDto[];
+    }): Promise<{
+      ok: boolean;
+      register: RegisterEntity;
+      guests: GuestEntity[];
+    }> {
+      return { ok: true, register: mockRegister, guests: [mockGuest] };
     }
 
     async update(

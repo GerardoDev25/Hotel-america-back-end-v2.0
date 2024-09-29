@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
+import { CreateGuestDto } from '@domain/dtos/guest';
 import { IRegister, RegisterPagination } from '@domain/interfaces';
-import { RegisterEntity } from '@domain/entities/register.entity';
+import { RegisterEntity, GuestEntity } from '@domain/entities';
+import { variables } from '@domain/variables';
+
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
-import { RegisterRepository } from './register.repository';
+import { citiesList } from '@src/data/seed';
+import { RegisterRepository } from '.';
 
 describe('register.repository.ts', () => {
   const page = 2;
@@ -40,6 +44,22 @@ describe('register.repository.ts', () => {
     next: null,
   };
 
+  const fullName = Generator.randomName();
+
+  const mockGuest = new GuestEntity({
+    id: Uuid.v4(),
+    di: Generator.randomIdentityNumber(),
+    checkIn: Generator.randomDate(),
+    dateOfBirth: Generator.randomDate(),
+    city: Generator.randomCity(citiesList),
+    name: fullName.split(' ').at(0)!,
+    lastName: fullName.split(' ').at(1)!,
+    phone: Generator.randomPhone(),
+    roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
+    countryId: 'BO',
+    registerId: Uuid.v4(),
+  });
+
   class MockRegisterRepository implements RegisterRepository {
     async getById(
       id: string
@@ -61,6 +81,17 @@ describe('register.repository.ts', () => {
       createRegisterDto: CreateRegisterDto
     ): Promise<{ ok: boolean; register: RegisterEntity }> {
       return { ok: true, register: mockRegister };
+    }
+
+    async checkIn(data: {
+      registerDto: CreateRegisterDto;
+      guestDtos: CreateGuestDto[];
+    }): Promise<{
+      ok: boolean;
+      register: RegisterEntity;
+      guests: GuestEntity[];
+    }> {
+      return { ok: true, register: mockRegister, guests: [mockGuest] };
     }
 
     async update(
@@ -124,6 +155,51 @@ describe('register.repository.ts', () => {
     expect(mockRegisterRepository.create(newRegister)).resolves.toEqual({
       ok: true,
       register: mockRegister,
+    });
+  });
+
+  test('should get default behavior checkIn()', async () => {
+    const mockRegisterRepository = new MockRegisterRepository();
+
+    const { id, ...restRegister } = mockRegister;
+    const checkIn = new Date(restRegister.checkIn);
+    const checkOut = restRegister.checkOut
+      ? new Date(restRegister.checkOut)
+      : undefined;
+    const registerDto = { ...restRegister, checkIn, checkOut };
+
+    const { id: guestId, ...restGuest } = mockGuest;
+    const guestDateOfBirth = new Date(restGuest.dateOfBirth);
+    const guestCheckIn = new Date(restGuest.checkIn);
+    const guestCheckOut = restGuest.checkOut
+      ? new Date(restGuest.checkOut)
+      : undefined;
+
+    const guestDto: CreateGuestDto = {
+      ...restGuest,
+      dateOfBirth: guestDateOfBirth,
+      checkIn: guestCheckIn,
+      checkOut: guestCheckOut,
+    };
+
+    const { ok, register, guests } = await mockRegisterRepository.checkIn({
+      registerDto,
+      guestDtos: [guestDto],
+    });
+
+    expect(typeof mockRegisterRepository.checkIn).toBe('function');
+    expect(ok).toBeTruthy();
+    expect(register).toBeInstanceOf(RegisterEntity);
+    expect(guests[0]).toBeInstanceOf(GuestEntity);
+    expect(
+      mockRegisterRepository.checkIn({
+        registerDto,
+        guestDtos: [guestDto],
+      })
+    ).resolves.toEqual({
+      ok: true,
+      register: mockRegister,
+      guests: [mockGuest],
     });
   });
 

@@ -1,6 +1,7 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { IRegister, RegisterPagination } from '@domain/interfaces';
-import { RegisterEntity } from '@domain/entities';
+import { GuestEntity, RegisterEntity } from '@domain/entities';
+import { CreateGuestDto } from '@domain/dtos/guest';
 
 export abstract class RegisterRepository {
   abstract getAll(page: number, limit: number): Promise<RegisterPagination>;
@@ -16,6 +17,11 @@ export abstract class RegisterRepository {
   abstract create(
     createRegisterDto: CreateRegisterDto
   ): Promise<{ ok: boolean; register: RegisterEntity }>;
+
+  abstract checkIn(data: {
+    registerDto: CreateRegisterDto;
+    guestDtos: CreateGuestDto[];
+  }): Promise<{ ok: boolean; register: RegisterEntity; guests: GuestEntity[] }>;
 
   abstract update(
     updaterRegisterDto: UpdateRegisterDto
