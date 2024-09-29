@@ -3,13 +3,14 @@ import { Register } from '@prisma/client';
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
 import { RegisterDatasource } from '@domain/datasources';
-import { RegisterEntity } from '@domain/entities';
+import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { RegisterPagination, IRegister } from '@domain/interfaces';
 
 import { LoggerService } from '@presentation/services';
 
 import { cleanObject, pagination } from '@src/utils';
 import { prisma } from '@src/data/postgres';
+import { CreateGuestDto } from '@src/domain/dtos/guest';
 
 export class RegisterDatasourceImpl extends RegisterDatasource {
   constructor(private readonly logger: LoggerService) {
@@ -31,6 +32,38 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       checkIn: entity.checkIn.toISOString(),
       checkOut: entity.checkOut?.toISOString() ?? null,
     });
+  }
+
+  private async createCheckIn({
+    guestDtos,
+    registerDto,
+  }: {
+    registerDto: CreateRegisterDto;
+    guestDtos: CreateGuestDto[];
+  }) {
+    const checkInTx = await prisma.$transaction(async (tx) => {
+      // * 1 create register
+      const newRegister = await tx.register.create({
+        data: { ...registerDto, guestsNumber: guestDtos.length },
+      });
+      const register = this.transformObject(newRegister);
+
+      // * 2 create guests
+      await prisma.guest.createMany({
+        data: guestDtos.map((guestDto) => ({
+          ...guestDto,
+          registerId: register.id,
+        })),
+      });
+
+      const guestsDB = await tx.guest.findMany({
+        where: { registerId: register.id },
+      });
+      const guests = guestsDB.map(GuestEntity.fromObject);
+      return { register, guests };
+    });
+
+    return checkInTx;
   }
 
   async getById(
@@ -96,15 +129,31 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     createRegisterDto: CreateRegisterDto
   ): Promise<{ ok: boolean; register: RegisterEntity }> {
     try {
-      // todo before change for a transaction
-      // todo change room isAvailable to false
-
       const newRegister = await prisma.register.create({
         data: createRegisterDto,
       });
 
       return { ok: true, register: this.transformObject(newRegister) };
     } catch (error: any) {
+      throw this.handleError(error);
+    }
+  }
+
+  // todo make CreateRegisterDto.guestsNumber as optional
+  // todo make CreateGuestDto.registerId as optional
+
+  async checkIn(data: {
+    registerDto: CreateRegisterDto;
+    guestDtos: CreateGuestDto[];
+  }): Promise<{
+    ok: boolean;
+    register: RegisterEntity;
+    guests: GuestEntity[];
+  }> {
+    try {
+      const checkInTx = await this.createCheckIn(data);
+      return { ok: true, ...checkInTx };
+    } catch (error) {
       throw this.handleError(error);
     }
   }
@@ -121,12 +170,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       await prisma.register.update({ where: { id }, data });
       return { ok: true, message: 'register updated successfully' };
     } catch (error: any) {
-      if (error instanceof CustomError) {
-        throw error;
-      } else {
-        this.logger.error(error.message);
-        throw CustomError.internalServerError(`internal server error`);
-      }
+      throw this.handleError(error);
     }
   }
 
