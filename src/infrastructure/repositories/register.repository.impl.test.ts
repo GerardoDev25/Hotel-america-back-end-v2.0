@@ -1,9 +1,13 @@
+import { CreateGuestDto } from '@domain/dtos/guest';
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { RegisterDatasource } from '@domain/datasources';
+import { variables } from '@domain/variables';
 
 import { Uuid } from '@src/adapters';
 
-import { RegisterRepositoryImpl } from './register.repository.impl';
+import { Generator } from '@src/utils/generator';
+import { citiesList } from '@src/data/seed';
+import { RegisterRepositoryImpl } from '.';
 
 describe('register.repository.impl.ts', () => {
   const mockDataSource: RegisterDatasource = {
@@ -13,6 +17,7 @@ describe('register.repository.impl.ts', () => {
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    checkIn: jest.fn(),
   };
 
   const repository = new RegisterRepositoryImpl(mockDataSource);
@@ -47,7 +52,7 @@ describe('register.repository.impl.ts', () => {
 
   test('should call create', async () => {
     const createRegister: CreateRegisterDto = {
-      guestsNumber: 0,
+      guestsNumber: variables.GUESTS_NUMBER_MIN_VALUE,
       discount: 0,
       price: 0,
       userId: Uuid.v4(),
@@ -59,6 +64,38 @@ describe('register.repository.impl.ts', () => {
 
     expect(mockDataSource.create).toHaveBeenCalled();
     expect(mockDataSource.create).toHaveBeenCalledWith(createRegister);
+  });
+
+  test('should call checkIn', async () => {
+    const createRegister: CreateRegisterDto = {
+      guestsNumber: variables.GUESTS_NUMBER_MIN_VALUE,
+      discount: 0,
+      price: 0,
+      userId: Uuid.v4(),
+      roomId: Uuid.v4(),
+      checkIn: new Date(),
+    };
+
+    const fullName = Generator.randomName();
+    const guestDto: CreateGuestDto = {
+      di: Generator.randomIdentityNumber(),
+      city: Generator.randomCity(citiesList),
+      name: fullName.split(' ').at(0)!,
+      lastName: fullName.split(' ').at(1)!,
+      phone: Generator.randomPhone(),
+      roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
+      countryId: Uuid.v4(),
+      registerId: Uuid.v4(),
+      dateOfBirth: new Date(),
+      checkIn: new Date(),
+    };
+
+    const data = { registerDto: createRegister, guestDtos: [guestDto] };
+
+    await repository.checkIn(data);
+
+    expect(mockDataSource.checkIn).toHaveBeenCalled();
+    expect(mockDataSource.checkIn).toHaveBeenCalledWith(data);
   });
 
   test('should call update', async () => {

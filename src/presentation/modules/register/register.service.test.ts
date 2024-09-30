@@ -1,11 +1,15 @@
 import { CreateRegisterDto } from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
-import { RegisterEntity } from '@domain/entities';
+import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { RegisterPagination } from '@domain/interfaces';
 import { RegisterRepository } from '@domain/repositories';
 import { Uuid } from '@src/adapters';
 import { RegisterService } from '.';
+import { Generator } from '@src/utils/generator';
+import { citiesList } from '@src/data/seed';
+import { variables } from '@src/domain/variables';
+import { CreateGuestDto } from '@src/domain/dtos/guest';
 
 describe('register.service.ts', () => {
   const register = new RegisterEntity({
@@ -15,6 +19,22 @@ describe('register.service.ts', () => {
     discount: 0,
     guestsNumber: 1,
     price: 100,
+    checkIn: new Date().toISOString(),
+    checkOut: new Date().toISOString(),
+  });
+
+  const fullName = Generator.randomName();
+  const guest = new GuestEntity({
+    id: Uuid.v4(),
+    di: Generator.randomIdentityNumber(),
+    city: Generator.randomCity(citiesList),
+    name: fullName.split(' ').at(0)!,
+    lastName: fullName.split(' ').at(1)!,
+    phone: Generator.randomPhone(),
+    roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
+    countryId: Uuid.v4(),
+    registerId: Uuid.v4(),
+    dateOfBirth: new Date().toISOString(),
     checkIn: new Date().toISOString(),
     checkOut: new Date().toISOString(),
   });
@@ -37,6 +57,9 @@ describe('register.service.ts', () => {
     create: jest.fn().mockResolvedValue({ ok: true, register }),
     update: jest.fn().mockResolvedValue(resolveData),
     delete: jest.fn().mockResolvedValue(resolveData),
+    checkIn: jest
+      .fn()
+      .mockResolvedValue({ register, guests: [guest], ok: true }),
   };
 
   const room = { isAvailable: true };
@@ -144,6 +167,88 @@ describe('register.service.ts', () => {
         `room with id ${registerDto.roomId} is not available`
       );
       expect(mockRegisterRepository.create).not.toHaveBeenCalled();
+    }
+  });
+
+  test('should have been call with parameters (checkIn)', async () => {
+    const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
+    const guestDtos = [] as CreateGuestDto[];
+
+    const mockRegisterRepository = {
+      getByParam: jest.fn().mockResolvedValue({ ok: false, register: null }),
+      checkIn: jest
+        .fn()
+        .mockResolvedValue({ ok: true, register, guests: [guest] }),
+    } as unknown as RegisterRepository;
+
+    const registerService = new RegisterService(
+      mockRegisterRepository,
+      mockRoomRepository
+    );
+
+    await registerService.checkIn({ guestDtos, registerDto });
+
+    expect(mockRegisterRepository.checkIn).toHaveBeenCalledWith({
+      registerDto,
+      guestDtos,
+    });
+    expect(mockRoomRepository.getById).toHaveBeenCalledWith(registerDto.roomId);
+    expect(mockRegisterRepository.getByParam).toHaveBeenCalledWith({
+      roomId: registerDto.roomId,
+    });
+  });
+
+  test('should throw error if room is not available (checkIn)', async () => {
+    const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
+    const guestDtos = [] as CreateGuestDto[];
+
+    const mockRegisterRepository = {
+      getByParam: jest.fn().mockResolvedValue({ ok: false, register: null }),
+      checkIn: jest.fn(),
+    } as unknown as RegisterRepository;
+
+    const mockRoomRepository = {
+      getById: jest.fn().mockResolvedValue({ room: { isAvailable: false } }),
+    } as any;
+
+    const registerService = new RegisterService(
+      mockRegisterRepository,
+      mockRoomRepository
+    );
+
+    try {
+      await registerService.checkIn({ registerDto, guestDtos });
+    } catch (error: any) {
+      expect(error).toBeInstanceOf(CustomError);
+      expect(error.message).toBe(
+        `room with id ${registerDto.roomId} is not available`
+      );
+      expect(mockRegisterRepository.checkIn).not.toHaveBeenCalled();
+    }
+  });
+
+  test('should throw error if register with roomId exist (checkIn)', async () => {
+    const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
+    const guestDtos = [] as CreateGuestDto[];
+
+    const mockRegisterRepository = {
+      getByParam: jest.fn().mockResolvedValue({ ok: false, register: {} }),
+      checkIn: jest.fn(),
+    } as unknown as RegisterRepository;
+
+    const registerService = new RegisterService(
+      mockRegisterRepository,
+      mockRoomRepository
+    );
+
+    try {
+      await registerService.checkIn({ registerDto, guestDtos });
+    } catch (error: any) {
+      expect(error).toBeInstanceOf(CustomError);
+      expect(error.message).toBe(
+        `room with id ${registerDto.roomId} is not available`
+      );
+      expect(mockRegisterRepository.checkIn).not.toHaveBeenCalled();
     }
   });
 

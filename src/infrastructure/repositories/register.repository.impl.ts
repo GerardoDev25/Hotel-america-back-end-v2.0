@@ -1,8 +1,9 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { RegisterDatasource } from '@domain/datasources';
-import { RegisterEntity } from '@domain/entities';
+import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { RegisterPagination, IRegister } from '@domain/interfaces';
 import { RegisterRepository } from '@domain/repositories';
+import { CreateGuestDto } from '@src/domain/dtos/guest';
 
 export class RegisterRepositoryImpl extends RegisterRepository {
   constructor(private readonly registerDataSource: RegisterDatasource) {
@@ -27,6 +28,17 @@ export class RegisterRepositoryImpl extends RegisterRepository {
     createRegisterDto: CreateRegisterDto
   ): Promise<{ ok: boolean; register: RegisterEntity }> {
     return this.registerDataSource.create(createRegisterDto);
+  }
+
+  checkIn(data: {
+    registerDto: CreateRegisterDto;
+    guestDtos: CreateGuestDto[];
+  }): Promise<{
+    ok: boolean;
+    register: RegisterEntity;
+    guests: GuestEntity[];
+  }> {
+    return this.registerDataSource.checkIn(data);
   }
 
   update(
