@@ -2,13 +2,13 @@ import { RegisterValidator } from './register-validator-dtos';
 
 export class CreateRegisterDto {
   private constructor(
-    public readonly guestsNumber: number,
     public readonly discount: number,
     public readonly price: number,
     public readonly userId: string,
     public readonly roomId: string,
     public readonly checkIn: Date,
-    public readonly checkOut?: Date
+    public readonly checkOut?: Date,
+    public readonly guestsNumber?: number
   ) {}
 
   static create(props: Record<string, any>): [string[]?, CreateRegisterDto?] {
@@ -30,13 +30,13 @@ export class CreateRegisterDto {
     return [
       undefined,
       new CreateRegisterDto(
-        +guestsNumber,
         +discount,
         +price,
         userId,
         roomId,
         new Date(checkIn),
-        checkOut ? new Date(checkOut) : undefined
+        checkOut ? new Date(checkOut) : undefined,
+        +guestsNumber
       ),
     ];
   }

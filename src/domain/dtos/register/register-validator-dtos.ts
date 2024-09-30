@@ -13,12 +13,14 @@ export class RegisterValidator {
       object;
 
     // * guestsNumber
-    const guestsNumberMinValueValid = NumberValidator.isMinValue({
-      value: guestsNumber,
-      minValue: variables.GUESTS_NUMBER_MIN_VALUE,
-    });
-    if (guestsNumberMinValueValid !== true) {
-      errors.push(`guestsNumber ${guestsNumberMinValueValid}`);
+    if (guestsNumber !== undefined) {
+      const guestsNumberMinValueValid = NumberValidator.isMinValue({
+        value: guestsNumber,
+        minValue: variables.GUESTS_NUMBER_MIN_VALUE,
+      });
+      if (guestsNumberMinValueValid !== true) {
+        errors.push(`guestsNumber ${guestsNumberMinValueValid}`);
+      }
     }
 
     // * discount

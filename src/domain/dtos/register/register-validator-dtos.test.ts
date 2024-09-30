@@ -19,6 +19,21 @@ describe('register-validator-dtos.ts', () => {
     expect(errors.length).toBe(0);
   });
 
+  it('should accept guestsNumber as optional create()', () => {
+    const data = {
+      checkIn: Generator.randomDate(),
+      checkOut: Generator.randomDate(),
+      discount: 0,
+      price: 302,
+      userId: Uuid.v4(),
+      roomId: Uuid.v4(),
+    };
+
+    const errors = RegisterValidator.create(data);
+
+    expect(errors.length).toBe(0);
+  });
+
   it('should get error if properties are wrong create()', () => {
     const data = {
       checkIn: 'no valid date',

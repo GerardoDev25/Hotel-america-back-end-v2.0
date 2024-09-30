@@ -29,6 +29,30 @@ describe('create-register.dto.ts', () => {
     );
   });
 
+  it('should receive guestsNumber as optional', () => {
+    const data = {
+      checkIn: Generator.randomDate(),
+      checkOut: Generator.randomDate(),
+      discount: 0,
+      price: 302,
+      userId: Uuid.v4(),
+      roomId: Uuid.v4(),
+    };
+
+    const [errors, registerDto] = CreateRegisterDto.create(data);
+    const checkOut = data.checkOut ? new Date(data.checkOut) : undefined;
+
+    expect(errors).toBeUndefined();
+    expect(registerDto).toBeInstanceOf(CreateRegisterDto);
+    expect(registerDto).toEqual(
+      expect.objectContaining({
+        ...data,
+        checkIn: new Date(data.checkIn),
+        checkOut,
+      })
+    );
+  });
+
   it('should get error if properties are wrong', () => {
     const data = {
       checkIn: 'no valid date',
