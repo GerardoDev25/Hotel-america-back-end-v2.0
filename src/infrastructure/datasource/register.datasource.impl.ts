@@ -34,6 +34,19 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     });
   }
 
+  private async checkGuestsCountryIds(guestDtos: CreateGuestDto[]) {
+    const countries = await prisma.country.findMany({ select: { id: true } });
+
+    for (const guest of guestDtos) {
+      // if (!countries.some(({ id }) => id === guest.countryId)) {
+      if (!countries.find((country) => country.id === guest.countryId)) {
+        throw CustomError.badRequest(
+          `Country with id ${guest.countryId} not found`
+        );
+      }
+    }
+  }
+
   private async createCheckIn({
     guestDtos,
     registerDto,
@@ -151,6 +164,8 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     guests: GuestEntity[];
   }> {
     try {
+      await this.checkGuestsCountryIds(data.guestDtos);
+
       const checkInTx = await this.createCheckIn(data);
       return { ok: true, ...checkInTx };
     } catch (error) {
