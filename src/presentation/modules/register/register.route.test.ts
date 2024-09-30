@@ -61,7 +61,14 @@ describe('register.route.ts', () => {
     const room = await prisma.room.create({ data: rawRoom });
 
     await prisma.register.createMany({
-      data: [{ ...rawRegister, userId: user.id, roomId: room.id }],
+      data: [
+        {
+          ...rawRegister,
+          userId: user.id,
+          roomId: room.id,
+          guestsNumber: rawRegister.guestsNumber ?? 1,
+        },
+      ],
     });
     const { body } = await request(testServer.app)
       .get('/api/register')
@@ -114,7 +121,12 @@ describe('register.route.ts', () => {
     const room = await prisma.room.create({ data: rawRoom });
 
     const registerTest = await prisma.register.create({
-      data: { ...rawRegister, userId: user.id, roomId: room.id },
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
     });
 
     const { body } = await request(testServer.app)
@@ -177,7 +189,6 @@ describe('register.route.ts', () => {
 
   it('should get error white create a register (create)', async () => {
     const user = await prisma.user.create({ data: rawUser });
-    // const room = await prisma.room.create({ data: rawRoom });
 
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
 
@@ -190,8 +201,7 @@ describe('register.route.ts', () => {
         expect(body.ok).toBeFalsy();
         expect(body.errors).toBeInstanceOf(Array);
 
-        expect(body.errors.length).toBe(5);
-        expect(body.errors).toContain('guestsNumber property is required');
+        expect(body.errors.length).toBe(4);
         expect(body.errors).toContain('discount property is required');
         expect(body.errors).toContain('price property is required');
         expect(body.errors).toContain('roomId property is required');
@@ -203,7 +213,12 @@ describe('register.route.ts', () => {
     const user = await prisma.user.create({ data: rawUser });
     const room = await prisma.room.create({ data: rawRoom });
     const register = await prisma.register.create({
-      data: { ...rawRegister, userId: user.id, roomId: room.id },
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
     });
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
     const guestsNumber = 1000;
@@ -217,10 +232,6 @@ describe('register.route.ts', () => {
         const { ok, message } = body;
         expect(ok).toBeTruthy();
         expect(message).toBe('register updated successfully');
-        // expect(
-        //   (await prisma.register.findUnique({ where: { id: register.id } }))
-        //     ?.guestsNumber
-        // ).toBe(guestsNumber);
       });
   });
 
@@ -228,7 +239,12 @@ describe('register.route.ts', () => {
     const user = await prisma.user.create({ data: rawUser });
     const room = await prisma.room.create({ data: rawRoom });
     const register = await prisma.register.create({
-      data: { ...rawRegister, userId: user.id, roomId: room.id },
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
     });
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
     const guestsNumber = 'not';
@@ -250,7 +266,12 @@ describe('register.route.ts', () => {
     const room = await prisma.room.create({ data: rawRoom });
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
     const register = await prisma.register.create({
-      data: { ...rawRegister, userId: user.id, roomId: room.id },
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
     });
 
     return request(testServer.app)

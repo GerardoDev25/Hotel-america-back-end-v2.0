@@ -99,7 +99,12 @@ describe('guest.route.ts', () => {
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
-      data: { ...rawRegister, userId: user.id, roomId: room.id },
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
     });
     await prisma.guest.createMany({
       data: [{ ...rawGuest, registerId: register.id, countryId: country.id }],
@@ -149,7 +154,12 @@ describe('guest.route.ts', () => {
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
-      data: { ...rawRegister, userId: user.id, roomId: room.id },
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
     });
     const guestDB = await prisma.guest.create({
       data: { ...rawGuest, registerId: register.id, countryId: country.id },
@@ -192,7 +202,12 @@ describe('guest.route.ts', () => {
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
-      data: { ...rawRegister, userId: user.id, roomId: room.id },
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
     });
 
     const { body } = await request(testServer.app)
@@ -265,7 +280,12 @@ describe('guest.route.ts', () => {
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
-      data: { ...rawRegister, userId: user.id, roomId: room.id },
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
     });
     const guestDB = await prisma.guest.create({
       data: { ...rawGuest, registerId: register.id, countryId: country.id },
@@ -312,7 +332,12 @@ describe('guest.route.ts', () => {
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
-      data: { ...rawRegister, userId: user.id, roomId: room.id },
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
     });
     const guestDB = await prisma.guest.create({
       data: { ...rawGuest, registerId: register.id, countryId: country.id },

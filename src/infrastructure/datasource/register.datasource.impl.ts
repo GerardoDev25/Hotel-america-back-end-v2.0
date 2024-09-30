@@ -141,9 +141,14 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
   async create(
     createRegisterDto: CreateRegisterDto
   ): Promise<{ ok: boolean; register: RegisterEntity }> {
+    const { guestsNumber, ...rest } = createRegisterDto;
+    if (!guestsNumber) {
+      throw CustomError.badRequest('guestsNumber property is required');
+    }
+
     try {
       const newRegister = await prisma.register.create({
-        data: createRegisterDto,
+        data: { ...rest, guestsNumber },
       });
 
       return { ok: true, register: this.transformObject(newRegister) };
