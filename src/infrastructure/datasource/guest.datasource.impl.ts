@@ -77,13 +77,19 @@ export class GuestDatasourceImpl extends GuestDatasource {
   async create(
     createGuestDto: CreateGuestDto
   ): Promise<{ ok: boolean; guest: GuestEntity }> {
+    const { registerId, ...rest } = createGuestDto;
+
+    if (!registerId) {
+      throw CustomError.badRequest('registerId property required');
+    }
+
     try {
       const newGuest = await prisma.$transaction(async (tx) => {
         await tx.register.update({
           where: { id: createGuestDto.registerId },
           data: { guestsNumber: { increment: 1 } },
         });
-        return await tx.guest.create({ data: createGuestDto });
+        return await tx.guest.create({ data: { ...rest, registerId } });
       });
 
       return { ok: true, guest: this.transformObject(newGuest) };

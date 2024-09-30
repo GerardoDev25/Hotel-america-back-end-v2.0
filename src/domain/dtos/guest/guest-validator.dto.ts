@@ -72,9 +72,11 @@ export class GuestValidator {
     }
 
     //  * registerId
-    const registerIdValid = StringValidator.isValidUUID(registerId);
-    if (registerIdValid !== true) {
-      errors.push(`registerId ${registerIdValid}`);
+    if (registerId !== undefined) {
+      const registerIdValid = StringValidator.isValidUUID(registerId);
+      if (registerIdValid !== true) {
+        errors.push(`registerId ${registerIdValid}`);
+      }
     }
 
     //  * dateOfBirth

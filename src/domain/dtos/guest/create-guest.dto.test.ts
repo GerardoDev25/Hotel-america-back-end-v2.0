@@ -35,6 +35,35 @@ describe('create-guest.dto.ts', () => {
     );
   });
 
+  it('should get registerId as optional', () => {
+    const fullName = Generator.randomName();
+    const data = {
+      di: Generator.randomIdentityNumber(),
+      city: Generator.randomCity(citiesList),
+      name: fullName.split(' ').at(0)!,
+      lastName: fullName.split(' ').at(1)!,
+      phone: Generator.randomPhone(),
+      roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
+      countryId: 'BO',
+      dateOfBirth: Generator.randomDate(),
+      checkIn: Generator.randomDate(),
+      checkOut: Generator.randomDate(),
+    };
+    const [errors, guestDto] = CreateGuestDto.create(data);
+    const checkOut = data.checkOut ? new Date(data.checkOut) : undefined;
+
+    expect(errors).toBeUndefined();
+    expect(guestDto).toBeInstanceOf(CreateGuestDto);
+    expect(guestDto).toEqual(
+      expect.objectContaining({
+        ...data,
+        dateOfBirth: new Date(data.dateOfBirth),
+        checkIn: new Date(data.checkIn),
+        checkOut,
+      })
+    );
+  });
+
   it('should get error if properties are wrong', () => {
     const data = {
       di: 'false',

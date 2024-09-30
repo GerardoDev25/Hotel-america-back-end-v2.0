@@ -25,7 +25,7 @@ export class GuestService {
 
   async create(createGuestDto: CreateGuestDto) {
     try {
-      await this.registerRepository.getById(createGuestDto.registerId);
+      await this.registerRepository.getById(createGuestDto.registerId!);
     } catch (error) {
       throw this.handleError(error);
     }

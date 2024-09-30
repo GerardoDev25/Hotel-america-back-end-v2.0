@@ -24,6 +24,26 @@ describe('guest-validator.dto.ts', () => {
     expect(errors.length).toBe(0);
   });
 
+  it('should get registerId as optional (create)', () => {
+    const fullName = Generator.randomName();
+    const data = {
+      di: Generator.randomIdentityNumber(),
+      city: Generator.randomCity(citiesList),
+      name: fullName.split(' ').at(0)!,
+      lastName: fullName.split(' ').at(1)!,
+      phone: Generator.randomPhone(),
+      roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
+      countryId: 'BO',
+      dateOfBirth: Generator.randomDate(),
+      checkIn: Generator.randomDate(),
+      checkOut: Generator.randomDate(),
+    };
+
+    const errors = GuestValidator.create(data);
+
+    expect(errors.length).toBe(0);
+  });
+
   it('should get error if properties are wrong (create)', () => {
     const data = {
       di: 'false',

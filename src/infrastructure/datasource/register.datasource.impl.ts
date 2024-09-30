@@ -157,9 +157,6 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     }
   }
 
-  // todo make CreateRegisterDto.guestsNumber as optional
-  // todo make CreateGuestDto.registerId as optional
-
   async checkIn(data: {
     registerDto: CreateRegisterDto;
     guestDtos: CreateGuestDto[];

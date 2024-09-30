@@ -9,10 +9,10 @@ export class CreateGuestDto {
     public readonly phone: string,
     public readonly roomNumber: number,
     public readonly countryId: string,
-    public readonly registerId: string,
     public readonly dateOfBirth: Date,
     public readonly checkIn: Date,
-    public readonly checkOut?: Date
+    public readonly checkOut?: Date,
+    public readonly registerId?: string
   ) {}
 
   static create(props: Record<string, any>): [string[]?, CreateGuestDto?] {
@@ -56,10 +56,10 @@ export class CreateGuestDto {
         phone,
         +roomNumber,
         countryId,
-        registerId,
         new Date(dateOfBirth),
         new Date(checkIn),
-        checkOut ? new Date(checkOut) : undefined
+        checkOut ? new Date(checkOut) : undefined,
+        registerId
       ),
     ];
   }

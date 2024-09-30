@@ -48,6 +48,10 @@ export class GuestController {
   public create = async (req: Request, res: Response) => {
     const [errors, createGuestDto] = CreateGuestDto.create(req.body);
 
+    if (!createGuestDto?.registerId) {
+      errors?.push('registerId property is required');
+    }
+
     if (errors) {
       return res.status(400).json({ ok: false, errors });
     }

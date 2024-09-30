@@ -266,9 +266,9 @@ describe('guest.route.ts', () => {
         'roomNumber property is required',
         'countryId property is required',
         'countryId not valid',
-        'registerId property is required',
         'dateOfBirth property is required',
         'checkIn property is required',
+        'registerId property is required',
       ],
     });
   });
