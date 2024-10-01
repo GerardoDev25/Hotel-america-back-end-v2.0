@@ -116,11 +116,22 @@ export class GuestDatasourceImpl extends GuestDatasource {
   }
 
   async delete(id: string): Promise<{ ok: boolean; message: string }> {
-    await this.getById(id);
-
     try {
-      await prisma.guest.delete({ where: { id } });
-      return { ok: true, message: 'guest deleted successfully' };
+      const { guest } = await this.getById(id);
+
+      return await prisma.$transaction(async (tx) => {
+        const registerUpdated = await tx.register.update({
+          where: { id: guest.registerId },
+          data: { guestsNumber: { decrement: 1 } },
+        });
+
+        if (registerUpdated.guestsNumber < 1) {
+          throw CustomError.conflict('register most have 1 guest as minimum');
+        }
+
+        await tx.guest.delete({ where: { id } });
+        return { ok: true, message: 'guest deleted successfully' };
+      });
     } catch (error: any) {
       throw this.handleError(error);
     }

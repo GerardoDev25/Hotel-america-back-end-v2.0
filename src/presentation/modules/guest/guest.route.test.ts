@@ -47,7 +47,7 @@ describe('guest.route.ts', () => {
   };
 
   const rawRegister: CreateRegisterDto = {
-    guestsNumber: 1,
+    guestsNumber: 2,
     price: 0,
     checkOut: new Date(),
     discount: 0,
@@ -322,7 +322,7 @@ describe('guest.route.ts', () => {
     });
   });
 
-  test('should delete a user by id (delete)', async () => {
+  test('should delete a guest by id (delete)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
       await prisma.user.create({ data: rawUser }),
@@ -336,11 +336,22 @@ describe('guest.route.ts', () => {
         guestsNumber: rawRegister.guestsNumber ?? 1,
       },
     });
-    const guestDB = await prisma.guest.create({
-      data: { ...rawGuest, registerId: register.id, countryId: country.id },
+    await prisma.guest.createMany({
+      data: [
+        { ...rawGuest, registerId: register.id, countryId: country.id },
+        {
+          ...rawGuest,
+          registerId: register.id,
+          countryId: country.id,
+          di: Generator.randomIdentityNumber(),
+        },
+      ],
     });
+
+    const guestDB = await prisma.guest.findMany();
+
     const { body } = await request(testServer.app)
-      .delete(`/api/guest/${guestDB.id}`)
+      .delete(`/api/guest/${guestDB[0].id}`)
       .set('Authorization', `Bearer ${token}`)
       .expect(200);
 
@@ -348,5 +359,34 @@ describe('guest.route.ts', () => {
 
     expect(ok).toBeTruthy();
     expect(message).toBe('guest deleted successfully');
+  });
+
+  test('should not delete a guest if there is only one (delete)', async () => {
+    const [country, user, room] = await Promise.all([
+      await prisma.country.create({ data: rawCountry }),
+      await prisma.user.create({ data: rawUser }),
+      await prisma.room.create({ data: rawRoom }),
+    ]);
+    const register = await prisma.register.create({
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: 1,
+      },
+    });
+    const guestDB = await prisma.guest.create({
+      data: { ...rawGuest, registerId: register.id, countryId: country.id },
+    });
+
+    const { body } = await request(testServer.app)
+      .delete(`/api/guest/${guestDB.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(409);
+
+    const { ok, errors } = body;
+
+    expect(ok).toBeFalsy();
+    expect(errors[0]).toBe('register most have 1 guest as minimum');
   });
 });
