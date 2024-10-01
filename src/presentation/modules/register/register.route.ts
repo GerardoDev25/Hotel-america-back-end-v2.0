@@ -63,7 +63,7 @@ export class RegisterRoute {
     route.get('/:id', middleware.getById, registerController.getById);
     route.post('/', middleware.create, registerController.create);
     route.put('/', middleware.update, registerController.update);
-    route.delete('/:id', middleware.delete, registerController.deleted);
+    route.delete('/:id', middleware.delete, registerController.delete);
 
     return route;
   }

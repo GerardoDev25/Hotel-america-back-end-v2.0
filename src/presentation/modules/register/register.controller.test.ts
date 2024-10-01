@@ -1,9 +1,12 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
-import { RegisterEntity } from '@domain/entities';
+import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { RegisterPagination } from '@domain/interfaces';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 import { RegisterController } from './';
+// import { CreateGuestDto } from '@src/domain/dtos/guest';
+import { citiesList } from '@src/data/seed';
+import { variables } from '@src/domain/variables';
 
 describe('register.controller.ts', () => {
   const registerEntity: RegisterEntity = {
@@ -15,6 +18,34 @@ describe('register.controller.ts', () => {
     userId: Uuid.v4(),
     roomId: Uuid.v4(),
   };
+
+  const fullName = Generator.randomName();
+
+  const guestDto = {
+    di: Generator.randomIdentityNumber(),
+    city: Generator.randomCity(citiesList),
+    name: fullName.split(' ').at(0)!,
+    lastName: fullName.split(' ').at(1)!,
+    phone: Generator.randomPhone(),
+    roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
+    countryId: 'AR',
+    dateOfBirth: new Date().toISOString().split('T')[0],
+  };
+
+  const guestEntity = new GuestEntity({
+    id: guestDto.di,
+    di: guestDto.di,
+    checkIn: new Date().toISOString(),
+    checkOut: new Date().toISOString(),
+    dateOfBirth: new Date().toISOString(),
+    city: guestDto.city,
+    name: guestDto.name,
+    lastName: guestDto.lastName,
+    phone: guestDto.phone,
+    roomNumber: guestDto.roomNumber,
+    countryId: guestDto.countryId,
+    registerId: registerEntity.id,
+  });
 
   const pagination: RegisterPagination = {
     registers: [registerEntity],
@@ -110,6 +141,112 @@ describe('register.controller.ts', () => {
     });
   });
 
+  it('should make checkIn successfully (checkIn)', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...register } = registerEntity;
+    const body = { register, guests: [guestDto] };
+
+    const req = { body } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const returnData = {
+      ok: true,
+      register: registerEntity,
+      guests: [guestEntity],
+    };
+    const mockService = {
+      checkIn: jest.fn().mockResolvedValue(returnData),
+    } as any;
+    const registerController = new RegisterController(mockService);
+
+    await registerController.checkIn(req, res);
+
+    expect(res.json).toHaveBeenCalledWith(returnData);
+    expect(mockService.checkIn).toHaveBeenCalledWith({
+      registerDto: expect.any(CreateRegisterDto),
+      guestDtos: expect.any(Array),
+    });
+  });
+
+  it('should get error if request object is not valid (checkIn)', async () => {
+    const req = { body: {} } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const mockService = { checkIn: jest.fn() } as any;
+    const registerController = new RegisterController(mockService);
+
+    await registerController.checkIn(req, res);
+
+    expect(res.json).toHaveBeenCalledWith({
+      ok: false,
+      errors: [
+        'register object required',
+        'guests array required or not valid',
+      ],
+    });
+    expect(mockService.checkIn).not.toHaveBeenCalled();
+  });
+
+  it('should get error if register object is not valid (checkIn)', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...register } = registerEntity;
+    const body = {
+      register: { ...register, discount: true },
+      guests: [guestDto],
+    };
+
+    const req = { body } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const returnData = {
+      ok: true,
+      register: registerEntity,
+      guests: [guestEntity],
+    };
+    const mockService = {
+      checkIn: jest.fn().mockResolvedValue(returnData),
+    } as any;
+    const registerController = new RegisterController(mockService);
+
+    await registerController.checkIn(req, res);
+
+    expect(res.json).toHaveBeenCalledWith({
+      ok: false,
+      errors: ['discount property most be a number'],
+    });
+    expect(mockService.checkIn).not.toHaveBeenCalled();
+  });
+
+  it('should get error if guests array is not valid (checkIn)', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...register } = registerEntity;
+    const body = {
+      register,
+      guests: [{ ...guestDto, city: 4 }],
+    };
+
+    const req = { body } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const returnData = {
+      ok: true,
+      register: registerEntity,
+      guests: [guestEntity],
+    };
+    const mockService = {
+      checkIn: jest.fn().mockResolvedValue(returnData),
+    } as any;
+    const registerController = new RegisterController(mockService);
+
+    await registerController.checkIn(req, res);
+
+    expect(res.json).toHaveBeenCalledWith({
+      ok: false,
+      errors: ['city property most be a string'],
+    });
+    expect(mockService.checkIn).not.toHaveBeenCalled();
+  });
+
   it('should update a register (update)', async () => {
     const req = { body: { id: registerEntity.id } } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
@@ -153,7 +290,7 @@ describe('register.controller.ts', () => {
     } as any;
     const registerController = new RegisterController(mockService);
 
-    await registerController.deleted(req, res);
+    await registerController.delete(req, res);
 
     expect(mockService.delete).toHaveBeenCalledWith(registerEntity.id);
     expect(res.json).toHaveBeenCalledWith({ ok: true, message: '' });
