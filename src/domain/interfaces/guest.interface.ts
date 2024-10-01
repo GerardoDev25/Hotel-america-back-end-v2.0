@@ -22,7 +22,7 @@ export interface GuestPagination {
   next: string | null;
 }
 
-export type CreateGuest = Omit<IGuest, 'id' | 'registerId'> & {
+export type CreateGuest = Omit<IGuest, 'id' | 'registerId' | 'checkIn'> & {
   registerId?: string;
 };
 export type UpdateGuest = Partial<CreateGuest> & { id: string };

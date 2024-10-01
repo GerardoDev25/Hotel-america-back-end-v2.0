@@ -19,7 +19,6 @@ export class GuestValidator {
       countryId,
       registerId,
       dateOfBirth,
-      checkIn,
       checkOut,
     } = object;
 
@@ -85,12 +84,6 @@ export class GuestValidator {
       errors.push(`dateOfBirth ${dateOfBirthValid}`);
     }
 
-    // * checkIn
-    const checkInValid = DateValidator.isValid(checkIn);
-    if (checkInValid !== true) {
-      errors.push(`checkIn ${checkInValid}`);
-    }
-
     // * checkOut
     if (checkOut !== undefined) {
       const checkOutValid = DateValidator.isValid(checkOut);
@@ -115,7 +108,6 @@ export class GuestValidator {
       countryId,
       registerId,
       dateOfBirth,
-      checkIn,
       checkOut,
     } = object;
 
@@ -200,14 +192,6 @@ export class GuestValidator {
       const dateOfBirthValid = DateValidator.isValid(dateOfBirth);
       if (dateOfBirthValid !== true) {
         errors.push(`dateOfBirth ${dateOfBirthValid}`);
-      }
-    }
-
-    // * checkIn
-    if (checkIn !== undefined) {
-      const checkInValid = DateValidator.isValid(checkIn);
-      if (checkInValid !== true) {
-        errors.push(`checkIn ${checkInValid}`);
       }
     }
 

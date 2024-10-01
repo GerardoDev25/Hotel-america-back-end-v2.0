@@ -10,7 +10,6 @@ export class CreateGuestDto {
     public readonly roomNumber: number,
     public readonly countryId: string,
     public readonly dateOfBirth: Date,
-    public readonly checkIn: Date,
     public readonly checkOut?: Date,
     public readonly registerId?: string
   ) {}
@@ -26,7 +25,6 @@ export class CreateGuestDto {
       countryId,
       registerId,
       dateOfBirth,
-      checkIn,
       checkOut,
     } = props;
 
@@ -40,7 +38,6 @@ export class CreateGuestDto {
       countryId,
       registerId,
       dateOfBirth,
-      checkIn,
       checkOut,
     });
 
@@ -57,7 +54,6 @@ export class CreateGuestDto {
         +roomNumber,
         countryId,
         new Date(dateOfBirth),
-        new Date(checkIn),
         checkOut ? new Date(checkOut) : undefined,
         registerId
       ),

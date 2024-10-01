@@ -17,7 +17,6 @@ describe('guest-validator.dto.ts', () => {
       countryId: 'BO',
       registerId: Uuid.v4(),
       dateOfBirth: Generator.randomDate(),
-      checkIn: Generator.randomDate(),
       checkOut: Generator.randomDate(),
     };
     const errors = GuestValidator.create(data);
@@ -35,7 +34,6 @@ describe('guest-validator.dto.ts', () => {
       roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
       countryId: 'BO',
       dateOfBirth: Generator.randomDate(),
-      checkIn: Generator.randomDate(),
       checkOut: Generator.randomDate(),
     };
 
@@ -55,7 +53,6 @@ describe('guest-validator.dto.ts', () => {
       countryId: 'B',
       registerId: 'Uuid.v4()',
       dateOfBirth: 'Generator.randomDate()',
-      checkIn: 'Generator.randomDate()',
       checkOut: 'Generator.randomDate()',
     };
     const errors = GuestValidator.create(data);
@@ -69,9 +66,6 @@ describe('guest-validator.dto.ts', () => {
     );
     expect(errors).toContain(
       'dateOfBirth property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format'
-    );
-    expect(errors).toContain(
-      'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format'
     );
     expect(errors).toContain(
       'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format'
@@ -101,7 +95,6 @@ describe('guest-validator.dto.ts', () => {
       countryId: 'BO',
       registerId: Uuid.v4(),
       dateOfBirth: Generator.randomDate(),
-      checkIn: Generator.randomDate(),
       checkOut: Generator.randomDate(),
     };
 
@@ -122,7 +115,6 @@ describe('guest-validator.dto.ts', () => {
       countryId: 'B',
       registerId: 'Uuid.v4()',
       dateOfBirth: 'Generator.randomDate()',
-      checkIn: 'Generator.randomDate()',
       checkOut: 'Generator.randomDate()',
     };
     const errors = GuestValidator.update(data);
@@ -137,9 +129,6 @@ describe('guest-validator.dto.ts', () => {
     );
     expect(errors).toContain(
       'dateOfBirth property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format'
-    );
-    expect(errors).toContain(
-      'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format'
     );
     expect(errors).toContain(
       'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format'

@@ -12,7 +12,6 @@ export class UpdateGuestDto {
     public readonly countryId?: string,
     public readonly registerId?: string,
     public readonly dateOfBirth?: Date,
-    public readonly checkIn?: Date,
     public readonly checkOut?: Date
   ) {}
 
@@ -28,7 +27,6 @@ export class UpdateGuestDto {
       countryId,
       registerId,
       dateOfBirth,
-      checkIn,
       checkOut,
     } = props;
 
@@ -43,7 +41,6 @@ export class UpdateGuestDto {
       countryId,
       registerId,
       dateOfBirth,
-      checkIn,
       checkOut,
     });
 
@@ -62,7 +59,6 @@ export class UpdateGuestDto {
         countryId,
         registerId,
         dateOfBirth ? new Date(dateOfBirth) : undefined,
-        checkIn ? new Date(checkIn) : undefined,
         checkOut ? new Date(checkOut) : undefined
       ),
     ];
