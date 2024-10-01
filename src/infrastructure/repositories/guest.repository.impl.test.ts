@@ -53,7 +53,6 @@ describe('guest.repository.impl.ts', () => {
       countryId: '',
       registerId: '',
       dateOfBirth: new Date(),
-      checkIn: new Date(),
     };
 
     await repository.create(createGuest);
@@ -74,7 +73,6 @@ describe('guest.repository.impl.ts', () => {
       countryId: '',
       registerId: '',
       dateOfBirth: new Date(),
-      checkIn: new Date(),
     };
 
     await repository.update(updateGuest);

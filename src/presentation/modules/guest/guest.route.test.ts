@@ -65,7 +65,6 @@ describe('guest.route.ts', () => {
     countryId: rawCountry.id,
     registerId: '',
     dateOfBirth: new Date(),
-    checkIn: new Date(),
     checkOut: new Date(),
   };
 
@@ -266,7 +265,6 @@ describe('guest.route.ts', () => {
         'countryId property is required',
         'countryId not valid',
         'dateOfBirth property is required',
-        'checkIn property is required',
         'registerId property is required',
       ],
     });

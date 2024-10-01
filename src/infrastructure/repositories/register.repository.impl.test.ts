@@ -85,7 +85,6 @@ describe('register.repository.impl.ts', () => {
       countryId: Uuid.v4(),
       registerId: Uuid.v4(),
       dateOfBirth: new Date(),
-      checkIn: new Date(),
     };
 
     const data = { registerDto: createRegister, guestDtos: [guestDto] };

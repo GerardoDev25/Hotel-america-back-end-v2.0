@@ -143,9 +143,10 @@ describe('register.repository.ts', () => {
     const mockRegisterRepository = new MockRegisterRepository();
 
     const { id, ...rest } = mockRegister;
-    const checkIn = new Date(rest.checkIn);
+    // const checkIn = new Date(rest.checkIn);
     const checkOut = rest.checkOut ? new Date(rest.checkOut) : undefined;
-    const newRegister = { ...rest, checkIn, checkOut };
+    // const newRegister = { ...rest, checkIn, checkOut };
+    const newRegister = { ...rest, checkOut };
 
     const { ok, register } = await mockRegisterRepository.create(newRegister);
 
@@ -162,15 +163,15 @@ describe('register.repository.ts', () => {
     const mockRegisterRepository = new MockRegisterRepository();
 
     const { id, ...restRegister } = mockRegister;
-    const checkIn = new Date(restRegister.checkIn);
+    // const checkIn = new Date(restRegister.checkIn);
     const checkOut = restRegister.checkOut
       ? new Date(restRegister.checkOut)
       : undefined;
-    const registerDto = { ...restRegister, checkIn, checkOut };
+    // const registerDto = { ...restRegister, checkIn, checkOut };
+    const registerDto = { ...restRegister, checkOut };
 
     const { id: guestId, ...restGuest } = mockGuest;
     const guestDateOfBirth = new Date(restGuest.dateOfBirth);
-    const guestCheckIn = new Date(restGuest.checkIn);
     const guestCheckOut = restGuest.checkOut
       ? new Date(restGuest.checkOut)
       : undefined;
@@ -178,7 +179,6 @@ describe('register.repository.ts', () => {
     const guestDto: CreateGuestDto = {
       ...restGuest,
       dateOfBirth: guestDateOfBirth,
-      checkIn: guestCheckIn,
       checkOut: guestCheckOut,
     };
 
@@ -206,11 +206,12 @@ describe('register.repository.ts', () => {
   test('should get default behavior update()', async () => {
     const mockRegisterRepository = new MockRegisterRepository();
 
-    const checkIn = new Date(mockRegister.checkIn);
+    // const checkIn = new Date(mockRegister.checkIn);
     const checkOut = mockRegister.checkOut
       ? new Date(mockRegister.checkOut)
       : undefined;
-    const newRegister = { ...mockRegister, checkIn, checkOut };
+    // const newRegister = { ...mockRegister, checkIn, checkOut };
+    const newRegister = { ...mockRegister, checkOut };
 
     const { ok, message } = await mockRegisterRepository.update(newRegister);
 
