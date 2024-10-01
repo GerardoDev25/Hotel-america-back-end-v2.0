@@ -5,7 +5,6 @@ import { RegisterValidator } from './register-validator-dtos';
 describe('register-validator-dtos.ts', () => {
   it('should get empty array if pass a valid object create()', () => {
     const data = {
-      checkIn: Generator.randomDate(),
       checkOut: Generator.randomDate(),
       guestsNumber: 4,
       discount: 0,
@@ -21,7 +20,6 @@ describe('register-validator-dtos.ts', () => {
 
   it('should accept guestsNumber as optional create()', () => {
     const data = {
-      checkIn: Generator.randomDate(),
       checkOut: Generator.randomDate(),
       discount: 0,
       price: 302,
@@ -36,7 +34,6 @@ describe('register-validator-dtos.ts', () => {
 
   it('should get error if properties are wrong create()', () => {
     const data = {
-      checkIn: 'no valid date',
       checkOut: 'no valid date',
       guestsNumber: -4,
       discount: -4,
@@ -54,7 +51,6 @@ describe('register-validator-dtos.ts', () => {
       'price property most be a positive',
       'userId is not a valid uuid',
       'roomId is not a valid uuid',
-      'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
       'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
     ]);
   });
@@ -62,7 +58,6 @@ describe('register-validator-dtos.ts', () => {
   it('should get empty array if pass a valid object update()', () => {
     const data = {
       id: Uuid.v4(),
-      checkIn: Generator.randomDate(),
       checkOut: Generator.randomDate(),
       guestsNumber: 4,
       discount: 0,
@@ -79,7 +74,6 @@ describe('register-validator-dtos.ts', () => {
   it('should get error if properties are wrong update()', () => {
     const data = {
       id: 'no valid uuid',
-      checkIn: 'no valid date',
       checkOut: 'no valid date',
       guestsNumber: -4,
       discount: -4,
@@ -98,7 +92,6 @@ describe('register-validator-dtos.ts', () => {
       'price property most be a positive',
       'userId is not a valid uuid',
       'roomId is not a valid uuid',
-      'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
       'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
     ]);
   });

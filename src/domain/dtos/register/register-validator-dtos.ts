@@ -9,8 +9,7 @@ import { variables } from '@domain/variables';
 export class RegisterValidator {
   static create(object: CreateRegister): string[] {
     const errors: string[] = [];
-    const { guestsNumber, discount, price, userId, roomId, checkIn, checkOut } =
-      object;
+    const { guestsNumber, discount, price, userId, roomId, checkOut } = object;
 
     // * guestsNumber
     if (guestsNumber !== undefined) {
@@ -47,12 +46,6 @@ export class RegisterValidator {
       errors.push(`roomId ${roomIdValid}`);
     }
 
-    // * checkIn
-    const checkInValid = DateValidator.isValid(checkIn);
-    if (checkInValid !== true) {
-      errors.push(`checkIn ${checkInValid}`);
-    }
-
     // * checkOut
     if (checkOut !== undefined) {
       const checkOutValid = DateValidator.isValid(checkOut);
@@ -66,16 +59,8 @@ export class RegisterValidator {
 
   static update(object: UpdateRegister): string[] {
     const errors: string[] = [];
-    const {
-      id,
-      guestsNumber,
-      discount,
-      price,
-      userId,
-      roomId,
-      checkIn,
-      checkOut,
-    } = object;
+    const { id, guestsNumber, discount, price, userId, roomId, checkOut } =
+      object;
 
     // * id
     const idValid = StringValidator.isValidUUID(id);
@@ -123,14 +108,6 @@ export class RegisterValidator {
       const roomIdValid = StringValidator.isValidUUID(roomId);
       if (roomIdValid !== true) {
         errors.push(`roomId ${roomIdValid}`);
-      }
-    }
-
-    // * checkIn
-    if (checkIn !== undefined) {
-      const checkInValid = DateValidator.isValid(checkIn);
-      if (checkInValid !== true) {
-        errors.push(`checkIn ${checkInValid}`);
       }
     }
 

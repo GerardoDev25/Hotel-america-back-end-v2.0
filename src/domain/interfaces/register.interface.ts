@@ -18,7 +18,10 @@ export interface RegisterPagination {
   next: string | null;
 }
 
-export type CreateRegister = Omit<IRegister, 'id' | 'guestsNumber'> & {
+export type CreateRegister = Omit<
+  IRegister,
+  'id' | 'guestsNumber' | 'checkIn'
+> & {
   guestsNumber?: number;
 };
 export type UpdateRegister = Partial<CreateRegister> & { id: string };

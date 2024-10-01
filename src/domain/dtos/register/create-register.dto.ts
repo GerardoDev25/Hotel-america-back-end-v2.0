@@ -6,14 +6,12 @@ export class CreateRegisterDto {
     public readonly price: number,
     public readonly userId: string,
     public readonly roomId: string,
-    public readonly checkIn: Date,
     public readonly checkOut?: Date,
     public readonly guestsNumber?: number
   ) {}
 
   static create(props: Record<string, any>): [string[]?, CreateRegisterDto?] {
-    const { guestsNumber, discount, price, userId, roomId, checkIn, checkOut } =
-      props;
+    const { guestsNumber, discount, price, userId, roomId, checkOut } = props;
 
     const errors = RegisterValidator.create({
       guestsNumber,
@@ -21,7 +19,6 @@ export class CreateRegisterDto {
       price,
       userId,
       roomId,
-      checkIn,
       checkOut,
     });
 
@@ -34,7 +31,6 @@ export class CreateRegisterDto {
         +price,
         userId,
         roomId,
-        new Date(checkIn),
         checkOut ? new Date(checkOut) : undefined,
         +guestsNumber
       ),

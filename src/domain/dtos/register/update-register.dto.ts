@@ -8,21 +8,12 @@ export class UpdateRegisterDto {
     public readonly price?: number,
     public readonly userId?: string,
     public readonly roomId?: string,
-    public readonly checkIn?: Date,
     public readonly checkOut?: Date
   ) {}
 
   static create(props: Record<string, any>): [string[]?, UpdateRegisterDto?] {
-    const {
-      id,
-      guestsNumber,
-      discount,
-      price,
-      userId,
-      roomId,
-      checkIn,
-      checkOut,
-    } = props;
+    const { id, guestsNumber, discount, price, userId, roomId, checkOut } =
+      props;
 
     const errors = RegisterValidator.update({
       id,
@@ -31,7 +22,6 @@ export class UpdateRegisterDto {
       price,
       userId,
       roomId,
-      checkIn,
       checkOut,
     });
 
@@ -46,7 +36,6 @@ export class UpdateRegisterDto {
         +price,
         userId,
         roomId,
-        checkIn ? new Date(checkIn) : undefined,
         checkOut ? new Date(checkOut) : undefined
       ),
     ];

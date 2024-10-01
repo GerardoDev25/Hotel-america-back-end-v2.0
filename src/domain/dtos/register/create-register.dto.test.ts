@@ -6,7 +6,6 @@ import { CreateRegisterDto } from './create-register.dto';
 describe('create-register.dto.ts', () => {
   it('should create and instance of CreateRegisterDto', () => {
     const data = {
-      checkIn: Generator.randomDate(),
       checkOut: Generator.randomDate(),
       guestsNumber: 4,
       discount: 0,
@@ -23,7 +22,6 @@ describe('create-register.dto.ts', () => {
     expect(registerDto).toEqual(
       expect.objectContaining({
         ...data,
-        checkIn: new Date(data.checkIn),
         checkOut,
       })
     );
@@ -31,7 +29,6 @@ describe('create-register.dto.ts', () => {
 
   it('should receive guestsNumber as optional', () => {
     const data = {
-      checkIn: Generator.randomDate(),
       checkOut: Generator.randomDate(),
       discount: 0,
       price: 302,
@@ -47,7 +44,6 @@ describe('create-register.dto.ts', () => {
     expect(registerDto).toEqual(
       expect.objectContaining({
         ...data,
-        checkIn: new Date(data.checkIn),
         checkOut,
       })
     );
@@ -55,7 +51,6 @@ describe('create-register.dto.ts', () => {
 
   it('should get error if properties are wrong', () => {
     const data = {
-      checkIn: 'no valid date',
       checkOut: 'no valid date',
       guestsNumber: '4',
       discount: true,
@@ -73,7 +68,6 @@ describe('create-register.dto.ts', () => {
       'discount property most be a number',
       'userId is not a valid uuid',
       'roomId is not a valid uuid',
-      'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
       'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
     ]);
   });
