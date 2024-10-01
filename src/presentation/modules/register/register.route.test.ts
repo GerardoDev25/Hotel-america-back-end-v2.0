@@ -46,7 +46,6 @@ describe('register.route.ts', () => {
   const rawRegister: CreateRegisterDto = {
     guestsNumber: 1,
     price: 0,
-    checkIn: new Date(),
     checkOut: new Date(),
     discount: 0,
     userId: '',
@@ -143,9 +142,6 @@ describe('register.route.ts', () => {
     expect(register.price).toBe(registerTest.price);
     expect(register.userId).toBe(registerTest.userId);
     expect(register.roomId).toBe(registerTest.roomId);
-    expect(register.checkIn).toEqual(
-      new Date(registerTest.checkIn).toISOString().split('T').at(0)
-    );
     expect(register.checkOut).toEqual(
       new Date(registerTest.checkOut!).toISOString().split('T').at(0)
     );
@@ -201,11 +197,10 @@ describe('register.route.ts', () => {
         expect(body.ok).toBeFalsy();
         expect(body.errors).toBeInstanceOf(Array);
 
-        expect(body.errors.length).toBe(4);
+        expect(body.errors.length).toBe(3);
         expect(body.errors).toContain('discount property is required');
         expect(body.errors).toContain('price property is required');
         expect(body.errors).toContain('roomId property is required');
-        expect(body.errors).toContain('checkIn property is required');
       });
   });
 

@@ -57,7 +57,6 @@ describe('register.repository.impl.ts', () => {
       price: 0,
       userId: Uuid.v4(),
       roomId: Uuid.v4(),
-      checkIn: new Date(),
     };
 
     await repository.create(createRegister);
@@ -73,7 +72,6 @@ describe('register.repository.impl.ts', () => {
       price: 0,
       userId: Uuid.v4(),
       roomId: Uuid.v4(),
-      checkIn: new Date(),
     };
 
     const fullName = Generator.randomName();
@@ -106,7 +104,6 @@ describe('register.repository.impl.ts', () => {
       guestsNumber: 0,
       discount: 0,
       price: 0,
-      checkIn: new Date(),
       checkOut: new Date(),
     };
 

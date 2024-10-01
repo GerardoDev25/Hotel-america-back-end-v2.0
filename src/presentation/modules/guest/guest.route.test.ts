@@ -49,7 +49,6 @@ describe('guest.route.ts', () => {
   const rawRegister: CreateRegisterDto = {
     guestsNumber: 1,
     price: 0,
-    checkIn: new Date(),
     checkOut: new Date(),
     discount: 0,
     userId: '',
