@@ -111,7 +111,7 @@ model Payment {
   id          String      @id @default(uuid())
   paidAt      DateTime    @default(now())
   amount      Int
-  description String?
+  description String      @default("")
   type        TypePayment
 
   register   Register @relation(fields: [registerId], references: [id])
