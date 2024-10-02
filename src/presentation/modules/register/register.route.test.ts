@@ -1,13 +1,15 @@
 import request from 'supertest';
-
+import { RoomTypesList, UserRolesList } from '@domain/interfaces';
+import { CreateRoomDto } from '@domain/dtos/room';
+import { CreateRegisterDto } from '@domain/dtos/register';
+import { variables } from '@domain/variables';
+import { DateValidator } from '@domain/type-validators';
+import { CreateUserDto } from '@domain/dtos/user';
 import { prisma } from '@src/data/postgres';
 import { testServer } from '@src/test-server';
 import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
-import { RoomTypesList, UserRolesList } from '@domain/interfaces';
 import { Generator } from '@src/utils/generator';
-import { CreateRoomDto } from '@domain/dtos/room';
-import { CreateRegisterDto } from '@domain/dtos/register';
-import { CreateUserDto } from '@domain/dtos/user';
+import { citiesList } from '@src/data/seed';
 
 describe('register.route.ts', () => {
   beforeAll(async () => {
@@ -50,6 +52,19 @@ describe('register.route.ts', () => {
     discount: 0,
     userId: '',
     roomId: '',
+  };
+
+  const fullName = Generator.randomName();
+
+  const rawGuest = {
+    di: Generator.randomIdentityNumber(),
+    city: Generator.randomCity(citiesList),
+    name: fullName.split(' ').at(0)!,
+    lastName: fullName.split(' ').at(1)!,
+    phone: Generator.randomPhone(),
+    roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
+    countryId: 'AR',
+    dateOfBirth: new Date().toISOString().split('T')[0],
   };
 
   it('should get all register (getAll)', async () => {
@@ -201,6 +216,122 @@ describe('register.route.ts', () => {
         expect(body.errors).toContain('discount property is required');
         expect(body.errors).toContain('price property is required');
         expect(body.errors).toContain('roomId property is required');
+      });
+  });
+
+  it('should make a checkIn (CheckIn)', async () => {
+    const country = await prisma.country.create({
+      data: { id: 'AR', name: 'Argentina' },
+    });
+    const user = await prisma.user.create({ data: rawUser });
+    const room = await prisma.room.create({ data: rawRoom });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { guestsNumber, ...restRegister } = rawRegister;
+
+    const data = {
+      register: { ...restRegister, roomId: room.id },
+      guests: [{ ...rawGuest, countryId: country.id }],
+    };
+    return request(testServer.app)
+      .post('/api/register/check-in')
+      .set('Authorization', `Bearer ${token}`)
+      .send(data)
+      .expect(201)
+      .expect(({ body }) => {
+        const { register, guests, ok } = body;
+
+        expect(ok).toBeTruthy();
+        expect(register.id).toBeDefined();
+        expect(register.guestsNumber).toBe(rawRegister.guestsNumber);
+        expect(register.discount).toBe(rawRegister.discount);
+        expect(register.price).toBe(rawRegister.price);
+        expect(register.userId).toBe(user.id);
+        expect(register.roomId).toBe(room.id);
+
+        expect(guests[0].id).toBeDefined();
+        expect(guests[0].di).toBe(rawGuest.di);
+        expect(DateValidator.isValid(guests[0].checkIn)).toBeTruthy();
+        expect(DateValidator.isValid(guests[0].dateOfBirth)).toBeTruthy();
+        expect(guests[0].city).toBe(rawGuest.city);
+        expect(guests[0].name).toBe(rawGuest.name);
+        expect(guests[0].lastName).toBe(rawGuest.lastName);
+        expect(guests[0].phone).toBe(rawGuest.phone);
+        expect(guests[0].registerId).toBe(register.id);
+      });
+  });
+
+  it('should get error if pass invalid data (CheckIn)', async () => {
+    const user = await prisma.user.create({ data: rawUser });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+
+    return request(testServer.app)
+      .post('/api/register/check-in')
+      .set('Authorization', `Bearer ${token}`)
+      .send({})
+      .expect(400)
+      .expect(({ body }) => {
+        const { ok, errors } = body;
+        expect(ok).toBeFalsy();
+        expect(errors).toBeInstanceOf(Array);
+        expect(errors).toContain('register object required');
+        expect(errors).toContain('guests array required or not valid');
+      });
+  });
+
+  it('should get error if guests array is invalid (CheckIn)', async () => {
+    const user = await prisma.user.create({ data: rawUser });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { guestsNumber, ...restRegister } = rawRegister;
+
+    const data = {
+      register: { ...restRegister, roomId: Uuid.v4() },
+      guests: [{}],
+    };
+
+    return request(testServer.app)
+      .post('/api/register/check-in')
+      .set('Authorization', `Bearer ${token}`)
+      .send(data)
+      .expect(400)
+      .expect(({ body }) => {
+        const { ok, errors } = body;
+        expect(ok).toBeFalsy();
+        expect(errors).toEqual([
+          'di property is required',
+          'city property is required',
+          'name property is required',
+          'lastName property is required',
+          'phone property is required',
+          'roomNumber property is required',
+          'countryId property is required',
+          'countryId not valid',
+          'dateOfBirth property is required',
+        ]);
+      });
+  });
+
+  it('should get error if register is invalid (CheckIn)', async () => {
+    const user = await prisma.user.create({ data: rawUser });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+    const data = { register: {}, guests: [{ ...rawGuest, countryId: 'AR' }] };
+
+    return request(testServer.app)
+      .post('/api/register/check-in')
+      .set('Authorization', `Bearer ${token}`)
+      .send(data)
+      .expect(400)
+      .expect(({ body }) => {
+        const { ok, errors } = body;
+        expect(ok).toBeFalsy();
+        expect(errors).toEqual([
+          'discount property is required',
+          'price property is required',
+          'roomId property is required',
+        ]);
       });
   });
 

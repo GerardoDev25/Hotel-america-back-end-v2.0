@@ -1,4 +1,4 @@
-import { Register } from '@prisma/client';
+import { Guest, Register } from '@prisma/client';
 
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
@@ -30,15 +30,27 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     return RegisterEntity.fromObject({
       ...entity,
       checkIn: entity.checkIn.toISOString(),
-      checkOut: entity.checkOut?.toISOString() ?? null,
+      checkOut: entity.checkOut?.toISOString() ?? undefined,
     });
+  }
+
+  private transformGuestObject(entities: Guest[]): GuestEntity[] {
+    const guestEntities = entities.map((guest) =>
+      GuestEntity.fromObject({
+        ...guest,
+        checkIn: guest.checkIn.toISOString(),
+        dateOfBirth: guest.dateOfBirth.toISOString(),
+        checkOut: guest.checkOut?.toISOString() ?? undefined,
+      })
+    );
+
+    return guestEntities;
   }
 
   private async checkGuestsCountryIds(guestDtos: CreateGuestDto[]) {
     const countries = await prisma.country.findMany({ select: { id: true } });
 
     for (const guest of guestDtos) {
-      // if (!countries.some(({ id }) => id === guest.countryId)) {
       if (!countries.find((country) => country.id === guest.countryId)) {
         throw CustomError.badRequest(
           `Country with id ${guest.countryId} not found`
@@ -56,23 +68,25 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
   }) {
     const checkInTx = await prisma.$transaction(async (tx) => {
       // * 1 create register
+
       const newRegister = await tx.register.create({
         data: { ...registerDto, guestsNumber: guestDtos.length },
       });
-      const register = this.transformObject(newRegister);
 
       // * 2 create guests
-      await prisma.guest.createMany({
+      await tx.guest.createMany({
         data: guestDtos.map((guestDto) => ({
           ...guestDto,
-          registerId: register.id,
+          registerId: newRegister.id,
         })),
       });
 
       const guestsDB = await tx.guest.findMany({
-        where: { registerId: register.id },
+        where: { registerId: newRegister.id },
       });
-      const guests = guestsDB.map(GuestEntity.fromObject);
+
+      const register = this.transformObject(newRegister);
+      const guests = this.transformGuestObject(guestsDB);
       return { register, guests };
     });
 
@@ -165,10 +179,16 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     register: RegisterEntity;
     guests: GuestEntity[];
   }> {
-    try {
-      await this.checkGuestsCountryIds(data.guestDtos);
+    const registerDto = cleanObject(data.registerDto) as CreateRegisterDto;
+    const guestDtos = data.guestDtos.map((guest) =>
+      cleanObject(guest)
+    ) as CreateGuestDto[];
 
-      const checkInTx = await this.createCheckIn(data);
+    try {
+      await this.checkGuestsCountryIds(guestDtos);
+
+      const checkInTx = await this.createCheckIn({ registerDto, guestDtos });
+      // console.log(checkInTx);
       return { ok: true, ...checkInTx };
     } catch (error) {
       throw this.handleError(error);

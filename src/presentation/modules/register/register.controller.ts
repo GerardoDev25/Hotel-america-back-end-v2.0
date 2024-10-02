@@ -3,8 +3,8 @@ import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
 import { variables } from '@domain/variables';
-import { RegisterService } from './register.service';
-import { CreateGuestDto } from '@src/domain/dtos/guest';
+import { CreateGuestDto } from '@domain/dtos/guest';
+import { RegisterService } from '.';
 
 export class RegisterController {
   constructor(private readonly registerService: RegisterService) {}
@@ -35,9 +35,11 @@ export class RegisterController {
     if (reqErrors.length > 0) return [reqErrors, undefined];
 
     // * create registerDto
-    const [registerErrors, registerDto] = CreateRegisterDto.create(
-      req.body.register
-    );
+
+    const [registerErrors, registerDto] = CreateRegisterDto.create({
+      ...req.body.register,
+      userId: req.body.userId,
+    });
     if (registerErrors) return [registerErrors, undefined];
 
     // * create guestDtos
@@ -92,7 +94,6 @@ export class RegisterController {
   public checkIn = async (req: Request, res: Response) => {
     const [errors, data] = this.verifyCheckIn(req);
 
-    // console.log({errors, data});
     if (errors) {
       return res.status(400).json({ ok: false, errors });
     }

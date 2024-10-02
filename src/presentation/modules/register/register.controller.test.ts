@@ -1,12 +1,11 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { RegisterPagination } from '@domain/interfaces';
+import { variables } from '@domain/variables';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
-import { RegisterController } from './';
-// import { CreateGuestDto } from '@src/domain/dtos/guest';
 import { citiesList } from '@src/data/seed';
-import { variables } from '@src/domain/variables';
+import { RegisterController } from './';
 
 describe('register.controller.ts', () => {
   const registerEntity: RegisterEntity = {
@@ -144,7 +143,7 @@ describe('register.controller.ts', () => {
   it('should make checkIn successfully (checkIn)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...register } = registerEntity;
-    const body = { register, guests: [guestDto] };
+    const body = { userId: register.userId, register, guests: [guestDto] };
 
     const req = { body } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
@@ -191,6 +190,7 @@ describe('register.controller.ts', () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...register } = registerEntity;
     const body = {
+      userId: register.userId,
       register: { ...register, discount: true },
       guests: [guestDto],
     };
@@ -221,6 +221,7 @@ describe('register.controller.ts', () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...register } = registerEntity;
     const body = {
+      userId: register.userId,
       register,
       guests: [{ ...guestDto, city: 4 }],
     };

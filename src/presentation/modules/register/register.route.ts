@@ -47,6 +47,10 @@ export class RegisterRoute {
         authMiddleware.validateJwt,
         Auth.verifyRole([UserRolesList.RECEPTION]),
       ],
+      checkIn: [
+        authMiddleware.validateJwt,
+        Auth.verifyRole([UserRolesList.RECEPTION]),
+      ],
       update: [
         authMiddleware.validateJwt,
         Auth.verifyRole([UserRolesList.RECEPTION]),
@@ -62,6 +66,7 @@ export class RegisterRoute {
     route.get('/', registerController.getAll);
     route.get('/:id', middleware.getById, registerController.getById);
     route.post('/', middleware.create, registerController.create);
+    route.post('/check-in/', middleware.checkIn, registerController.checkIn);
     route.put('/', middleware.update, registerController.update);
     route.delete('/:id', middleware.delete, registerController.delete);
 

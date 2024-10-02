@@ -150,7 +150,7 @@ export class GuestEntity implements IGuest {
       registerId,
     } = object;
 
-    this.verifyProperties({
+    GuestEntity.verifyProperties({
       id,
       di,
       checkIn,
