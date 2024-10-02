@@ -2,11 +2,18 @@ export interface IPayment {
   id: string;
   amount: number;
   description?: string;
-  type: TypePayment;
+  type: PaymentType;
   registerId: string;
 }
 
-export type TypePayment = 'cash' | 'credit_cart' | 'qr' | 'back';
+export type PaymentType = 'cash' | 'credit_cart' | 'qr' | 'back';
+
+export enum PaymentTypeList {
+  CASH = 'cash',
+  CREDIT_CART = 'credit_cart',
+  QR = 'qr',
+  BACK = 'back',
+}
 
 export interface PaymentPagination {
   payments: IPayment[];
