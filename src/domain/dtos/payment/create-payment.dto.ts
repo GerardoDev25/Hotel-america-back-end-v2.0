@@ -1,6 +1,5 @@
 import { PaymentType } from '@domain/interfaces';
-import { cleanObject } from '@src/utils';
-import { PaymentValidator } from './payment-validator.dto';
+import { PaymentValidator } from '.';
 
 export class CreatePaymentDto {
   private constructor(
@@ -22,10 +21,9 @@ export class CreatePaymentDto {
 
     if (errors.length > 0) return [errors, undefined];
 
-    const createPaymentDto = cleanObject(
-      new CreatePaymentDto(+amount, type, registerId, description)
-    ) as CreatePaymentDto;
-
-    return [undefined, createPaymentDto];
+    return [
+      undefined,
+      new CreatePaymentDto(+amount, type, registerId, description),
+    ];
   }
 }
