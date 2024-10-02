@@ -25,6 +25,13 @@ enum RoleType {
   cafe
 }
 
+enum TypePayment {
+  cash
+  credit_cart
+  qr
+  back
+}
+
 model Country {
   id    String  @id
   name  String
@@ -77,7 +84,8 @@ model Register {
   room   Room   @relation(fields: [roomId], references: [id])
   roomId String @unique
 
-  Guest Guest[]
+  Guest   Guest[]
+  Payment Payment[]
 }
 
 model Guest {
@@ -98,3 +106,17 @@ model Guest {
   register   Register @relation(fields: [registerId], references: [id])
   registerId String
 }
+
+model Payment {
+  id          String      @id @default(uuid())
+  paidAt      DateTime    @default(now())
+  amount      Int
+  description String?
+  type        TypePayment
+
+  register   Register @relation(fields: [registerId], references: [id])
+  registerId String
+}
+
+// todo add charge model
+// todo add cafeteria model
