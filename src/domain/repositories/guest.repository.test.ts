@@ -37,7 +37,7 @@ describe('guest.repository.ts', () => {
     next: null,
   };
 
-  class MockGuestDatasource extends GuestRepository {
+  class MockGuestRepository extends GuestRepository {
     async getById(id: string): Promise<{ ok: boolean; guest: GuestEntity }> {
       return { ok: true, guest: mockGuest };
     }
@@ -69,12 +69,12 @@ describe('guest.repository.ts', () => {
     }
   }
 
-  const mockGuestDataSource = new MockGuestDatasource();
+  const mockGuestRepository = new MockGuestRepository();
   it('test in function getById()', async () => {
     const id = Uuid.v4();
 
-    expect(typeof mockGuestDataSource.getById).toBe('function');
-    expect(mockGuestDataSource.getById(id)).resolves.toEqual({
+    expect(typeof mockGuestRepository.getById).toBe('function');
+    expect(mockGuestRepository.getById(id)).resolves.toEqual({
       ok: true,
       guest: mockGuest,
     });
@@ -83,18 +83,18 @@ describe('guest.repository.ts', () => {
   it('test in function getByParam()', async () => {
     const di = Generator.randomIdentityNumber();
 
-    expect(typeof mockGuestDataSource.getByParam).toBe('function');
-    expect(mockGuestDataSource.getByParam({ di })).resolves.toEqual({
+    expect(typeof mockGuestRepository.getByParam).toBe('function');
+    expect(mockGuestRepository.getByParam({ di })).resolves.toEqual({
       ok: true,
       guest: mockGuest,
     });
   });
 
   it('test in function getAll()', async () => {
-    const { guests } = await mockGuestDataSource.getAll(page, limit);
+    const { guests } = await mockGuestRepository.getAll(page, limit);
 
-    expect(typeof mockGuestDataSource.getAll).toBe('function');
-    expect(mockGuestDataSource.getAll(page, limit)).resolves.toEqual(
+    expect(typeof mockGuestRepository.getAll).toBe('function');
+    expect(mockGuestRepository.getAll(page, limit)).resolves.toEqual(
       pagination
     );
 
@@ -112,12 +112,12 @@ describe('guest.repository.ts', () => {
     const checkOut = rest.checkOut ? new Date(rest.checkOut) : undefined;
     const createGuest = { ...rest, checkIn, checkOut, dateOfBirth };
 
-    const { ok, guest } = await mockGuestDataSource.create(createGuest);
+    const { ok, guest } = await mockGuestRepository.create(createGuest);
 
     expect(ok).toBeTruthy();
     expect(guest).toBeInstanceOf(GuestEntity);
-    expect(typeof mockGuestDataSource.create).toBe('function');
-    expect(mockGuestDataSource.create(createGuest)).resolves.toEqual({
+    expect(typeof mockGuestRepository.create).toBe('function');
+    expect(mockGuestRepository.create(createGuest)).resolves.toEqual({
       ok: true,
       guest: expect.any(GuestEntity),
     });
@@ -126,12 +126,12 @@ describe('guest.repository.ts', () => {
   it('test in function update()', async () => {
     const { dateOfBirth, checkIn, checkOut, ...rest } = mockGuest;
 
-    const { ok, message } = await mockGuestDataSource.update(rest);
+    const { ok, message } = await mockGuestRepository.update(rest);
 
     expect(ok).toBeTruthy();
     expect(typeof message).toBe('string');
-    expect(typeof mockGuestDataSource.update).toBe('function');
-    expect(mockGuestDataSource.update(rest)).resolves.toEqual({
+    expect(typeof mockGuestRepository.update).toBe('function');
+    expect(mockGuestRepository.update(rest)).resolves.toEqual({
       ok: true,
       message: expect.any(String),
     });
@@ -139,12 +139,12 @@ describe('guest.repository.ts', () => {
 
   it('test in function delete()', async () => {
     const id = Uuid.v4();
-    const { ok, message } = await mockGuestDataSource.delete(id);
+    const { ok, message } = await mockGuestRepository.delete(id);
 
     expect(ok).toBeTruthy();
     expect(typeof message).toBe('string');
-    expect(typeof mockGuestDataSource.delete).toBe('function');
-    expect(mockGuestDataSource.delete(id)).resolves.toEqual({
+    expect(typeof mockGuestRepository.delete).toBe('function');
+    expect(mockGuestRepository.delete(id)).resolves.toEqual({
       ok: true,
       message: expect.any(String),
     });
