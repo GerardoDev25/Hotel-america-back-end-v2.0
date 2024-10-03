@@ -1,7 +1,7 @@
-import { Uuid } from '@src/adapters';
-import { IPayment, PaymentTypeList } from '../interfaces';
 import { Generator } from '@src/utils/generator';
+import { IPayment, PaymentTypeList } from '@domain/interfaces';
 import { PaymentEntity } from './payment.entity';
+import { Uuid } from '@src/adapters';
 
 describe('payment.entity.ts', () => {
   const paymentValid: IPayment = {
@@ -22,6 +22,7 @@ describe('payment.entity.ts', () => {
     const invalidAmount = -12;
     const invalidPaidAt = 'Generator.randomDate()';
     const invalidType = 'PaymentTypeList.BACK';
+    const invalidDescription = false;
     const invalidRegisterId = 'Uuid.v4()';
 
     expect(() =>
@@ -34,6 +35,13 @@ describe('payment.entity.ts', () => {
 
     expect(() =>
       PaymentEntity.fromObject({ ...paymentValid, paidAt: invalidPaidAt })
+    ).toThrow();
+
+    expect(() =>
+      PaymentEntity.fromObject({
+        ...paymentValid,
+        description: invalidDescription,
+      })
     ).toThrow();
 
     expect(() =>
