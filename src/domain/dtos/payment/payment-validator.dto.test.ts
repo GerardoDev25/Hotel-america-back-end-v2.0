@@ -1,8 +1,9 @@
 import { Uuid } from '@src/adapters';
-import { PaymentValidator, CreatePaymentDto } from './';
+import { PaymentTypeList, UpdatePayment } from '@domain/interfaces';
+import { PaymentValidator, CreatePaymentDto } from '.';
 
 describe('payment-validator.dto.ts', () => {
-  it('should get empty array if pass valid object', () => {
+  it('should get empty array if pass valid object (create)', () => {
     const data: CreatePaymentDto = {
       amount: 100,
       type: 'cash',
@@ -14,7 +15,7 @@ describe('payment-validator.dto.ts', () => {
     expect(errors.length).toBe(0);
   });
 
-  it('should get description field as optional', () => {
+  it('should get description field as optional (create)', () => {
     const data: CreatePaymentDto = {
       amount: 100,
       type: 'credit_cart',
@@ -25,7 +26,7 @@ describe('payment-validator.dto.ts', () => {
     expect(errors.length).toBe(0);
   });
 
-  it('should get error if pass empty object', () => {
+  it('should get error if pass empty object (create)', () => {
     const data = {} as CreatePaymentDto;
 
     const errors = PaymentValidator.create(data);
@@ -37,7 +38,7 @@ describe('payment-validator.dto.ts', () => {
     ]);
   });
 
-  it('should get array with errors if pass invalid object', () => {
+  it('should get array with errors if pass invalid object (create)', () => {
     const data = {
       amount: -100,
       type: 'as',
@@ -50,6 +51,43 @@ describe('payment-validator.dto.ts', () => {
       'type most be: back, cash, credit_cart, qr',
       'amount property most be a positive',
       'registerId is not a valid uuid',
+      'description property most be a string',
+    ]);
+  });
+
+  it('should get empty array if pass a valid object update()', () => {
+    const data = {
+      id: Uuid.v4(),
+      amount: 100,
+      type: PaymentTypeList.BACK,
+      description: 'hello world',
+    };
+
+    const errors = PaymentValidator.update(data);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should get empty array if pass an empty object update()', () => {
+    const data = { id: Uuid.v4() };
+
+    const errors = PaymentValidator.update(data);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should get error if properties are wrong update()', () => {
+    const data = {
+      id: 'Uuid.v4()',
+      amount: -100,
+      type: false,
+      description: 34,
+    } as unknown as UpdatePayment;
+
+    const errors = PaymentValidator.update(data);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors).toEqual([
+      'id is not a valid uuid',
+      'type property most be a string',
+      'amount property most be a positive',
       'description property most be a string',
     ]);
   });

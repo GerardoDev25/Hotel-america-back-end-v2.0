@@ -2,6 +2,7 @@ export interface IPayment {
   id: string;
   amount: number;
   description?: string;
+  paidAt: string;
   type: PaymentType;
   registerId: string;
 }
@@ -24,7 +25,7 @@ export interface PaymentPagination {
   next: string | null;
 }
 
-export type CreatePayment = Omit<IPayment, 'id'>;
+export type CreatePayment = Omit<IPayment, 'id' | 'paidAt'>;
 export type UpdatePayment = Partial<Omit<CreatePayment, 'registerId'>> & {
   id: string;
 };
