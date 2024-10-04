@@ -81,11 +81,6 @@ describe('guest.service.ts', () => {
 
   test('should have been call with parameters (create)', async () => {
     const guestDto = { registerId: Uuid.v4() } as CreateGuestDto;
-
-    // const mockRegisterRepository = {
-    //   getById: jest.fn().mockRejectedValue(CustomError.badRequest('')),
-    // } as unknown as RegisterRepository;
-
     const guestService = new GuestService(
       mockGuestRepository,
       mockRegisterRepository
