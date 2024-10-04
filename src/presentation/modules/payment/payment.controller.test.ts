@@ -2,8 +2,8 @@ import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 import { PaymentEntity } from '@domain/entities';
 import { PaymentPagination, PaymentTypeList } from '@domain/interfaces';
+import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
 import { PaymentController } from '.';
-import { CreatePaymentDto, UpdatePaymentDto } from '@src/domain/dtos/payment';
 
 describe('payment.controller.ts', () => {
   const paymentEntity: PaymentEntity = {
