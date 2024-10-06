@@ -59,7 +59,7 @@ export class PaymentEntity implements IPayment {
     }
 
     // * description
-    if (description !== undefined) {
+    if (description !== undefined && description !== '') {
       const descriptionValid = StringValidator.isValid(description);
       if (descriptionValid !== true)
         throw CustomError.badRequest('description ' + descriptionValid);

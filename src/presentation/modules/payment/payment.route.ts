@@ -1,13 +1,13 @@
 import { Router } from 'express';
+import { UserRolesList } from '@domain/interfaces';
 import { LoggerService } from '@presentation/services';
+import { Auth, Commons } from '@presentation/middlewares';
+import { PaymentRepositoryImpl } from '@infrastructure/repositories';
 import {
   PaymentDatasourceImpl,
   UserDatasourceImpl,
 } from '@infrastructure/datasource';
-import { PaymentRepositoryImpl } from '@infrastructure/repositories';
 import { PaymentController, PaymentService } from '.';
-import { Auth, Commons } from '@src/presentation/middlewares';
-import { UserRolesList } from '@src/domain/interfaces';
 
 export class PaymentRoute {
   static get routes(): Router {
@@ -27,7 +27,7 @@ export class PaymentRoute {
 
     const middleware = {
       getAll: [authMiddleware.validateJwt],
-      getById: [Commons.isValidUUID],
+      getById: [authMiddleware.validateJwt, Commons.isValidUUID],
       create: [
         authMiddleware.validateJwt,
         Auth.verifyRole([
@@ -56,7 +56,7 @@ export class PaymentRoute {
     };
 
     // * endpoints
-    route.get('/', paymentController.getAll);
+    route.get('/', middleware.getAll, paymentController.getAll);
     route.get('/:id', middleware.getById, paymentController.getById);
     route.post('/', middleware.create, paymentController.create);
     route.put('/', middleware.update, paymentController.update);
