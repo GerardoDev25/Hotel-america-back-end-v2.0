@@ -129,10 +129,9 @@ model Payment {
 model Charge {
   id          String     @id @default(uuid())
   createdAt   DateTime   @default(now())
-  updateAt    DateTime?  @updatedAt
   amount      Int
   description String     @default("")
-  type        TypeCharge @default(dbgenerated("other"))
+  type        TypeCharge
 
   register   Register @relation(fields: [registerId], references: [id])
   registerId String
