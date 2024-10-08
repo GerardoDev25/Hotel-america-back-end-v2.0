@@ -1,5 +1,6 @@
 import { Uuid } from '@src/adapters';
 import { ChargeValidator, CreateChargeDto } from '.';
+import { chargeTypeList, UpdateCharge } from '@src/domain/interfaces';
 
 describe('charge-validator.dto.ts', () => {
   it('should get empty array if pass valid object (create)', () => {
@@ -50,6 +51,43 @@ describe('charge-validator.dto.ts', () => {
       'type most be: cafeteria, laundry, lodging, other',
       'amount property most be a positive',
       'registerId is not a valid uuid',
+      'description property most be a string',
+    ]);
+  });
+
+  it('should get empty array if pass a valid object (update)', () => {
+    const data = {
+      id: Uuid.v4(),
+      amount: 100,
+      type: chargeTypeList.CAFETERIA,
+      description: 'hello world',
+    };
+
+    const errors = ChargeValidator.update(data);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should get empty array if pass an empty object (update)', () => {
+    const data = { id: Uuid.v4() };
+
+    const errors = ChargeValidator.update(data);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should get error if properties are wrong (update)', () => {
+    const data = {
+      id: 'Uuid.v4()',
+      amount: -100,
+      type: false,
+      description: 34,
+    } as unknown as UpdateCharge;
+
+    const errors = ChargeValidator.update(data);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors).toEqual([
+      'id is not a valid uuid',
+      'type property most be a string',
+      'amount property most be a positive',
       'description property most be a string',
     ]);
   });
