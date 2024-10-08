@@ -1,3 +1,4 @@
+export * from './charge.interface';
 export * from './guest.interface';
 export * from './payment.interface';
 export * from './register.interface';
