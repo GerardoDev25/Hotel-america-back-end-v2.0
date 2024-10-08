@@ -3,11 +3,11 @@ export interface ICharge {
   amount: number;
   description?: string;
   createdAt: string;
-  type: TypeCharge;
+  type: ChargeType;
   registerId: string;
 }
 
-export type TypeCharge = 'lodging' | 'laundry' | 'cafeteria' | 'other';
+export type ChargeType = 'lodging' | 'laundry' | 'cafeteria' | 'other';
 
 export enum chargeTypeList {
   LODGING = 'lodging',
