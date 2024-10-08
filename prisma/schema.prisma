@@ -32,6 +32,13 @@ enum TypePayment {
   back
 }
 
+enum TypeCharge {
+  lodging
+  laundry
+  cafeteria
+  other
+}
+
 model Country {
   id    String  @id
   name  String
@@ -86,6 +93,7 @@ model Register {
 
   Guest   Guest[]
   Payment Payment[]
+  Charge  Charge[]
 }
 
 model Guest {
@@ -118,5 +126,16 @@ model Payment {
   registerId String
 }
 
-// todo add charge model
+model Charge {
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  updateAt    DateTime?  @updatedAt
+  amount      Int
+  description String     @default("")
+  type        TypeCharge @default(dbgenerated("other"))
+
+  register   Register @relation(fields: [registerId], references: [id])
+  registerId String
+}
+
 // todo add cafeteria model
