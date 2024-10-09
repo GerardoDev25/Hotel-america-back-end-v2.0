@@ -9,7 +9,7 @@ export interface ICharge {
 
 export type ChargeType = 'lodging' | 'laundry' | 'cafeteria' | 'other';
 
-export enum chargeTypeList {
+export enum ChargeTypeList {
   LODGING = 'lodging',
   LAUNDRY = 'laundry',
   CAFETERIA = 'cafeteria',
@@ -17,7 +17,7 @@ export enum chargeTypeList {
 }
 
 export interface ChargePagination {
-  Charges: ICharge[];
+  charges: ICharge[];
   total: number;
   page: number;
   limit: number;

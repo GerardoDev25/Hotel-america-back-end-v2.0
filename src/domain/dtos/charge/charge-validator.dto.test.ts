@@ -1,6 +1,6 @@
 import { Uuid } from '@src/adapters';
 import { ChargeValidator, CreateChargeDto } from '.';
-import { chargeTypeList, UpdateCharge } from '@src/domain/interfaces';
+import { ChargeTypeList, UpdateCharge } from '@src/domain/interfaces';
 
 describe('charge-validator.dto.ts', () => {
   it('should get empty array if pass valid object (create)', () => {
@@ -59,7 +59,7 @@ describe('charge-validator.dto.ts', () => {
     const data = {
       id: Uuid.v4(),
       amount: 100,
-      type: chargeTypeList.CAFETERIA,
+      type: ChargeTypeList.CAFETERIA,
       description: 'hello world',
     };
 

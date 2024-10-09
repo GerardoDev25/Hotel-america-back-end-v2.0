@@ -1,4 +1,4 @@
-import { chargeTypeList, CreateCharge, UpdateCharge } from '@domain/interfaces';
+import { ChargeTypeList, CreateCharge, UpdateCharge } from '@domain/interfaces';
 import { NumberValidator, StringValidator } from '@domain/type-validators';
 
 export class ChargeValidator {
@@ -10,10 +10,10 @@ export class ChargeValidator {
     const typeValid = StringValidator.mostBe({
       value: type,
       allowValues: [
-        chargeTypeList.CAFETERIA,
-        chargeTypeList.LAUNDRY,
-        chargeTypeList.LODGING,
-        chargeTypeList.OTHER,
+        ChargeTypeList.CAFETERIA,
+        ChargeTypeList.LAUNDRY,
+        ChargeTypeList.LODGING,
+        ChargeTypeList.OTHER,
       ],
     });
     if (typeValid !== true) errors.push('type ' + typeValid);
@@ -52,10 +52,10 @@ export class ChargeValidator {
       const typeValid = StringValidator.mostBe({
         value: type,
         allowValues: [
-          chargeTypeList.CAFETERIA,
-          chargeTypeList.LAUNDRY,
-          chargeTypeList.LODGING,
-          chargeTypeList.OTHER,
+          ChargeTypeList.CAFETERIA,
+          ChargeTypeList.LAUNDRY,
+          ChargeTypeList.LODGING,
+          ChargeTypeList.OTHER,
         ],
       });
       if (typeValid !== true) errors.push('type ' + typeValid);
