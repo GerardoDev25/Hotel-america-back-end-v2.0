@@ -1,7 +1,7 @@
-import { PaymentRepository } from '@src/domain/repositories';
-import { PaymentService } from './payment.service';
 import { Uuid } from '@src/adapters';
-import { CreatePaymentDto, UpdatePaymentDto } from '@src/domain/dtos/payment';
+import { PaymentRepository } from '@domain/repositories';
+import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
+import { PaymentService } from './';
 
 describe('payment.service.ts', () => {
   const paymentRepository: PaymentRepository = {

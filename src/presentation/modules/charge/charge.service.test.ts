@@ -1,7 +1,7 @@
-import { ChargeRepository } from '@src/domain/repositories';
-import { ChargeService } from './charge.service';
 import { Uuid } from '@src/adapters';
-import { CreateChargeDto, UpdateChargeDto } from '@src/domain/dtos/charge';
+import { ChargeRepository } from '@domain/repositories';
+import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
+import { ChargeService } from '.';
 
 describe('charge.service.ts', () => {
   const chargeRepository: ChargeRepository = {
