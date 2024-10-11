@@ -12,6 +12,12 @@ describe('app.ts', () => {
     expect(Server).toHaveBeenCalledWith({
       port: envs.PORT,
       routes: expect.any(Function),
+      corsOptions: {
+        origin: ['http://localhost:4000'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Authorization', 'Content-Type'],
+        credentials: true,
+      },
       logger: new LoggerService('server.ts'),
     });
 
