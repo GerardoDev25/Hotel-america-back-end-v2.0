@@ -1,5 +1,9 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
-import { IRegister, RegisterPagination } from '@domain/interfaces';
+import {
+  IRegister,
+  RegisterCheckOut,
+  RegisterPagination,
+} from '@domain/interfaces';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { CreateGuestDto } from '@domain/dtos/guest';
 
@@ -22,6 +26,10 @@ export abstract class RegisterDatasource {
     registerDto: CreateRegisterDto;
     guestDtos: CreateGuestDto[];
   }): Promise<{ ok: boolean; register: RegisterEntity; guests: GuestEntity[] }>;
+
+  abstract checkOut(
+    id: string
+  ): Promise<{ ok: boolean; registerCheckOutDetail: RegisterCheckOut }>;
 
   abstract update(
     updaterRegisterDto: UpdateRegisterDto
