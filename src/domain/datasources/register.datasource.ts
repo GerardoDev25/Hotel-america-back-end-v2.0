@@ -1,8 +1,8 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import {
-  IRegister,
   RegisterCheckOut,
   RegisterPagination,
+  RegisterFilter,
 } from '@domain/interfaces';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { CreateGuestDto } from '@domain/dtos/guest';
@@ -15,7 +15,7 @@ export abstract class RegisterDatasource {
   ): Promise<{ ok: boolean; register: RegisterEntity }>;
 
   abstract getByParam(
-    searchParam: Partial<Pick<IRegister, keyof IRegister>>
+    searchParam: RegisterFilter
   ): Promise<{ ok: boolean; register: RegisterEntity | null }>;
 
   abstract create(
