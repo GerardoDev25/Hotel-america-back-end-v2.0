@@ -6,6 +6,7 @@ import {
   RegisterRoute,
   RoomRoute,
   UserRoute,
+  ChargeRoute,
 } from '@presentation/modules';
 
 export class AppRoute {
@@ -15,6 +16,7 @@ export class AppRoute {
     const route = Router();
 
     route.use('/api/auth', AuthRoute.routes);
+    route.use('/api/charge', ChargeRoute.routes);
     route.use('/api/guest', GuestRoute.routes);
     route.use('/api/payment', PaymentRoute.routes);
     route.use('/api/register', RegisterRoute.routes);

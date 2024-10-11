@@ -23,7 +23,7 @@ describe('charge.controller.ts', () => {
     next: null,
   };
 
-  it('should return all payments (getAll)', async () => {
+  it('should return all charges (getAll)', async () => {
     const res = { json: jest.fn() } as any;
     const req = { query: { page: 1, limit: 10 } } as any;
 
@@ -71,7 +71,7 @@ describe('charge.controller.ts', () => {
     expect(res.json).toHaveBeenCalledWith(chargeEntity);
   });
 
-  it('should create a payment (create)', async () => {
+  it('should create a charge (create)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...body } = chargeEntity;
 
@@ -108,7 +108,7 @@ describe('charge.controller.ts', () => {
     });
   });
 
-  it('should update a payment (update)', async () => {
+  it('should update a charge (update)', async () => {
     const req = { body: { id: chargeEntity.id } } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
