@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { CreateGuestDto } from '@domain/dtos/guest';
-import { IRegister, RegisterPagination } from '@domain/interfaces';
+import {
+  RegisterCheckOut,
+  RegisterFilter,
+  RegisterPagination,
+} from '@domain/interfaces';
 import { RegisterEntity, GuestEntity } from '@domain/entities';
 import { variables } from '@domain/variables';
 
@@ -24,6 +28,20 @@ describe('register.repository.ts', () => {
     userId: Uuid.v4(),
     roomId: Uuid.v4(),
   });
+
+  const registerCheckOut: RegisterCheckOut = {
+    id: Uuid.v4(),
+    checkIn: Generator.randomDate(),
+    checkOut: Generator.randomDate(),
+    discount: 0,
+    price: 0,
+    roomNumber: 0,
+    totalCharges: 0,
+    totalPayments: 0,
+    guests: [],
+    charges: [],
+    payments: [],
+  };
 
   const mockRegister2 = new RegisterEntity({
     id: Uuid.v4(),
@@ -68,7 +86,7 @@ describe('register.repository.ts', () => {
     }
 
     async getByParam(
-      searchParam: Partial<Pick<IRegister, keyof IRegister>>
+      searchParam: RegisterFilter
     ): Promise<{ ok: boolean; register: RegisterEntity | null }> {
       return { ok: true, register: mockRegister };
     }
@@ -92,6 +110,12 @@ describe('register.repository.ts', () => {
       guests: GuestEntity[];
     }> {
       return { ok: true, register: mockRegister, guests: [mockGuest] };
+    }
+
+    async checkOut(
+      id: string
+    ): Promise<{ ok: boolean; registerCheckOutDetail: RegisterCheckOut }> {
+      return { ok: true, registerCheckOutDetail: registerCheckOut };
     }
 
     async update(
@@ -143,9 +167,7 @@ describe('register.repository.ts', () => {
     const mockRegisterRepository = new MockRegisterRepository();
 
     const { id, ...rest } = mockRegister;
-    // const checkIn = new Date(rest.checkIn);
     const checkOut = rest.checkOut ? new Date(rest.checkOut) : undefined;
-    // const newRegister = { ...rest, checkIn, checkOut };
     const newRegister = { ...rest, checkOut };
 
     const { ok, register } = await mockRegisterRepository.create(newRegister);
@@ -163,11 +185,9 @@ describe('register.repository.ts', () => {
     const mockRegisterRepository = new MockRegisterRepository();
 
     const { id, ...restRegister } = mockRegister;
-    // const checkIn = new Date(restRegister.checkIn);
     const checkOut = restRegister.checkOut
       ? new Date(restRegister.checkOut)
       : undefined;
-    // const registerDto = { ...restRegister, checkIn, checkOut };
     const registerDto = { ...restRegister, checkOut };
 
     const { id: guestId, ...restGuest } = mockGuest;
@@ -203,14 +223,24 @@ describe('register.repository.ts', () => {
     });
   });
 
+  it('should get default behavior checkOut()', async () => {
+    const id = Uuid.v4();
+    const mockRegisterRepository = new MockRegisterRepository();
+
+    const { ok, registerCheckOutDetail } =
+      await mockRegisterRepository.checkOut(id);
+
+    expect(typeof mockRegisterRepository.checkOut).toBe('function');
+    expect(ok).toBeTruthy();
+    expect(registerCheckOutDetail).toBeInstanceOf(Object);
+  });
+
   test('should get default behavior update()', async () => {
     const mockRegisterRepository = new MockRegisterRepository();
 
-    // const checkIn = new Date(mockRegister.checkIn);
     const checkOut = mockRegister.checkOut
       ? new Date(mockRegister.checkOut)
       : undefined;
-    // const newRegister = { ...mockRegister, checkIn, checkOut };
     const newRegister = { ...mockRegister, checkOut };
 
     const { ok, message } = await mockRegisterRepository.update(newRegister);
