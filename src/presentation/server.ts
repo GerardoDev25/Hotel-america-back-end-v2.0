@@ -1,5 +1,6 @@
 import path from 'node:path';
 import express, { Router } from 'express';
+import cors, { CorsOptions } from 'cors';
 
 import { LoggerService } from '@presentation/services';
 
@@ -11,6 +12,7 @@ interface Options {
   routes: Router;
   public_path?: string;
   logger?: LoggerService;
+  corsOptions?: CorsOptions;
 }
 
 export class Server {
@@ -21,24 +23,32 @@ export class Server {
   private readonly publicPath: string;
   private readonly routes: Router;
   private readonly logger: LoggerService | undefined;
+  private readonly corsOptions: CorsOptions | undefined;
 
   constructor(options: Options) {
-    const { port, routes, public_path = 'public', logger } = options;
+    const {
+      port,
+      routes,
+      public_path = 'public',
+      logger,
+      corsOptions,
+    } = options;
     this.port = port;
     this.publicPath = public_path;
     this.routes = routes;
     this.logger = logger;
+    this.corsOptions = corsOptions;
   }
 
   private loadMiddleware() {
+    if (this.corsOptions) {
+      this.app.use(cors(this.corsOptions));
+    }
+
     this.app.use(express.json());
-
     this.app.use(express.urlencoded({ extended: true }));
-
     this.app.use(this.routes);
-
     this.app.use(express.static(this.publicPath));
-
     this.app.get(/^\/(?!api).*/, (req, res) => {
       const indexPath = path.join(
         __dirname,
