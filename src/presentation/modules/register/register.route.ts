@@ -51,6 +51,11 @@ export class RegisterRoute {
         authMiddleware.validateJwt,
         Auth.verifyRole([UserRolesList.RECEPTION]),
       ],
+      checkOut: [
+        Commons.isValidUUID,
+        authMiddleware.validateJwt,
+        Auth.verifyRole([UserRolesList.RECEPTION]),
+      ],
       update: [
         authMiddleware.validateJwt,
         Auth.verifyRole([UserRolesList.RECEPTION]),
@@ -69,6 +74,11 @@ export class RegisterRoute {
     route.post('/check-in/', middleware.checkIn, registerController.checkIn);
     route.put('/', middleware.update, registerController.update);
     route.delete('/:id', middleware.delete, registerController.delete);
+    route.delete(
+      '/check-out/:id',
+      middleware.checkOut,
+      registerController.checkOut
+    );
 
     return route;
   }
