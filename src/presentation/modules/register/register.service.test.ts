@@ -2,7 +2,7 @@ import { CreateRegisterDto } from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
-import { RegisterPagination } from '@domain/interfaces';
+import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
 import { RegisterRepository } from '@domain/repositories';
 import { Uuid } from '@src/adapters';
 import { RegisterService } from '.';
@@ -22,6 +22,20 @@ describe('register.service.ts', () => {
     checkIn: new Date().toISOString(),
     checkOut: new Date().toISOString(),
   });
+
+  const registerCheckOutDetail: RegisterCheckOut = {
+    id: Uuid.v4(),
+    checkIn: Generator.randomDate(),
+    checkOut: Generator.randomDate(),
+    discount: 0,
+    price: 0,
+    roomNumber: 0,
+    totalCharges: 0,
+    totalPayments: 0,
+    guests: [],
+    charges: [],
+    payments: [],
+  };
 
   const fullName = Generator.randomName();
   const guest = new GuestEntity({
@@ -57,6 +71,7 @@ describe('register.service.ts', () => {
     create: jest.fn().mockResolvedValue({ ok: true, register }),
     update: jest.fn().mockResolvedValue(resolveData),
     delete: jest.fn().mockResolvedValue(resolveData),
+    checkOut: jest.fn().mockResolvedValue({ ok: true, registerCheckOutDetail }),
     checkIn: jest
       .fn()
       .mockResolvedValue({ register, guests: [guest], ok: true }),
@@ -67,7 +82,7 @@ describe('register.service.ts', () => {
     getById: jest.fn().mockResolvedValue({ room }),
   } as any;
 
-  test('should have been call with parameters (getAll)', async () => {
+  it('should have been call with parameters (getAll)', async () => {
     const paginationDto: PaginationDto = { page: 1, limit: 10 };
 
     const registerService = new RegisterService(
@@ -83,7 +98,7 @@ describe('register.service.ts', () => {
     );
   });
 
-  test('should have been call with parameters (getById)', async () => {
+  it('should have been call with parameters (getById)', async () => {
     const id = Uuid.v4();
 
     const registerService = new RegisterService(
@@ -96,7 +111,7 @@ describe('register.service.ts', () => {
     expect(mockRegisterRepository.getById).toHaveBeenCalledWith(id);
   });
 
-  test('should have been call with parameters (create)', async () => {
+  it('should have been call with parameters (create)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
 
     const mockRegisterRepository = {
@@ -118,7 +133,7 @@ describe('register.service.ts', () => {
     });
   });
 
-  test('should throw error if room is not available (create)', async () => {
+  it('should throw error if room is not available (create)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
 
     const mockRegisterRepository = {
@@ -146,7 +161,7 @@ describe('register.service.ts', () => {
     }
   });
 
-  test('should throw error if register with roomId exist (create)', async () => {
+  it('should throw error if register with roomId exist (create)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
 
     const mockRegisterRepository = {
@@ -170,7 +185,7 @@ describe('register.service.ts', () => {
     }
   });
 
-  test('should have been call with parameters (checkIn)', async () => {
+  it('should have been call with parameters (checkIn)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
     const guestDtos = [] as CreateGuestDto[];
 
@@ -198,7 +213,7 @@ describe('register.service.ts', () => {
     });
   });
 
-  test('should throw error if room is not available (checkIn)', async () => {
+  it('should throw error if room is not available (checkIn)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
     const guestDtos = [] as CreateGuestDto[];
 
@@ -227,7 +242,20 @@ describe('register.service.ts', () => {
     }
   });
 
-  test('should throw error if register with roomId exist (checkIn)', async () => {
+  it('should have been call with parameters (checkOut)', async () => {
+    const id = Uuid.v4();
+
+    const registerService = new RegisterService(
+      mockRegisterRepository,
+      mockRoomRepository
+    );
+
+    await registerService.checkOut(id);
+
+    expect(mockRegisterRepository.checkOut).toHaveBeenCalledWith(id);
+  });
+
+  it('should throw error if register with roomId exist (checkIn)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
     const guestDtos = [] as CreateGuestDto[];
 
@@ -252,7 +280,7 @@ describe('register.service.ts', () => {
     }
   });
 
-  test('should have been call with parameters (update)', async () => {
+  it('should have been call with parameters (update)', async () => {
     const registerService = new RegisterService(
       mockRegisterRepository,
       mockRoomRepository
@@ -265,7 +293,7 @@ describe('register.service.ts', () => {
     });
   });
 
-  test('should have been call with parameters (delete)', async () => {
+  it('should have been call with parameters (delete)', async () => {
     const id = Uuid.v4();
 
     const registerService = new RegisterService(

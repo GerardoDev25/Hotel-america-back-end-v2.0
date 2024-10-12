@@ -70,6 +70,10 @@ export class RegisterService {
     return this.registerRepository.checkIn(data);
   }
 
+  async checkOut(id: string) {
+    return this.registerRepository.checkOut(id);
+  }
+
   async update(updateRegisterDto: UpdateRegisterDto) {
     return this.registerRepository.update(updateRegisterDto);
   }
