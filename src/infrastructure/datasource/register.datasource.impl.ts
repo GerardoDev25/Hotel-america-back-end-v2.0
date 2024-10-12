@@ -4,7 +4,12 @@ import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
 import { RegisterDatasource } from '@domain/datasources';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
-import { RegisterPagination, IRegister } from '@domain/interfaces';
+import {
+  RegisterPagination,
+  IRegister,
+  RegisterCheckOut,
+  RegisterCheckOutDB,
+} from '@domain/interfaces';
 
 import { LoggerService } from '@presentation/services';
 
@@ -34,6 +39,52 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     });
   }
 
+  private checkOutObject(checkOutDB: RegisterCheckOutDB): RegisterCheckOut {
+    const checkIn = checkOutDB.checkIn.toISOString().split('T').at(0);
+    const checkOut = checkOutDB.checkOut!.toISOString().split('T').at(0);
+
+    const totalCharges = checkOutDB.Charge.reduce(
+      (total, charge) => total + charge.amount,
+      0
+    );
+
+    const totalPayments = checkOutDB.Payment.reduce(
+      (total, payment) => total + payment.amount,
+      0
+    );
+
+    const guests = checkOutDB.Guest.map((guest) => ({
+      ...guest,
+      country: guest.country.name,
+      dateOfBirth: guest.dateOfBirth.toISOString().split('T').at(0)!,
+    }));
+
+    const charges = checkOutDB.Charge.map((charge) => ({
+      ...charge,
+      createdAt: charge.createdAt.toISOString().split('T').at(0)!,
+    }));
+
+    const payments = checkOutDB.Payment.map((payment) => ({
+      ...payment,
+      paidAt: payment.paidAt.toISOString().split('T').at(0)!,
+    }));
+
+    const checkOutDetail: RegisterCheckOut = {
+      id: checkOutDB.id,
+      checkIn: checkIn!,
+      checkOut,
+      discount: checkOutDB.discount,
+      price: checkOutDB.price,
+      roomNumber: checkOutDB.room.roomNumber,
+      totalCharges,
+      totalPayments,
+      guests,
+      charges,
+      payments,
+    };
+
+    return checkOutDetail;
+  }
   private transformGuestObject(entities: Guest[]): GuestEntity[] {
     const guestEntities = entities.map((guest) =>
       GuestEntity.fromObject({
@@ -91,6 +142,52 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     });
 
     return checkInTx;
+  }
+
+  private async makeCheckOut(id: string) {
+    const checkOut = await prisma.$transaction(async (tx) => {
+      // * 1 get register information
+      const registerToDelete = tx.register.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          checkIn: true,
+          checkOut: true,
+          discount: true,
+          price: true,
+          room: { select: { roomNumber: true } },
+          Charge: {
+            select: { amount: true, description: true, createdAt: true },
+          },
+          Payment: {
+            select: { amount: true, description: true, paidAt: true },
+          },
+          Guest: {
+            select: {
+              di: true,
+              dateOfBirth: true,
+              city: true,
+              name: true,
+              lastName: true,
+              phone: true,
+              country: { select: { name: true } },
+            },
+          },
+        },
+      });
+
+      // * delete charges, payments, guests and register
+      await Promise.all([
+        tx.charge.deleteMany({ where: { registerId: id } }),
+        tx.payment.deleteMany({ where: { registerId: id } }),
+        tx.guest.deleteMany({ where: { registerId: id } }),
+      ]);
+      await tx.register.delete({ where: { id } });
+
+      return registerToDelete;
+    });
+
+    return checkOut;
   }
 
   async getById(
@@ -191,6 +288,32 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       // console.log(checkInTx);
       return { ok: true, ...checkInTx };
     } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async checkOut(
+    id: string
+  ): Promise<{ ok: boolean; registerCheckOutDetail: RegisterCheckOut }> {
+    // ? verify register exist and have checkOut date
+    try {
+      const { ok, register } = await this.getById(id);
+      if (ok && !register.checkOut) {
+        await prisma.register.update({
+          where: { id },
+          data: { checkOut: new Date() },
+        });
+      }
+    } catch (error: any) {
+      throw this.handleError(error);
+    }
+
+    // ? do checkOut
+    try {
+      const checkOut = await this.makeCheckOut(id);
+      const registerCheckOutDetail = this.checkOutObject(checkOut!);
+      return { ok: true, registerCheckOutDetail };
+    } catch (error: any) {
       throw this.handleError(error);
     }
   }

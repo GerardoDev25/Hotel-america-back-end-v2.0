@@ -9,6 +9,33 @@ export interface IRegister {
   roomId: string;
 }
 
+export interface RegisterCheckOutDB {
+  id: string;
+  checkIn: Date;
+  checkOut: Date | null;
+  discount: number;
+  price: number;
+  Guest: {
+    name: string;
+    di: string;
+    dateOfBirth: Date;
+    city: string;
+    lastName: string;
+    phone: string;
+    country: { name: string };
+  }[];
+  room: { roomNumber: number };
+  Charge: {
+    amount: number;
+    description: string;
+    createdAt: Date;
+  }[];
+  Payment: {
+    amount: number;
+    description: string;
+    paidAt: Date;
+  }[];
+}
 export interface RegisterCheckOut {
   id: string;
   checkIn: string;
