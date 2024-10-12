@@ -104,6 +104,13 @@ export class RegisterController {
       .catch((error) => this.handleError(res, error));
   };
 
+  public checkOut = async (req: Request, res: Response) => {
+    this.registerService
+      .checkOut(req.params.id)
+      .then((data) => res.json(data))
+      .catch((error) => this.handleError(res, error));
+  };
+
   public update = async (req: Request, res: Response) => {
     const [errors, updateRegisterDto] = UpdateRegisterDto.create(req.body);
 

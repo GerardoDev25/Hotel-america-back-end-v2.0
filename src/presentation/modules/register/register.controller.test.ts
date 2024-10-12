@@ -1,6 +1,6 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
-import { RegisterPagination } from '@domain/interfaces';
+import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
 import { variables } from '@domain/variables';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
@@ -246,6 +246,37 @@ describe('register.controller.ts', () => {
       errors: ['city property most be a string'],
     });
     expect(mockService.checkIn).not.toHaveBeenCalled();
+  });
+
+  it('should call checkOut function service (checkOut)', async () => {
+    const req = { params: { id: registerEntity.id } } as any;
+    const res = { json: jest.fn() } as any;
+
+    const registerCheckOutDetail: RegisterCheckOut = {
+      id: Uuid.v4(),
+      checkIn: Generator.randomDate(),
+      checkOut: Generator.randomDate(),
+      discount: 0,
+      price: 0,
+      roomNumber: 0,
+      totalCharges: 0,
+      totalPayments: 0,
+      guests: [],
+      charges: [],
+      payments: [],
+    };
+
+    const mockService = {
+      checkOut: jest
+        .fn()
+        .mockResolvedValue({ ok: true, registerCheckOutDetail }),
+    } as any;
+    const registerController = new RegisterController(mockService);
+
+    await registerController.checkOut(req, res);
+
+    expect(mockService.checkOut).toHaveBeenCalledWith(registerEntity.id);
+    expect(res.json).toHaveBeenCalledWith({ ok: true, registerCheckOutDetail });
   });
 
   it('should update a register (update)', async () => {
