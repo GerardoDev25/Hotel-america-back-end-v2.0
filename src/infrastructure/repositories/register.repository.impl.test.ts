@@ -18,13 +18,14 @@ describe('register.repository.impl.ts', () => {
     update: jest.fn(),
     delete: jest.fn(),
     checkIn: jest.fn(),
+    checkOut: jest.fn(),
   };
 
   const repository = new RegisterRepositoryImpl(mockDataSource);
 
   beforeEach(() => jest.clearAllMocks());
 
-  test('should call getById', async () => {
+  it('should call getById', async () => {
     const id = Uuid.v4();
     await repository.getById(id);
 
@@ -32,7 +33,7 @@ describe('register.repository.impl.ts', () => {
     expect(mockDataSource.getById).toHaveBeenCalledWith(id);
   });
 
-  test('should call getByParam', async () => {
+  it('should call getByParam', async () => {
     const roomId = Uuid.v4();
     await repository.getByParam({ roomId });
 
@@ -40,7 +41,7 @@ describe('register.repository.impl.ts', () => {
     expect(mockDataSource.getByParam).toHaveBeenCalledWith({ roomId });
   });
 
-  test('should call getAll', async () => {
+  it('should call getAll', async () => {
     const page = 2;
     const limit = 10;
 
@@ -50,7 +51,7 @@ describe('register.repository.impl.ts', () => {
     expect(mockDataSource.getAll).toHaveBeenCalledWith(page, limit);
   });
 
-  test('should call create', async () => {
+  it('should call create', async () => {
     const createRegister: CreateRegisterDto = {
       guestsNumber: variables.GUESTS_NUMBER_MIN_VALUE,
       discount: 0,
@@ -65,7 +66,7 @@ describe('register.repository.impl.ts', () => {
     expect(mockDataSource.create).toHaveBeenCalledWith(createRegister);
   });
 
-  test('should call checkIn', async () => {
+  it('should call checkIn', async () => {
     const createRegister: CreateRegisterDto = {
       guestsNumber: variables.GUESTS_NUMBER_MIN_VALUE,
       discount: 0,
@@ -95,7 +96,15 @@ describe('register.repository.impl.ts', () => {
     expect(mockDataSource.checkIn).toHaveBeenCalledWith(data);
   });
 
-  test('should call update', async () => {
+  it('should call checkOut', async () => {
+    const id = Uuid.v4();
+    await repository.checkOut(id);
+
+    expect(mockDataSource.checkOut).toHaveBeenCalled();
+    expect(mockDataSource.checkOut).toHaveBeenCalledWith(id);
+  });
+
+  it('should call update', async () => {
     const updateRegister: UpdateRegisterDto = {
       id: Uuid.v4(),
       userId: Uuid.v4(),
@@ -112,7 +121,7 @@ describe('register.repository.impl.ts', () => {
     expect(mockDataSource.update).toHaveBeenCalledWith(updateRegister);
   });
 
-  test('should call delete', async () => {
+  it('should call delete', async () => {
     const id = Uuid.v4();
     await repository.delete(id);
 

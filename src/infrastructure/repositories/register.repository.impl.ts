@@ -1,7 +1,11 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { RegisterDatasource } from '@domain/datasources';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
-import { RegisterPagination, IRegister } from '@domain/interfaces';
+import {
+  RegisterPagination,
+  IRegister,
+  RegisterCheckOut,
+} from '@domain/interfaces';
 import { RegisterRepository } from '@domain/repositories';
 import { CreateGuestDto } from '@src/domain/dtos/guest';
 
@@ -39,6 +43,12 @@ export class RegisterRepositoryImpl extends RegisterRepository {
     guests: GuestEntity[];
   }> {
     return this.registerDataSource.checkIn(data);
+  }
+
+  async checkOut(
+    id: string
+  ): Promise<{ ok: boolean; registerCheckOutDetail: RegisterCheckOut }> {
+    return this.registerDataSource.checkOut(id);
   }
 
   update(
