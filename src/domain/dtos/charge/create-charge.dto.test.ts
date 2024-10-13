@@ -28,7 +28,7 @@ describe('create-charge.dto.ts', () => {
 
     expect(paymentDto).toBeUndefined();
     expect(errors).toEqual([
-      'type most be: cafeteria, laundry, lodging, other',
+      'type most be: cafeteria, laundry, lodging, other, new_guest',
       'amount property most be a positive',
       'registerId is not a valid uuid',
       'description property most be a string',

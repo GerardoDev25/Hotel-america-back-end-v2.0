@@ -14,6 +14,7 @@ export class ChargeValidator {
         ChargeTypeList.LAUNDRY,
         ChargeTypeList.LODGING,
         ChargeTypeList.OTHER,
+        ChargeTypeList.NEW_GUEST,
       ],
     });
     if (typeValid !== true) errors.push('type ' + typeValid);
@@ -56,6 +57,7 @@ export class ChargeValidator {
           ChargeTypeList.LAUNDRY,
           ChargeTypeList.LODGING,
           ChargeTypeList.OTHER,
+          ChargeTypeList.NEW_GUEST,
         ],
       });
       if (typeValid !== true) errors.push('type ' + typeValid);

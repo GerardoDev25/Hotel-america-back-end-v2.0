@@ -37,6 +37,7 @@ enum TypeCharge {
   laundry
   cafeteria
   other
+  new_guest
 }
 
 model Country {

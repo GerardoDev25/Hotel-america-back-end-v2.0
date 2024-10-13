@@ -60,16 +60,17 @@ describe('charge.route.ts', () => {
     testServer.close();
   });
 
-  beforeAll(async () => {
-    await prisma.charge.deleteMany();
-    await prisma.register.deleteMany();
-    await prisma.room.deleteMany();
-    await prisma.country.deleteMany();
-    await prisma.user.deleteMany();
-  });
+  // beforeAll(async () => {
+  //   await prisma.charge.deleteMany();
+  //   await prisma.register.deleteMany();
+  //   await prisma.room.deleteMany();
+  //   await prisma.country.deleteMany();
+  //   await prisma.user.deleteMany();
+  // });
 
   beforeEach(async () => {
     await prisma.charge.deleteMany();
+    await prisma.guest.deleteMany();
     await prisma.register.deleteMany();
     await prisma.room.deleteMany();
     await prisma.country.deleteMany();
@@ -329,7 +330,7 @@ describe('charge.route.ts', () => {
     expect(body).toEqual({
       ok: false,
       errors: [
-        'type most be: cafeteria, laundry, lodging, other',
+        'type most be: cafeteria, laundry, lodging, other, new_guest',
         'amount property most be a number',
         'description property most be a string',
       ],

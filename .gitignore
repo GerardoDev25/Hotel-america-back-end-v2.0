@@ -134,3 +134,4 @@ dist
 # own
 /postgres
 /postgres_test
+.VSCodeCounter

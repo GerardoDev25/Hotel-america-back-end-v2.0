@@ -7,13 +7,19 @@ export interface ICharge {
   registerId: string;
 }
 
-export type ChargeType = 'lodging' | 'laundry' | 'cafeteria' | 'other';
+export type ChargeType =
+  | 'lodging'
+  | 'laundry'
+  | 'cafeteria'
+  | 'other'
+  | 'new_guest';
 
 export enum ChargeTypeList {
   LODGING = 'lodging',
   LAUNDRY = 'laundry',
   CAFETERIA = 'cafeteria',
   OTHER = 'other',
+  NEW_GUEST = 'new_guest',
 }
 
 export interface ChargePagination {

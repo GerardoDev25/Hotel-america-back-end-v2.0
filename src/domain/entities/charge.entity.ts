@@ -42,6 +42,7 @@ export class ChargeEntity implements ICharge {
         ChargeTypeList.LAUNDRY,
         ChargeTypeList.LODGING,
         ChargeTypeList.OTHER,
+        ChargeTypeList.NEW_GUEST,
       ],
     });
     if (typeValid !== true) throw CustomError.badRequest('type ' + typeValid);
