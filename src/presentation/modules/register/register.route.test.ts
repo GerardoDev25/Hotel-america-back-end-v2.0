@@ -1,5 +1,10 @@
 import request from 'supertest';
-import { RoomTypesList, UserRolesList } from '@domain/interfaces';
+import {
+  ChargeTypeList,
+  PaymentTypeList,
+  RoomTypesList,
+  UserRolesList,
+} from '@domain/interfaces';
 import { CreateRoomDto } from '@domain/dtos/room';
 import { CreateRegisterDto } from '@domain/dtos/register';
 import { variables } from '@domain/variables';
@@ -20,7 +25,19 @@ describe('register.route.ts', () => {
     testServer.close();
   });
 
+  beforeAll(async () => {
+    await prisma.charge.deleteMany();
+    await prisma.payment.deleteMany();
+    await prisma.guest.deleteMany();
+    await prisma.register.deleteMany();
+    await prisma.room.deleteMany();
+    await prisma.country.deleteMany();
+    await prisma.user.deleteMany();
+  });
+
   beforeEach(async () => {
+    await prisma.charge.deleteMany();
+    await prisma.payment.deleteMany();
     await prisma.guest.deleteMany();
     await prisma.register.deleteMany();
     await prisma.room.deleteMany();
@@ -66,6 +83,9 @@ describe('register.route.ts', () => {
     countryId: 'AR',
     dateOfBirth: new Date().toISOString().split('T')[0],
   };
+
+  const rawCharge = { amount: 100, type: ChargeTypeList.LODGING };
+  const rawPayment = { amount: 100, type: PaymentTypeList.QR };
 
   it('should get all register (getAll)', async () => {
     const page = 1;
@@ -333,6 +353,128 @@ describe('register.route.ts', () => {
           'roomId property is required',
         ]);
       });
+  });
+
+  it('should make a checkOut (CheckOut)', async () => {
+    const country = await prisma.country.create({
+      data: { id: 'AR', name: 'Argentina' },
+    });
+    const user = await prisma.user.create({ data: rawUser });
+    const room = await prisma.room.create({ data: rawRoom });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+    const register = await prisma.register.create({
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+        Charge: { create: { ...rawCharge } },
+        Payment: { create: { ...rawPayment } },
+        Guest: {
+          create: {
+            ...rawGuest,
+            countryId: country.id,
+            dateOfBirth: new Date(rawGuest.dateOfBirth),
+          },
+        },
+      },
+    });
+
+    const { body } = await request(testServer.app)
+      .delete(`/api/register/check-out/${register.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    const { ok, registerCheckOutDetail } = body;
+    const { guests, charges, payments, ...rest } = registerCheckOutDetail;
+
+    expect(ok).toBeTruthy();
+    expect(rest).toMatchObject({
+      id: expect.any(String),
+      checkIn: expect.any(String),
+      checkOut: expect.any(String),
+      discount: expect.any(Number),
+      price: expect.any(Number),
+      roomNumber: expect.any(Number),
+      totalCharges: expect.any(Number),
+      totalPayments: expect.any(Number),
+    });
+
+    expect(guests).toBeInstanceOf(Array);
+    expect(guests[0]).toEqual({
+      di: expect.any(String),
+      dateOfBirth: expect.any(String),
+      city: expect.any(String),
+      name: expect.any(String),
+      lastName: expect.any(String),
+      phone: expect.any(String),
+      country: expect.any(String),
+    });
+
+    expect(charges).toBeInstanceOf(Array);
+    expect(charges[0]).toEqual({
+      amount: expect.any(Number),
+      description: expect.any(String),
+      createdAt: expect.any(String),
+    });
+
+    expect(payments).toBeInstanceOf(Array);
+    expect(payments[0]).toEqual({
+      amount: expect.any(Number),
+      description: expect.any(String),
+      paidAt: expect.any(String),
+    });
+  });
+
+  it('should get 409 code conflict if amounts not match (CheckOut)', async () => {
+    const country = await prisma.country.create({
+      data: { id: 'AR', name: 'Argentina' },
+    });
+    const user = await prisma.user.create({ data: rawUser });
+    const room = await prisma.room.create({ data: rawRoom });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+
+    const amount = 20;
+
+    const register = await prisma.register.create({
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        discount: 10,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+        Charge: { create: { ...rawCharge, amount } },
+        Payment: { create: { ...rawPayment, amount } },
+        Guest: {
+          create: {
+            ...rawGuest,
+            countryId: country.id,
+            dateOfBirth: new Date(rawGuest.dateOfBirth),
+          },
+        },
+      },
+    });
+
+    const { body } = await request(testServer.app)
+      .delete(`/api/register/check-out/${register.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(409);
+
+    expect(body).toMatchObject({
+      ok: false,
+      errors: [
+        `The total charges: (${amount}) must be equal to the total payments plus discount: (${amount + register.discount})`,
+      ],
+    });
+  });
+
+  it('should get 401 unauthorize if no pass token (CheckOut)', async () => {
+    const id = Uuid.v4();
+    const { body } = await request(testServer.app)
+      .delete(`/api/register/check-out/${id}`)
+      .expect(401);
+
+    expect(body).toMatchObject({ ok: false, errors: ['Token not provided'] });
   });
 
   it('should update a register (update)', async () => {

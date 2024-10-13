@@ -43,16 +43,6 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     const checkIn = checkOutDB.checkIn.toISOString().split('T').at(0);
     const checkOut = checkOutDB.checkOut!.toISOString().split('T').at(0);
 
-    const totalCharges = checkOutDB.Charge.reduce(
-      (total, charge) => total + charge.amount,
-      0
-    );
-
-    const totalPayments = checkOutDB.Payment.reduce(
-      (total, payment) => total + payment.amount,
-      0
-    );
-
     const guests = checkOutDB.Guest.map((guest) => ({
       ...guest,
       country: guest.country.name,
@@ -70,17 +60,13 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     }));
 
     const checkOutDetail: RegisterCheckOut = {
-      id: checkOutDB.id,
-      checkIn: checkIn!,
-      checkOut,
-      discount: checkOutDB.discount,
-      price: checkOutDB.price,
-      roomNumber: checkOutDB.room.roomNumber,
-      totalCharges,
-      totalPayments,
+      ...checkOutDB,
       guests,
       charges,
       payments,
+      checkOut,
+      checkIn: checkIn!,
+      roomNumber: checkOutDB.room.roomNumber,
     };
 
     return checkOutDetail;
@@ -147,7 +133,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
   private async makeCheckOut(id: string) {
     const checkOut = await prisma.$transaction(async (tx) => {
       // * 1 get register information
-      const registerToDelete = tx.register.findUnique({
+      const registerToDelete = await tx.register.findUnique({
         where: { id },
         select: {
           id: true,
@@ -176,6 +162,23 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
         },
       });
 
+      const totalCharges = registerToDelete!.Charge.reduce(
+        (total, charge) => total + charge.amount,
+        0
+      );
+
+      const totalPayments = registerToDelete!.Payment.reduce(
+        (total, payment) => total + payment.amount,
+        0
+      );
+
+      const discount = registerToDelete?.discount ?? 0;
+      if (totalCharges !== totalPayments + discount) {
+        throw CustomError.conflict(
+          `The total charges: (${totalCharges}) must be equal to the total payments plus discount: (${totalPayments + discount})`
+        );
+      }
+
       // * delete charges, payments, guests and register
       await Promise.all([
         tx.charge.deleteMany({ where: { registerId: id } }),
@@ -184,7 +187,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       ]);
       await tx.register.delete({ where: { id } });
 
-      return registerToDelete;
+      return { ...registerToDelete!, totalCharges, totalPayments };
     });
 
     return checkOut;

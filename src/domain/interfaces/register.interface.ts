@@ -15,6 +15,8 @@ export interface RegisterCheckOutDB {
   checkOut: Date | null;
   discount: number;
   price: number;
+  totalCharges: number;
+  totalPayments: number;
   Guest: {
     name: string;
     di: string;
