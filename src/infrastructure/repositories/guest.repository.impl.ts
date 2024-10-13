@@ -2,7 +2,7 @@ import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
 import { GuestDatasource } from '@domain/datasources/guest.datasource';
 import { GuestEntity } from '@domain/entities';
 import { GuestRepository } from '@domain/repositories';
-import { IGuest, GuestPagination } from '@domain/interfaces';
+import { GuestPagination, GuestFilter } from '@domain/interfaces';
 
 export class GuestRepositoryImpl extends GuestRepository {
   constructor(private readonly guestDatasource: GuestDatasource) {
@@ -14,7 +14,7 @@ export class GuestRepositoryImpl extends GuestRepository {
   }
 
   getByParam(
-    searchParam: Partial<Pick<IGuest, keyof IGuest>>
+    searchParam: GuestFilter
   ): Promise<{ ok: boolean; guest: GuestEntity | null }> {
     return this.guestDatasource.getByParam(searchParam);
   }

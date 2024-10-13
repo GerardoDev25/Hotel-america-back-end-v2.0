@@ -1,12 +1,12 @@
 import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
-import { ICharge, ChargePagination } from '@domain/interfaces';
+import { ChargePagination, ChargeFilter } from '@domain/interfaces';
 import { ChargeEntity } from '@domain/entities';
 
 export abstract class ChargeRepository {
   abstract getById(id: string): Promise<{ ok: boolean; charge: ChargeEntity }>;
 
   abstract getByParam(
-    searchParam: Partial<Pick<ICharge, keyof ICharge>>
+    searchParam: ChargeFilter
   ): Promise<{ ok: boolean; charge: ChargeEntity | null }>;
 
   abstract getAll(page: number, limit: number): Promise<ChargePagination>;

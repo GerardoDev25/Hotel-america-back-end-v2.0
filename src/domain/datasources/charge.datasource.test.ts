@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
-import { ICharge, ChargePagination, ChargeTypeList } from '@domain/interfaces';
 import { ChargeEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 import { ChargeDatasource } from '.';
+import {
+  ChargePagination,
+  ChargeTypeList,
+  ChargeFilter,
+} from '@domain/interfaces';
 
 describe('charge.datasource.ts', () => {
   const page = 2;
@@ -33,7 +37,7 @@ describe('charge.datasource.ts', () => {
     }
 
     async getByParam(
-      searchParam: Partial<Pick<ICharge, keyof ICharge>>
+      searchParam: ChargeFilter
     ): Promise<{ ok: boolean; charge: ChargeEntity | null }> {
       return { ok: true, charge: mockCharge };
     }

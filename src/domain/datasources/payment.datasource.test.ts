@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
-import {
-  IPayment,
-  PaymentPagination,
-  PaymentTypeList,
-} from '@domain/interfaces';
 import { PaymentEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 import { PaymentDatasource } from '.';
+import {
+  PaymentFilter,
+  PaymentPagination,
+  PaymentTypeList,
+} from '@domain/interfaces';
 
 describe('payment.datasource.ts', () => {
   const page = 2;
@@ -39,7 +39,7 @@ describe('payment.datasource.ts', () => {
     }
 
     async getByParam(
-      searchParam: Partial<Pick<IPayment, keyof IPayment>>
+      searchParam: PaymentFilter
     ): Promise<{ ok: boolean; payment: PaymentEntity | null }> {
       return { ok: true, payment: mockPayment };
     }

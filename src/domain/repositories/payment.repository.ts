@@ -1,5 +1,5 @@
 import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
-import { IPayment, PaymentPagination } from '@domain/interfaces';
+import { PaymentFilter, PaymentPagination } from '@domain/interfaces';
 import { PaymentEntity } from '@domain/entities';
 
 export abstract class PaymentRepository {
@@ -8,7 +8,7 @@ export abstract class PaymentRepository {
   ): Promise<{ ok: boolean; payment: PaymentEntity }>;
 
   abstract getByParam(
-    searchParam: Partial<Pick<IPayment, keyof IPayment>>
+    searchParam: PaymentFilter
   ): Promise<{ ok: boolean; payment: PaymentEntity | null }>;
 
   abstract getAll(page: number, limit: number): Promise<PaymentPagination>;

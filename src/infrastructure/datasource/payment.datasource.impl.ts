@@ -1,11 +1,11 @@
 import { Payment } from '@prisma/client';
 import { prisma } from '@src/data/postgres';
-import { PaymentDatasource } from '@src/domain/datasources';
-import { CreatePaymentDto, UpdatePaymentDto } from '@src/domain/dtos/payment';
-import { PaymentEntity } from '@src/domain/entities';
-import { CustomError } from '@src/domain/error';
-import { IPayment, PaymentPagination } from '@src/domain/interfaces';
-import { LoggerService } from '@src/presentation/services';
+import { PaymentDatasource } from '@domain/datasources';
+import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
+import { PaymentEntity } from '@domain/entities';
+import { CustomError } from '@domain/error';
+import { PaymentFilter, PaymentPagination } from '@domain/interfaces';
+import { LoggerService } from '@presentation/services';
 import { cleanObject, pagination } from '@src/utils';
 
 export class PaymentDatasourceImpl extends PaymentDatasource {
@@ -44,7 +44,7 @@ export class PaymentDatasourceImpl extends PaymentDatasource {
   }
 
   async getByParam(
-    searchParam: Partial<Pick<IPayment, keyof IPayment>>
+    searchParam: PaymentFilter
   ): Promise<{ ok: boolean; payment: PaymentEntity | null }> {
     try {
       const payment = await prisma.payment.findFirst({ where: searchParam });

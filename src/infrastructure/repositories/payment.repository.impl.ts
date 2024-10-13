@@ -1,5 +1,5 @@
 import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
-import { IPayment, PaymentPagination } from '@domain/interfaces';
+import { PaymentFilter, PaymentPagination } from '@domain/interfaces';
 import { PaymentDatasource } from '@domain/datasources';
 import { PaymentEntity } from '@domain/entities';
 import { PaymentRepository } from '@domain/repositories';
@@ -14,7 +14,7 @@ export class PaymentRepositoryImpl extends PaymentRepository {
   }
 
   getByParam(
-    searchParam: Partial<Pick<IPayment, keyof IPayment>>
+    searchParam: PaymentFilter
   ): Promise<{ ok: boolean; payment: PaymentEntity | null }> {
     return this.paymentDatasource.getByParam(searchParam);
   }

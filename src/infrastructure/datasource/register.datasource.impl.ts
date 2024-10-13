@@ -6,9 +6,9 @@ import { RegisterDatasource } from '@domain/datasources';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
 import {
   RegisterPagination,
-  IRegister,
   RegisterCheckOut,
   RegisterCheckOutDB,
+  RegisterFilter,
 } from '@domain/interfaces';
 
 import { LoggerService } from '@presentation/services';
@@ -210,7 +210,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
   }
 
   async getByParam(
-    searchParam: Partial<Pick<IRegister, keyof IRegister>>
+    searchParam: RegisterFilter
   ): Promise<{ ok: boolean; register: RegisterEntity | null }> {
     try {
       const register = await prisma.register.findFirst({ where: searchParam });

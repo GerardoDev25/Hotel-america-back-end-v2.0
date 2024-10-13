@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
-import { IUser, UserPagination } from '@domain/interfaces';
+import { UserFilter, UserPagination } from '@domain/interfaces';
 import { UserEntity } from '@domain/entities';
-
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
-
 import { UserDatasource } from '.';
 
 describe('user.database.ts', () => {
@@ -45,7 +43,7 @@ describe('user.database.ts', () => {
 
   class MockUserDataSource implements UserDatasource {
     async getByParam(
-      searchParam: Partial<Pick<IUser, keyof IUser>>
+      searchParam: UserFilter
     ): Promise<{ ok: boolean; user: UserEntity | null }> {
       return { ok: true, user: mockUser };
     }

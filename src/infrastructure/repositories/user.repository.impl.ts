@@ -1,5 +1,5 @@
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
-import { IUser, UserPagination } from '@domain/interfaces';
+import { UserFilter, UserPagination } from '@domain/interfaces';
 import { UserDatasource } from '@domain/datasources';
 import { UserEntity } from '@domain/entities';
 import { UserRepository } from '@domain/repositories';
@@ -14,7 +14,7 @@ export class UserRepositoryImpl extends UserRepository {
   }
 
   getByParam(
-    searchParam: Partial<Pick<IUser, keyof IUser>>
+    searchParam: UserFilter
   ): Promise<{ ok: boolean; user: UserEntity | null }> {
     return this.userDataSource.getByParam(searchParam);
   }

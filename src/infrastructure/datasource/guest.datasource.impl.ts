@@ -2,7 +2,7 @@ import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
 import { CustomError } from '@domain/error';
 import { GuestDatasource } from '@domain/datasources';
 import { GuestEntity } from '@domain/entities';
-import { IGuest, GuestPagination } from '@domain/interfaces';
+import { GuestPagination, GuestFilter } from '@domain/interfaces';
 import { LoggerService } from '@presentation/services';
 import { Guest } from '@prisma/client';
 import { prisma } from '@src/data/postgres';
@@ -46,7 +46,7 @@ export class GuestDatasourceImpl extends GuestDatasource {
   }
 
   async getByParam(
-    searchParam: Partial<Pick<IGuest, keyof IGuest>>
+    searchParam: GuestFilter
   ): Promise<{ ok: boolean; guest: GuestEntity | null }> {
     try {
       const guest = await prisma.guest.findFirst({ where: searchParam });

@@ -1,13 +1,13 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { RegisterDatasource } from '@domain/datasources';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
+import { RegisterRepository } from '@domain/repositories';
+import { CreateGuestDto } from '@domain/dtos/guest';
 import {
   RegisterPagination,
-  IRegister,
   RegisterCheckOut,
+  RegisterFilter,
 } from '@domain/interfaces';
-import { RegisterRepository } from '@domain/repositories';
-import { CreateGuestDto } from '@src/domain/dtos/guest';
 
 export class RegisterRepositoryImpl extends RegisterRepository {
   constructor(private readonly registerDataSource: RegisterDatasource) {
@@ -23,7 +23,7 @@ export class RegisterRepositoryImpl extends RegisterRepository {
   }
 
   getByParam(
-    searchParam: Partial<Pick<IRegister, keyof IRegister>>
+    searchParam: RegisterFilter
   ): Promise<{ ok: boolean; register: RegisterEntity | null }> {
     return this.registerDataSource.getByParam(searchParam);
   }

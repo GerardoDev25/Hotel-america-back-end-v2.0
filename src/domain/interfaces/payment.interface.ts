@@ -25,6 +25,7 @@ export interface PaymentPagination {
   next: string | null;
 }
 
+export type PaymentFilter = Partial<Pick<IPayment, keyof IPayment>>;
 export type CreatePayment = Omit<IPayment, 'id' | 'paidAt'>;
 export type UpdatePayment = Partial<Omit<CreatePayment, 'registerId'>> & {
   id: string;

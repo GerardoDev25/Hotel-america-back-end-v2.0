@@ -2,7 +2,7 @@ import { User } from '@prisma/client';
 
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
 import { CustomError } from '@domain/error';
-import { IUser, UserPagination } from '@domain/interfaces';
+import { UserFilter, UserPagination } from '@domain/interfaces';
 import { UserDatasource } from '@domain/datasources';
 import { UserEntity } from '@domain/entities';
 
@@ -47,7 +47,7 @@ export class UserDatasourceImpl extends UserDatasource {
   }
 
   async getByParam(
-    searchParam: Partial<Pick<IUser, keyof IUser>>
+    searchParam: UserFilter
   ): Promise<{ ok: boolean; user: UserEntity | null }> {
     try {
       const user = await prisma.user.findFirst({ where: searchParam });

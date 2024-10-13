@@ -2,7 +2,7 @@
 import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
 import { GuestRepository } from '.';
 import { GuestEntity } from '@domain/entities';
-import { IGuest, GuestPagination } from '@domain/interfaces';
+import { GuestFilter, GuestPagination } from '@domain/interfaces';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 import { citiesList } from '@src/data/seed';
@@ -43,7 +43,7 @@ describe('guest.repository.ts', () => {
     }
 
     async getByParam(
-      searchParam: Partial<Pick<IGuest, keyof IGuest>>
+      searchParam: GuestFilter
     ): Promise<{ ok: boolean; guest: GuestEntity | null }> {
       return { ok: true, guest: mockGuest };
     }

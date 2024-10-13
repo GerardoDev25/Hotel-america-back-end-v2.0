@@ -1,5 +1,5 @@
 import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
-import { ICharge, ChargePagination } from '@domain/interfaces';
+import { ChargePagination, ChargeFilter } from '@domain/interfaces';
 import { ChargeDatasource } from '@domain/datasources';
 import { ChargeEntity } from '@domain/entities';
 import { ChargeRepository } from '@domain/repositories';
@@ -14,7 +14,7 @@ export class ChargeRepositoryImpl extends ChargeRepository {
   }
 
   getByParam(
-    searchParam: Partial<Pick<ICharge, keyof ICharge>>
+    searchParam: ChargeFilter
   ): Promise<{ ok: boolean; charge: ChargeEntity | null }> {
     return this.chargeDatasource.getByParam(searchParam);
   }

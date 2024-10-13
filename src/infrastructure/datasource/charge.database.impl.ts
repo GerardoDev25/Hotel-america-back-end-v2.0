@@ -3,7 +3,7 @@ import { ChargeDatasource } from '@domain/datasources';
 import { ChargeEntity } from '@domain/entities';
 import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
 import { CustomError } from '@domain/error';
-import { ICharge, ChargePagination } from '@domain/interfaces';
+import { ChargePagination, ChargeFilter } from '@domain/interfaces';
 
 import { prisma } from '@src/data/postgres';
 import { LoggerService } from '@presentation/services';
@@ -45,7 +45,7 @@ export class ChargeDatasourceImpl extends ChargeDatasource {
   }
 
   async getByParam(
-    searchParam: Partial<Pick<ICharge, keyof ICharge>>
+    searchParam: ChargeFilter
   ): Promise<{ ok: boolean; charge: ChargeEntity | null }> {
     try {
       const charge = await prisma.charge.findFirst({ where: searchParam });
