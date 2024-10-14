@@ -73,7 +73,7 @@ describe('charge.repository.ts', () => {
 
   test('should call method (getByParam)', async () => {
     const { ok, charge } = await mockChargeRepository.getByParam({
-      id: mockCharge.id,
+      amount: mockCharge.amount,
     });
     expect(ok).toBeTruthy();
     expect(charge).toEqual(mockCharge);

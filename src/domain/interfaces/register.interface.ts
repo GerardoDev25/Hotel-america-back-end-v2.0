@@ -83,7 +83,7 @@ export interface RegisterPagination {
   next: string | null;
 }
 
-export type RegisterFilter = Partial<Pick<IRegister, keyof IRegister>>;
+export type RegisterFilter = Partial<Omit<IRegister, 'id'>>;
 
 export type CreateRegister = Omit<
   IRegister,

@@ -31,7 +31,8 @@ export interface ChargePagination {
   next: string | null;
 }
 
-export type ChargeFilter = Partial<Pick<ICharge, keyof ICharge>>;
+export type ChargeFilter = Partial<Omit<ICharge, 'id'>>;
+
 export type CreateCharge = Omit<ICharge, 'id' | 'createdAt'>;
 export type UpdateCharge = Partial<Omit<CreateCharge, 'registerId'>> & {
   id: string;

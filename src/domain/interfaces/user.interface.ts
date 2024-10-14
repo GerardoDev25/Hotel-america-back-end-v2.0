@@ -27,6 +27,6 @@ export interface UserPagination {
   next: string | null;
 }
 
-export type UserFilter = Partial<Pick<IUser, keyof IUser>>;
+export type UserFilter = Partial<Omit<IUser, 'id'>>;
 export type CreateUser = Omit<IUser, 'id'>;
 export type UpdateUser = Partial<CreateUser> & { id: string };

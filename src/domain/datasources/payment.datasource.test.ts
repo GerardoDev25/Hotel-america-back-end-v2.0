@@ -75,7 +75,7 @@ describe('payment.datasource.ts', () => {
 
   test('should call method (getByParam)', async () => {
     const { ok, payment } = await mockPaymentDatasource.getByParam({
-      id: mockPayment.id,
+      amount: mockPayment.amount,
     });
     expect(ok).toBeTruthy();
     expect(payment).toEqual(mockPayment);

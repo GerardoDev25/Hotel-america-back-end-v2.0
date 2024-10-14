@@ -46,16 +46,16 @@ export class CreateGuestDto {
     return [
       undefined,
       new CreateGuestDto(
-        di,
-        city,
-        name,
-        lastName,
-        phone,
+        (di as string).trim(),
+        (city as string).trim().toLowerCase(),
+        (name as string).trim().toLowerCase(),
+        (lastName as string).trim().toLowerCase(),
+        (phone as string).trim(),
         +roomNumber,
-        countryId,
+        (countryId as string).trim(),
         new Date(dateOfBirth),
         checkOut ? new Date(checkOut) : undefined,
-        registerId
+        registerId ? (registerId as string).trim() : undefined
       ),
     ];
   }

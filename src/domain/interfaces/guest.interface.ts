@@ -22,7 +22,7 @@ export interface GuestPagination {
   next: string | null;
 }
 
-export type GuestFilter = Partial<Pick<IGuest, keyof IGuest>>;
+export type GuestFilter = Partial<Omit<IGuest, 'id'>>;
 export type CreateGuest = Omit<IGuest, 'id' | 'registerId' | 'checkIn'> & {
   registerId?: string;
 };

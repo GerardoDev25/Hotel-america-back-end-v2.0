@@ -75,7 +75,7 @@ describe('payment.repository.ts', () => {
 
   test('should call method (getByParam)', async () => {
     const { ok, payment } = await mockPaymentRepository.getByParam({
-      id: mockPayment.id,
+      amount: mockPayment.amount,
     });
     expect(ok).toBeTruthy();
     expect(payment).toEqual(mockPayment);

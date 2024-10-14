@@ -9,9 +9,9 @@ describe('create-guest.dto.ts', () => {
     const fullName = Generator.randomName();
     const data = {
       di: Generator.randomIdentityNumber(),
-      city: Generator.randomCity(citiesList),
-      name: fullName.split(' ').at(0)!,
-      lastName: fullName.split(' ').at(1)!,
+      city: Generator.randomCity(citiesList).toLowerCase(),
+      name: fullName.split(' ').at(0)!.toLowerCase(),
+      lastName: fullName.split(' ').at(1)!.toLowerCase(),
       phone: Generator.randomPhone(),
       roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
       countryId: 'BO',
@@ -37,9 +37,9 @@ describe('create-guest.dto.ts', () => {
     const fullName = Generator.randomName();
     const data = {
       di: Generator.randomIdentityNumber(),
-      city: Generator.randomCity(citiesList),
-      name: fullName.split(' ').at(0)!,
-      lastName: fullName.split(' ').at(1)!,
+      city: Generator.randomCity(citiesList).toLowerCase(),
+      name: fullName.split(' ').at(0)!.toLowerCase(),
+      lastName: fullName.split(' ').at(1)!.toLowerCase(),
       phone: Generator.randomPhone(),
       roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
       countryId: 'BO',
