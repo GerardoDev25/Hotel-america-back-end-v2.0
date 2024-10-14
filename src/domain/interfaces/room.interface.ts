@@ -36,5 +36,6 @@ export interface RoomPagination {
   next: string | null;
 }
 
+export type RoomFilter = Partial<Omit<IRoom, 'id'>>;
 export type CreateRoom = Omit<IRoom, 'id'>;
 export type UpdateRoom = Partial<CreateRoom> & { id: string };

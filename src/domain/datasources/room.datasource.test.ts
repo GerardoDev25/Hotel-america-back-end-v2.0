@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomEntity } from '@domain/entities';
-import { RoomPagination, RoomTypesList } from '@domain/interfaces';
+import { RoomFilter, RoomPagination, RoomTypesList } from '@domain/interfaces';
 
 import { RoomDatasource } from './room.datasource';
 import { Uuid } from '@src/adapters';
@@ -50,6 +50,14 @@ describe('room.database.ts', () => {
       return roomPagination;
     }
 
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: RoomFilter
+    ): Promise<RoomPagination> {
+      return roomPagination;
+    }
+
     async create(
       createRoomDto: CreateRoomDto
     ): Promise<{ ok: boolean; room: RoomEntity }> {
@@ -76,6 +84,22 @@ describe('room.database.ts', () => {
     const { rooms } = await mockRoomDataSource.getAll(page, limit);
 
     expect(typeof mockRoomDataSource.getAll).toBe('function');
+    expect(mockRoomDataSource.getAll(page, limit)).resolves.toEqual(
+      roomPagination
+    );
+    expect(rooms).toBeInstanceOf(Array);
+    expect(rooms).toHaveLength(2);
+    rooms.forEach((room) => {
+      expect(room).toBeInstanceOf(RoomEntity);
+    });
+  });
+
+  test('test in function getByParams()', async () => {
+    const params: RoomFilter = { isAvailable: true, state: 'pending_cleaning' };
+
+    const { rooms } = await mockRoomDataSource.getByParams(page, limit, params);
+
+    expect(typeof mockRoomDataSource.getByParams).toBe('function');
     expect(mockRoomDataSource.getAll(page, limit)).resolves.toEqual(
       roomPagination
     );

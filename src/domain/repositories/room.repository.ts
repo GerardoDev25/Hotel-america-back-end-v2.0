@@ -1,12 +1,18 @@
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomEntity } from '@domain/entities';
-import { RoomPagination } from '@domain/interfaces';
+import { RoomFilter, RoomPagination } from '@domain/interfaces';
 
 export abstract class RoomRepository {
   abstract getAll(
     page: number,
     limit: number,
     isAvailable?: boolean
+  ): Promise<RoomPagination>;
+
+  abstract getByParams(
+    page: number,
+    limit: number,
+    searchParam: RoomFilter
   ): Promise<RoomPagination>;
 
   abstract getById(id: string): Promise<{ ok: boolean; room: RoomEntity }>;

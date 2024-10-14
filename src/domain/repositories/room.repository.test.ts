@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomEntity } from '@domain/entities';
-import { RoomPagination, RoomTypesList } from '@domain/interfaces';
+import { RoomFilter, RoomPagination, RoomTypesList } from '@domain/interfaces';
 import { Uuid } from '@src/adapters';
 import { RoomRepository } from './room.repository';
 describe('room.repository.ts', () => {
@@ -26,7 +26,7 @@ describe('room.repository.ts', () => {
     isAvailable: true,
   });
 
-  const getAllReturnValue = {
+  const roomPagination = {
     rooms: [mockRoom, mockRoom2],
     limit,
     next: '',
@@ -40,7 +40,15 @@ describe('room.repository.ts', () => {
       limit: number,
       isAvailable: boolean
     ): Promise<RoomPagination> {
-      return getAllReturnValue;
+      return roomPagination;
+    }
+
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: RoomFilter
+    ): Promise<RoomPagination> {
+      return roomPagination;
     }
 
     async getById(id: string): Promise<{ ok: boolean; room: RoomEntity }> {
@@ -61,7 +69,7 @@ describe('room.repository.ts', () => {
     }
   }
 
-  test('test in function getAll()', async () => {
+  it('test in function getAll()', async () => {
     const mockRoomRepository = new MockRoomRepository();
 
     expect(typeof mockRoomRepository.getAll).toBe('function');
@@ -69,7 +77,7 @@ describe('room.repository.ts', () => {
 
     expect(
       mockRoomRepository.getAll(page, limit, isAvailable)
-    ).resolves.toEqual(getAllReturnValue);
+    ).resolves.toEqual(roomPagination);
 
     expect(rooms).toBeInstanceOf(Array);
     expect(rooms).toHaveLength(2);
@@ -78,7 +86,24 @@ describe('room.repository.ts', () => {
     });
   });
 
-  test('test in function create()', async () => {
+  it('test in function getByParams()', async () => {
+    const params: RoomFilter = { isAvailable: true, state: 'pending_cleaning' };
+
+    const mockRoomRepository = new MockRoomRepository();
+    const { rooms } = await mockRoomRepository.getByParams(page, limit, params);
+
+    expect(typeof mockRoomRepository.getByParams).toBe('function');
+    expect(
+      mockRoomRepository.getByParams(page, limit, params)
+    ).resolves.toEqual(roomPagination);
+    expect(rooms).toBeInstanceOf(Array);
+    expect(rooms).toHaveLength(2);
+    rooms.forEach((room) => {
+      expect(room).toBeInstanceOf(RoomEntity);
+    });
+  });
+
+  it('test in function create()', async () => {
     const mockRoomRepository = new MockRoomRepository();
 
     const { id, ...rest } = mockRoom;
@@ -94,7 +119,7 @@ describe('room.repository.ts', () => {
     });
   });
 
-  test('test in function update()', async () => {
+  it('test in function update()', async () => {
     const mockRoomRepository = new MockRoomRepository();
 
     const { ok, message } = await mockRoomRepository.update(mockRoom);
@@ -108,7 +133,7 @@ describe('room.repository.ts', () => {
     });
   });
 
-  test('test in function delete()', async () => {
+  it('test in function delete()', async () => {
     const id = Uuid.v4();
     const mockRoomRepository = new MockRoomRepository();
     const { ok, message } = await mockRoomRepository.delete(id);

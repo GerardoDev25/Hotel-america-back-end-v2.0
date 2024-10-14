@@ -1,9 +1,15 @@
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomEntity } from '@domain/entities';
-import { RoomPagination } from '@domain/interfaces';
+import { RoomFilter, RoomPagination } from '@domain/interfaces';
 
 export abstract class RoomDatasource {
   abstract getAll(page: number, limit: number): Promise<RoomPagination>;
+
+  abstract getByParams(
+    page: number,
+    limit: number,
+    searchParam: RoomFilter
+  ): Promise<RoomPagination>;
 
   abstract getAllAvailable(
     page: number,
