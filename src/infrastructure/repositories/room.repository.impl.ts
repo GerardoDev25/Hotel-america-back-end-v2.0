@@ -1,7 +1,7 @@
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomDatasource } from '@domain/datasources';
 import { RoomEntity } from '@domain/entities';
-import { RoomPagination } from '@domain/interfaces';
+import { RoomFilter, RoomPagination } from '@domain/interfaces';
 import { RoomRepository } from '@domain/repositories';
 
 export class RoomRepositoryImpl extends RoomRepository {
@@ -17,6 +17,14 @@ export class RoomRepositoryImpl extends RoomRepository {
     return isAvailable === undefined
       ? this.roomDataSource.getAll(page, limit)
       : this.roomDataSource.getAllAvailable(page, limit, isAvailable);
+  }
+
+  getByParams(
+    page: number,
+    limit: number,
+    searchParam: RoomFilter
+  ): Promise<RoomPagination> {
+    return this.roomDataSource.getByParams(page, limit, searchParam);
   }
 
   async create(

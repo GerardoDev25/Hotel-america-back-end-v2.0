@@ -1,6 +1,6 @@
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomDatasource } from '@domain/datasources';
-import { RoomTypesList } from '@domain/interfaces';
+import { RoomFilter, RoomTypesList } from '@domain/interfaces';
 
 import { Uuid } from '@src/adapters';
 
@@ -12,6 +12,7 @@ describe('room.repository.impl.ts', () => {
 
   const mockDatasource: RoomDatasource = {
     getAll: jest.fn(),
+    getByParams: jest.fn(),
     getAllAvailable: jest.fn(),
     getById: jest.fn(),
     create: jest.fn(),
@@ -29,6 +30,19 @@ describe('room.repository.impl.ts', () => {
 
     expect(mockDatasource.getAll).toHaveBeenCalled();
     expect(mockDatasource.getAll).toHaveBeenCalledWith(page, limit);
+  });
+
+  test('should call getByParams', async () => {
+    const params: RoomFilter = { betsNumber: 3, isAvailable: false };
+
+    await repository.getByParams(page, limit, params);
+
+    expect(mockDatasource.getByParams).toHaveBeenCalled();
+    expect(mockDatasource.getByParams).toHaveBeenCalledWith(
+      page,
+      limit,
+      params
+    );
   });
 
   test('should call getAllAvailable', async () => {

@@ -2,7 +2,7 @@ import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { CustomError } from '@domain/error';
 import { RoomDatasource } from '@domain/datasources';
 import { RoomEntity } from '@domain/entities';
-import { RoomPagination } from '@domain/interfaces';
+import { RoomFilter, RoomPagination } from '@domain/interfaces';
 
 import { LoggerService } from '@presentation/services';
 
@@ -61,6 +61,38 @@ export class RoomDatasourceImpl extends RoomDatasource {
 
       const rooms = roomsDb.map((room) => RoomEntity.fromObject(room));
       const { next, prev } = pagination({ page, limit, total, path: 'room' });
+
+      return { page, limit, total, next, prev, rooms };
+    } catch (error: any) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getByParams(
+    page: number,
+    limit: number,
+    searchParam: RoomFilter
+  ): Promise<RoomPagination> {
+    try {
+      const where = cleanObject(searchParam);
+
+      const [total, roomsDb] = await Promise.all([
+        prisma.room.count(),
+        prisma.room.findMany({
+          where,
+          skip: (page - 1) * limit,
+          take: limit,
+          orderBy: { roomNumber: 'asc' },
+        }),
+      ]);
+
+      const rooms = roomsDb.map((room) => RoomEntity.fromObject(room));
+      const { next, prev } = pagination({
+        page,
+        limit,
+        total,
+        path: 'room/get-by-params',
+      });
 
       return { page, limit, total, next, prev, rooms };
     } catch (error: any) {
