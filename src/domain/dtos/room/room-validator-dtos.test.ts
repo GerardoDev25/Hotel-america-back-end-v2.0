@@ -32,6 +32,7 @@ describe('RoomValidator', () => {
       'betsNumber property most be greater than or equal to 1',
       'roomNumber property most be greater than or equal to 1',
       'isAvailable property most be a boolean',
+      'state most be: free, occupied, pending_cleaning, under_maintenance',
       'roomType most be: suit, normal',
     ]);
   });

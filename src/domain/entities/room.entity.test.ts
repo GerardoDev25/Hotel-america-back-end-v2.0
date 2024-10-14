@@ -1,11 +1,12 @@
 import { Uuid } from '@src/adapters';
-import { RoomTypesList } from '@domain/interfaces';
+import { RoomStateList, RoomTypesList } from '@domain/interfaces';
 import { RoomEntity } from './room.entity';
 
 describe('room.entity.ts', () => {
   const validObject = {
     id: Uuid.v4(),
     roomType: RoomTypesList.SUIT,
+    state: RoomStateList.FREE,
     roomNumber: '101',
     betsNumber: '2',
     isAvailable: 'true',
@@ -15,6 +16,7 @@ describe('room.entity.ts', () => {
     const expectedRoomEntity = new RoomEntity({
       id: validObject.id,
       roomType: RoomTypesList.SUIT,
+      state: validObject.state,
       roomNumber: 101,
       betsNumber: 2,
       isAvailable: true,
@@ -32,6 +34,7 @@ describe('room.entity.ts', () => {
     const idInvalid = '';
     const roomTypeInvalid = 'invalid';
     const roomNumberInvalid = '101a';
+    const stateInvalid = '101a';
     const betsNumberInvalid = '2a';
     const isAvailableInvalid = '';
 
@@ -39,6 +42,11 @@ describe('room.entity.ts', () => {
     expect(() =>
       RoomEntity.fromObject({ ...validObject, id: idInvalid })
     ).toThrow();
+
+    expect(() =>
+      RoomEntity.fromObject({ ...validObject, state: stateInvalid })
+    ).toThrow();
+
     expect(() =>
       RoomEntity.fromObject({ ...validObject, roomType: roomTypeInvalid })
     ).toThrow();

@@ -1,19 +1,26 @@
 import { variables } from '@domain/variables';
 import {
+  UpdateRoom,
+  CreateRoom,
+  RoomTypesList,
+  RoomStateList,
+} from '@domain/interfaces';
+import {
   BooleanValidator,
   NumberValidator,
   StringValidator,
 } from '@domain/type-validators';
-import {
-  UpdateRoom,
-  CreateRoom,
-  RoomTypesList,
-} from '@domain/interfaces/room.interface';
 
 export class RoomValidator {
   static create(object: CreateRoom): string[] {
     const errors: string[] = [];
-    const { betsNumber, isAvailable = false, roomNumber, roomType } = object;
+    const {
+      betsNumber,
+      isAvailable = false,
+      roomNumber,
+      roomType,
+      state,
+    } = object;
 
     // * betsNumber
     const betsNumberMinValueValid = NumberValidator.isMinValue({
@@ -38,6 +45,18 @@ export class RoomValidator {
     if (isAvailableValid !== true)
       errors.push('isAvailable ' + isAvailableValid);
 
+    // * state
+    const stateValid = StringValidator.mostBe({
+      value: state,
+      allowValues: [
+        RoomStateList.FREE,
+        RoomStateList.OCCUPIED,
+        RoomStateList.PENDING_CLEANING,
+        RoomStateList.UNDER_MAINTENANCE,
+      ],
+    });
+    if (stateValid !== true) errors.push('state ' + stateValid);
+
     // * roomType
     const roomTypeValid = StringValidator.mostBe({
       value: roomType,
@@ -49,13 +68,27 @@ export class RoomValidator {
   }
 
   static update(object: UpdateRoom): string[] {
-    const { id, roomType, roomNumber, betsNumber, isAvailable } = object;
+    const { id, roomType, roomNumber, betsNumber, isAvailable, state } = object;
 
     const errors: string[] = [];
 
     // * id
     const idValid = StringValidator.isValidUUID(id);
     if (idValid !== true) errors.push('id ' + idValid);
+
+    // * state
+    if (state !== undefined) {
+      const stateValid = StringValidator.mostBe({
+        value: state,
+        allowValues: [
+          RoomStateList.FREE,
+          RoomStateList.OCCUPIED,
+          RoomStateList.PENDING_CLEANING,
+          RoomStateList.UNDER_MAINTENANCE,
+        ],
+      });
+      if (stateValid !== true) errors.push('state ' + stateValid);
+    }
 
     // * roomType
     if (roomType !== undefined) {

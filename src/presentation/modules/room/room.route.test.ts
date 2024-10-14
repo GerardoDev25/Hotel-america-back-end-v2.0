@@ -41,6 +41,7 @@ describe('room.route.ts', () => {
       isAvailable: expect.any(Boolean),
       roomNumber: expect.any(Number),
       roomType: expect.any(String),
+      state: expect.any(String),
     });
   });
 
@@ -187,6 +188,7 @@ describe('room.route.ts', () => {
       errors: [
         'betsNumber property is required',
         'roomNumber property is required',
+        'state property is required',
         'roomType property is required',
       ],
     });
