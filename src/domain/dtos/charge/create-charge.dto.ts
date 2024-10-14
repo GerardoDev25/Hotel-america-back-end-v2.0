@@ -23,7 +23,12 @@ export class CreateChargeDto {
 
     return [
       undefined,
-      new CreateChargeDto(+amount, type, registerId, description),
+      new CreateChargeDto(
+        +amount,
+        type,
+        (registerId as string).trim(),
+        description ? (description as string).trim() : undefined
+      ),
     ];
   }
 }

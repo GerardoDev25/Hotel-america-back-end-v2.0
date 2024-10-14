@@ -23,7 +23,12 @@ export class CreatePaymentDto {
 
     return [
       undefined,
-      new CreatePaymentDto(+amount, type, registerId, description),
+      new CreatePaymentDto(
+        +amount,
+        type,
+        (registerId as string).trim(),
+        description ? (description as string).trim() : undefined
+      ),
     ];
   }
 }

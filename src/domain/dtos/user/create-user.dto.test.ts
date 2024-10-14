@@ -5,11 +5,11 @@ describe('create-user.dto.ts', () => {
   test('should create an instance of CreateUserDto', () => {
     const data = {
       birdDate: Generator.randomDate(),
-      name: Generator.randomName(),
+      name: Generator.randomName().toLowerCase(),
       password: Generator.randomPassword(),
       phone: Generator.randomPhone(),
       role: 'admin',
-      username: Generator.randomUsername(),
+      username: Generator.randomUsername().toLowerCase(),
       isActive: true,
     };
 

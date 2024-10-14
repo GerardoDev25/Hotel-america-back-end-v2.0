@@ -27,7 +27,7 @@ export class UpdateChargeDto {
         id,
         amount ? +amount : undefined,
         type ? type : undefined,
-        description ? description : undefined
+        description ? (description as string).trim() : undefined
       ),
     ];
   }

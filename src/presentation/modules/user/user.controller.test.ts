@@ -9,10 +9,10 @@ import { UserController, UserService } from '.';
 describe('user.controller.ts', () => {
   const user1 = {
     birdDate: Generator.randomDate(),
-    name: Generator.randomName(),
+    name: Generator.randomName().toLowerCase(),
     password: Generator.randomPassword(),
     phone: Generator.randomPhone(),
-    username: Generator.randomUsername(),
+    username: Generator.randomUsername().toLowerCase(),
     role: 'admin',
     isActive: true,
   };

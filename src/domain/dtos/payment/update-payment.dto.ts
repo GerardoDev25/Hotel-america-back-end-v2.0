@@ -24,10 +24,10 @@ export class UpdatePaymentDto {
     return [
       undefined,
       new UpdatePaymentDto(
-        id,
+        (id as string).trim(),
         amount ? +amount : undefined,
         type ? type : undefined,
-        description ? description : undefined
+        description ? (description as string).trim() : undefined
       ),
     ];
   }

@@ -49,15 +49,15 @@ export class UpdateGuestDto {
     return [
       undefined,
       new UpdateGuestDto(
-        id,
-        di,
-        city,
-        name,
-        lastName,
+        (id as string).trim(),
+        di ? (di as string).trim() : undefined,
+        city ? (city as string).trim().toLowerCase() : undefined,
+        name ? (name as string).trim().toLowerCase() : undefined,
+        lastName ? (lastName as string).trim().toLowerCase() : undefined,
         phone,
         +roomNumber,
-        countryId,
-        registerId,
+        countryId ? (countryId as string).trim() : undefined,
+        registerId ? (registerId as string).trim() : undefined,
         dateOfBirth ? new Date(dateOfBirth) : undefined,
         checkOut ? new Date(checkOut) : undefined
       ),

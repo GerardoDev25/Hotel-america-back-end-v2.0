@@ -29,10 +29,10 @@ export class CreateRegisterDto {
       new CreateRegisterDto(
         +discount,
         +price,
-        userId,
-        roomId,
+        (userId as string).trim(),
+        (roomId as string).trim(),
         checkOut ? new Date(checkOut) : undefined,
-        +guestsNumber
+        guestsNumber ? +guestsNumber : undefined
       ),
     ];
   }

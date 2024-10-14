@@ -30,12 +30,12 @@ export class UpdateRegisterDto {
     return [
       undefined,
       new UpdateRegisterDto(
-        id,
-        +guestsNumber,
-        +discount,
-        +price,
-        userId,
-        roomId,
+        (id as string).trim(),
+        guestsNumber ? +guestsNumber : undefined,
+        discount || discount === 0 ? +discount : undefined,
+        price ? +price : undefined,
+        userId ? (userId as string).trim() : undefined,
+        roomId ? (roomId as string).trim() : undefined,
         checkOut ? new Date(checkOut) : undefined
       ),
     ];

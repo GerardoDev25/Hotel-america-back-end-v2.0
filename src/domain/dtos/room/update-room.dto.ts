@@ -26,10 +26,10 @@ export class UpdateRoomDto {
     return [
       undefined,
       new UpdateRoomDto(
-        id,
-        roomType,
-        +roomNumber,
-        +betsNumber,
+        (id as string).trim(),
+        roomType ? roomType : undefined,
+        roomNumber ? +roomNumber : undefined,
+        betsNumber ? +betsNumber : undefined,
         !!BooleanValidator.toBoolean(isAvailable)
       ),
     ];

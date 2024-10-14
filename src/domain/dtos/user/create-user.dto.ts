@@ -41,7 +41,7 @@ export class CreateUserDto {
       new CreateUserDto(
         role,
         DateValidator.toDate(birdDate) ?? new Date(),
-        (name as string).trim(),
+        (name as string).trim().toLowerCase(),
         (phone as string).trim(),
         (username as string).trim().toLowerCase(),
         (password as string).trim(),

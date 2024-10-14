@@ -15,6 +15,6 @@ export class AuthRefreshTokenDto {
 
     if (errors.length > 0) return [errors, undefined];
 
-    return [undefined, new AuthRefreshTokenDto(token)];
+    return [undefined, new AuthRefreshTokenDto((token as string).trim())];
   }
 }
