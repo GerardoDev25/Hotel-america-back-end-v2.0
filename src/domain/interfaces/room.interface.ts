@@ -4,6 +4,7 @@ export interface IRoom {
   roomNumber: number;
   betsNumber: number;
   isAvailable: boolean;
+  state: RoomState;
 }
 
 export type RoomType = 'suit' | 'normal';
@@ -11,6 +12,19 @@ export type RoomType = 'suit' | 'normal';
 export enum RoomTypesList {
   SUIT = 'suit',
   NORMAL = 'normal',
+}
+
+export type RoomState =
+  | 'free'
+  | 'occupied'
+  | 'under_maintenance'
+  | 'pending_cleaning';
+
+export enum RoomStateList {
+  FREE = 'free',
+  OCCUPIED = 'occupied',
+  UNDER_MAINTENANCE = 'under_maintenance',
+  PENDING_CLEANING = 'pending_cleaning',
 }
 
 export interface RoomPagination {

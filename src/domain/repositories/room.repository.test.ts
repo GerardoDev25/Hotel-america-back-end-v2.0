@@ -12,6 +12,7 @@ describe('room.repository.ts', () => {
   const mockRoom: RoomEntity = new RoomEntity({
     id: 'abc',
     roomType: RoomTypesList.NORMAL,
+    state: 'free',
     roomNumber: 12,
     betsNumber: 12,
     isAvailable: true,
@@ -19,6 +20,7 @@ describe('room.repository.ts', () => {
   const mockRoom2: RoomEntity = new RoomEntity({
     id: 'abc',
     roomType: RoomTypesList.NORMAL,
+    state: 'free',
     roomNumber: 12,
     betsNumber: 12,
     isAvailable: true,

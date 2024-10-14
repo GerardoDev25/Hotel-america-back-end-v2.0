@@ -56,6 +56,7 @@ describe('room.repository.impl.ts', () => {
   test('should call create with parameter', async () => {
     const createRoom: CreateRoomDto = {
       roomType: RoomTypesList.SUIT,
+      state: 'under_maintenance',
       roomNumber: 1,
       betsNumber: 1,
       isAvailable: false,

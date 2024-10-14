@@ -1,6 +1,12 @@
 import { variables } from '@domain/variables';
 import { CustomError } from '@domain/error/';
-import { IRoom, RoomType, RoomTypesList } from '@domain/interfaces/';
+import {
+  IRoom,
+  RoomState,
+  RoomStateList,
+  RoomType,
+  RoomTypesList,
+} from '@domain/interfaces/';
 import {
   BooleanValidator,
   NumberValidator,
@@ -13,6 +19,7 @@ export class RoomEntity implements IRoom {
   roomNumber: number;
   betsNumber: number;
   isAvailable: boolean;
+  state: RoomState;
 
   constructor(params: IRoom) {
     this.id = params.id;
@@ -20,16 +27,31 @@ export class RoomEntity implements IRoom {
     this.roomNumber = params.roomNumber;
     this.betsNumber = params.betsNumber;
     this.isAvailable = params.isAvailable;
+    this.state = params.state;
   }
 
   private static verifyProperties(properties: IRoom) {
-    const { id, roomType, roomNumber, betsNumber, isAvailable } = properties;
+    const { id, roomType, roomNumber, betsNumber, isAvailable, state } =
+      properties;
 
     // * id
     const idValidation = StringValidator.isValidUUID(id);
     if (idValidation !== true) {
       throw CustomError.badRequest('id' + idValidation);
     }
+
+    // * state
+    const stateValid = StringValidator.mostBe({
+      value: state,
+      allowValues: [
+        RoomStateList.FREE,
+        RoomStateList.OCCUPIED,
+        RoomStateList.PENDING_CLEANING,
+        RoomStateList.UNDER_MAINTENANCE,
+      ],
+    });
+    if (stateValid !== true)
+      throw CustomError.badRequest('state ' + stateValid);
 
     // * roomType
     const roomTypeValid = StringValidator.mostBe({
@@ -62,7 +84,7 @@ export class RoomEntity implements IRoom {
   }
 
   static fromObject(object: Record<string, any>): RoomEntity {
-    const { id, roomType, roomNumber, betsNumber, isAvailable } = object;
+    const { id, roomType, roomNumber, betsNumber, isAvailable, state } = object;
 
     RoomEntity.verifyProperties({
       id,
@@ -70,6 +92,7 @@ export class RoomEntity implements IRoom {
       roomNumber,
       betsNumber,
       isAvailable,
+      state,
     });
 
     return new RoomEntity({
@@ -78,6 +101,7 @@ export class RoomEntity implements IRoom {
       roomNumber: +roomNumber,
       betsNumber: +betsNumber,
       isAvailable: BooleanValidator.toBoolean(isAvailable) ?? false,
+      state,
     });
   }
 }

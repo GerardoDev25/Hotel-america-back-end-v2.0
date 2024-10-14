@@ -9,6 +9,7 @@ describe('RoomValidator', () => {
       betsNumber: 3,
       roomType: 'suit',
       isAvailable: false,
+      state: 'pending_cleaning',
     };
 
     const errors = RoomValidator.create(data);
@@ -22,6 +23,7 @@ describe('RoomValidator', () => {
       betsNumber: -1,
       roomType: 'suitass' as any,
       isAvailable: 4 as any,
+      state: 'pending_cle' as any,
     };
 
     const errors = RoomValidator.create(data);

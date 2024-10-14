@@ -58,6 +58,7 @@ describe('register.route.ts', () => {
   const rawRoom: CreateRoomDto = {
     roomType: RoomTypesList.SUIT,
     roomNumber: 100,
+    state: 'free',
     betsNumber: 2,
     isAvailable: true,
   };

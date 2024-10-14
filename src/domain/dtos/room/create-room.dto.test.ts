@@ -8,6 +8,7 @@ describe('create-room.dto.ts', () => {
       roomNumber: 12,
       betsNumber: 12,
       isAvailable: false,
+      state: 'occupied',
     };
 
     const [errors, result] = CreateRoomDto.create(data);
@@ -23,6 +24,7 @@ describe('create-room.dto.ts', () => {
       roomNumber: -12,
       betsNumber: -12,
       isAvailable: 12 as any,
+      state: 'no-valid' as any,
     };
     const [errors, result] = CreateRoomDto.create(data);
 

@@ -41,6 +41,7 @@ describe('payment.route.ts', () => {
 
   const rawRoom: CreateRoomDto = {
     roomType: RoomTypesList.SUIT,
+    state: 'free',
     roomNumber: 100,
     betsNumber: 2,
     isAvailable: true,

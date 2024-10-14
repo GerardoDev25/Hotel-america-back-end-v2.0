@@ -10,6 +10,7 @@ describe('room.controller.ts', () => {
   const room1: RoomEntity = {
     id: Uuid.v4(),
     roomType: 'normal',
+    state: 'free',
     roomNumber: 128,
     betsNumber: 2,
     isAvailable: true,

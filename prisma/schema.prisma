@@ -18,6 +18,13 @@ enum RoomType {
   normal
 }
 
+enum RoomState {
+  free
+  occupied
+  under_maintenance
+  pending_cleaning
+}
+
 enum RoleType {
   admin
   laundry
@@ -47,11 +54,12 @@ model Country {
 }
 
 model Room {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   roomType    RoomType
   roomNumber  Int
   betsNumber  Int
-  isAvailable Boolean? @default(false)
+  isAvailable Boolean?  @default(false)
+  state       RoomState
 
   // * relations
   // ? one to one

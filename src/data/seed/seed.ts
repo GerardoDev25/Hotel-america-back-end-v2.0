@@ -22,6 +22,8 @@ async function main() {
   await checkDatabaseConnection();
 
   // * delete data
+  await prisma.charge.deleteMany();
+  await prisma.payment.deleteMany();
   await prisma.guest.deleteMany();
   await prisma.country.deleteMany();
   await prisma.register.deleteMany();

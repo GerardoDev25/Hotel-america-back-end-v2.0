@@ -17,6 +17,7 @@ describe('room.database.ts', () => {
     roomNumber: 12,
     betsNumber: 12,
     isAvailable: true,
+    state: 'free',
   });
   const mockRoom2 = new RoomEntity({
     id: 'abc',
@@ -24,6 +25,7 @@ describe('room.database.ts', () => {
     roomNumber: 12,
     betsNumber: 12,
     isAvailable: true,
+    state: 'free',
   });
 
   const roomPagination = {
