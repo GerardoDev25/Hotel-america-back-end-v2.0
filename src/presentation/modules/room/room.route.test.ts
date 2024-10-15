@@ -4,6 +4,7 @@ import { prisma } from '@src/data/postgres';
 import { seedData } from '@src/data/seed/data';
 import { testServer } from '@src/test-server';
 import { JwtAdapter, Uuid } from '@src/adapters';
+import { RoomFilter } from '@domain/interfaces';
 
 describe('room.route.ts', () => {
   beforeAll(async () => {
@@ -15,10 +16,7 @@ describe('room.route.ts', () => {
   });
 
   beforeEach(async () => {
-    await prisma.guest.deleteMany();
-    await prisma.register.deleteMany();
     await prisma.room.deleteMany();
-    await prisma.country.deleteMany();
     await prisma.user.deleteMany();
   });
 
@@ -123,6 +121,56 @@ describe('room.route.ts', () => {
 
     expect(body.ok).toBeFalsy();
     expect(body.errors[0]).toBe('Page must be greaten than 0');
+  });
+
+  it('should get all room (getByParams)', async () => {
+    const page = 1;
+    const limit = 10;
+    const params: RoomFilter = { state: 'occupied' };
+    await prisma.room.createMany({ data: seedData.rooms });
+    const { body } = await request(testServer.app)
+      .post('/api/room/get-by-params')
+      .send(params)
+      .expect(200);
+
+    expect(body.page).toBe(page);
+    expect(body.limit).toBe(limit);
+    expect(body.total).toBeDefined();
+    expect(body.next).toBe(`/api/room/get-by-params?page=2&limit=10`);
+    expect(body.prev).toBe(null);
+    expect(body.rooms).toBeInstanceOf(Array);
+
+    for (const room of body.rooms) {
+      expect(room).toEqual({
+        betsNumber: expect.any(Number),
+        id: expect.any(String),
+        isAvailable: expect.any(Boolean),
+        roomNumber: expect.any(Number),
+        roomType: expect.any(String),
+        state: params.state,
+      });
+    }
+  });
+
+  it('should get all room with pagination (getByParams)', async () => {
+    const page = 2;
+    const limit = 7;
+    const params: RoomFilter = { roomType: 'normal' };
+    await prisma.room.createMany({ data: seedData.rooms });
+    const { body } = await request(testServer.app)
+      .post(`/api/room/get-by-params?page=${page}&limit=${limit}`)
+      .send(params)
+      .expect(200);
+
+    expect(body.page).toBe(page);
+    expect(body.limit).toBe(limit);
+    expect(body.total).toBeDefined();
+    expect(body.next).toBe(
+      `/api/room/get-by-params?page=${page + 1}&limit=${limit}`
+    );
+    expect(body.prev).toBe(
+      `/api/room/get-by-params?page=${page - 1}&limit=${limit}`
+    );
   });
 
   it('should get a room by id (getById)', async () => {

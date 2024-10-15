@@ -2,11 +2,12 @@ import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { PaginationDto } from '@domain/dtos/share';
 import { RoomRepository } from '@domain/repositories';
 import { RoomService } from './room.service';
-import { RoomStateList } from '@src/domain/interfaces';
+import { RoomFilter, RoomStateList } from '@src/domain/interfaces';
 
 describe('room.service.ts', () => {
   const mockRoomRepository = {
     getAll: jest.fn(),
+    getByParams: jest.fn(),
     getById: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
@@ -25,6 +26,21 @@ describe('room.service.ts', () => {
       paginationDto.page,
       paginationDto.limit,
       isAvailable
+    );
+  });
+
+  it('should to have been called with parameter (getByParams)', async () => {
+    const params: RoomFilter = { state: 'pending_cleaning' };
+    const paginationDto = { page: 1, limit: 10 } as PaginationDto;
+    const service = new RoomService(mockRoomRepository);
+
+    await service.getByParams(paginationDto, params);
+
+    expect(mockRoomRepository.getByParams).toHaveBeenCalledTimes(1);
+    expect(mockRoomRepository.getByParams).toHaveBeenCalledWith(
+      paginationDto.page,
+      paginationDto.limit,
+      params
     );
   });
 

@@ -1,4 +1,4 @@
-import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
+import { CreateRoomDto, FilterRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { PaginationDto } from '@domain/dtos/share';
 import { RoomRepository } from '@domain/repositories';
 
@@ -8,6 +8,14 @@ export class RoomService {
   async getAll(paginationDto: PaginationDto, isAvailable?: boolean) {
     const { page, limit } = paginationDto;
     return this.roomRepository.getAll(page, limit, isAvailable);
+  }
+
+  async getByParams(
+    paginationDto: PaginationDto,
+    filterRoomDto: FilterRoomDto
+  ) {
+    const { page, limit } = paginationDto;
+    return this.roomRepository.getByParams(page, limit, filterRoomDto);
   }
 
   async getById(id: string) {

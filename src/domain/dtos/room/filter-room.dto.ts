@@ -13,13 +13,7 @@ export class FilterRoomDto {
   ) {}
 
   static create(props: Record<string, any>): [string[]?, FilterRoomDto?] {
-    const {
-      roomType,
-      state,
-      roomNumber,
-      betsNumber,
-      isAvailable = false,
-    } = props;
+    const { roomType, state, roomNumber, betsNumber, isAvailable } = props;
 
     const errors = RoomValidator.filter({
       roomType,
@@ -37,7 +31,9 @@ export class FilterRoomDto {
         state ? state : undefined,
         roomNumber ? +roomNumber : undefined,
         betsNumber ? +betsNumber : undefined,
-        !!BooleanValidator.toBoolean(isAvailable)
+        isAvailable !== undefined
+          ? !!BooleanValidator.toBoolean(isAvailable)
+          : undefined
       ),
     ];
   }

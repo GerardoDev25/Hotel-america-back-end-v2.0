@@ -1,8 +1,8 @@
 import { Uuid } from '@src/adapters';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
-import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
-import { RoomPagination } from '@domain/interfaces';
+import { CreateRoomDto, FilterRoomDto, UpdateRoomDto } from '@domain/dtos/room';
+import { RoomFilter, RoomPagination } from '@domain/interfaces';
 import { RoomEntity } from '@domain/entities';
 import { RoomController } from './';
 
@@ -23,7 +23,7 @@ describe('room.controller.ts', () => {
     prev: null,
     next: null,
   };
-  test('should return all rooms when getAllRoom is called (getAll)', async () => {
+  it('should return all rooms when getAllRoom is called (getAll)', async () => {
     const res = { json: jest.fn() } as any;
     const req = { query: { page: 1, limit: 10, isAvailable: true } } as any;
 
@@ -32,13 +32,13 @@ describe('room.controller.ts', () => {
     } as any;
 
     const roomController = new RoomController(mockService);
-    await roomController.getAllRoom(req, res);
+    await roomController.getAll(req, res);
 
     expect(mockService.getAll).toHaveBeenCalled();
     expect(res.json).toHaveBeenCalledWith(pagination);
   });
 
-  test('should retrieve all rooms with default pagination when no query parameters are provided (getAll)', async () => {
+  it('should retrieve all rooms with default pagination when no query parameters are provided (getAll)', async () => {
     const req = { query: {} } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
@@ -47,7 +47,7 @@ describe('room.controller.ts', () => {
     } as any;
     const roomController = new RoomController(mockService);
 
-    await roomController.getAllRoom(req, res);
+    await roomController.getAll(req, res);
 
     expect(res.json).toHaveBeenCalledWith(pagination);
     expect(mockService.getAll).toHaveBeenCalledWith(
@@ -65,7 +65,7 @@ describe('room.controller.ts', () => {
     } as any;
     const roomController = new RoomController(mockService);
 
-    await roomController.getAllRoom(req, res);
+    await roomController.getAll(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
@@ -83,11 +83,71 @@ describe('room.controller.ts', () => {
     } as any;
 
     const roomController = new RoomController(mockService);
-    await roomController.getAllRoom(req, res);
+    await roomController.getAll(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
       errors: ['isAvailable most be true or false'],
+      ok: false,
+    });
+  });
+
+  it('should return all rooms when getAllRoom is called (getByParams)', async () => {
+    const body: RoomFilter = {
+      roomType: 'normal',
+      state: 'free',
+      roomNumber: 128,
+      betsNumber: 2,
+      isAvailable: true,
+    };
+
+    const res = { json: jest.fn() } as any;
+    const req = { query: { page: 1, limit: 10 }, body } as any;
+
+    const mockService = {
+      getByParams: jest.fn().mockResolvedValue(pagination),
+    } as any;
+
+    const roomController = new RoomController(mockService);
+    await roomController.getByParams(req, res);
+
+    expect(mockService.getByParams).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith(pagination);
+  });
+
+  it('should retrieve all rooms with default pagination when no query parameters are provided (getByParams)', async () => {
+    const body = {};
+    const req = { query: {}, body } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const mockService = {
+      getByParams: jest.fn().mockResolvedValue(pagination),
+    } as any;
+    const roomController = new RoomController(mockService);
+
+    await roomController.getByParams(req, res);
+
+    expect(res.json).toHaveBeenCalledWith(pagination);
+    expect(mockService.getByParams).toHaveBeenCalledWith(
+      expect.any(PaginationDto),
+      expect.any(FilterRoomDto)
+    );
+  });
+
+  it('should  return error if is not well paginated (getByParams)', async () => {
+    const req = { query: { page: 'hol' }, body: {} } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const mockService = {
+      getByParams: jest.fn().mockResolvedValue(pagination),
+    } as any;
+    const roomController = new RoomController(mockService);
+
+    await roomController.getByParams(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      errors: ['Page and limit must be a number'],
       ok: false,
     });
   });
@@ -99,10 +159,10 @@ describe('room.controller.ts', () => {
     const mockService = { getById: jest.fn().mockResolvedValue(room1) } as any;
     const roomController = new RoomController(mockService);
 
-    await roomController.getByIdRoom(req, res);
+    await roomController.getById(req, res);
 
     expect(mockService.getById).toHaveBeenCalledWith('non-existent-id');
-    expect(roomController.getByIdRoom).rejects.toThrow();
+    expect(roomController.getById).rejects.toThrow();
   });
 
   it('should return throw error when room ID does not exist (getById)', async () => {
@@ -113,7 +173,7 @@ describe('room.controller.ts', () => {
     const roomController = new RoomController(mockService);
 
     try {
-      await roomController.getByIdRoom(req, res);
+      await roomController.getById(req, res);
     } catch (error) {
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ message: 'Room not found' });
@@ -133,7 +193,7 @@ describe('room.controller.ts', () => {
     const mockService = { create: jest.fn().mockResolvedValue(roomDto) } as any;
     const roomController = new RoomController(mockService);
 
-    await roomController.createRoom(req, res);
+    await roomController.create(req, res);
 
     expect(errors).toBeUndefined();
     expect(res.status).toHaveBeenCalledWith(201);
@@ -149,7 +209,7 @@ describe('room.controller.ts', () => {
     const mockService = { update: jest.fn().mockResolvedValue(data) } as any;
     const roomController = new RoomController(mockService);
 
-    await roomController.updateRoom(req, res);
+    await roomController.update(req, res);
 
     expect(res.json).toHaveBeenCalledWith(data);
     expect(mockService.update).toHaveBeenCalledWith(expect.any(UpdateRoomDto));
@@ -163,7 +223,7 @@ describe('room.controller.ts', () => {
     const mockService = { delete: jest.fn().mockResolvedValue(data) } as any;
     const roomController = new RoomController(mockService);
 
-    await roomController.deletedRoom(req, res);
+    await roomController.delete(req, res);
 
     expect(mockService.delete).toHaveBeenCalledWith(req.params.id);
     expect(res.json).toHaveBeenCalledWith(data);

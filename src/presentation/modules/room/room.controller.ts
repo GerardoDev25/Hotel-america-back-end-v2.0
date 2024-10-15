@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { AvailableDto, PaginationDto } from '@domain/dtos/share';
-import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
+import { CreateRoomDto, FilterRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { CustomError } from '@domain/error';
 import { variables } from '@domain/variables';
 
@@ -21,7 +21,7 @@ export class RoomController {
       .json({ ok: false, errors: [`Internal server error - check Logs`] });
   };
 
-  public getAllRoom = async (req: Request, res: Response) => {
+  public getAll = async (req: Request, res: Response) => {
     const page = req.query.page ?? variables.PAGINATION_PAGE_DEFAULT;
     const limit = req.query.limit ?? variables.PAGINATION_LIMIT_DEFAULT;
     const available = req.query.isAvailable as string;
@@ -45,14 +45,37 @@ export class RoomController {
       .catch((error) => this.handleError(res, error));
   };
 
-  public getByIdRoom = async (req: Request, res: Response) => {
+  public getByParams = async (req: Request, res: Response) => {
+    const page = req.query.page ?? variables.PAGINATION_PAGE_DEFAULT;
+    const limit = req.query.limit ?? variables.PAGINATION_LIMIT_DEFAULT;
+
+    const [paginationError, paginationDto] = PaginationDto.create(
+      +page,
+      +limit
+    );
+    const [filterError, filterDto] = FilterRoomDto.create(req.body);
+
+    if (paginationError) {
+      return res.status(400).json({ ok: false, errors: [paginationError] });
+    }
+    if (filterError) {
+      return res.status(400).json({ ok: false, errors: [filterError] });
+    }
+
+    this.roomService
+      .getByParams(paginationDto!, filterDto!)
+      .then((data) => res.json(data))
+      .catch((error) => this.handleError(res, error));
+  };
+
+  public getById = async (req: Request, res: Response) => {
     this.roomService
       .getById(req.params.id)
       .then((data) => res.json(data))
       .catch((error) => this.handleError(res, error));
   };
 
-  public createRoom = async (req: Request, res: Response) => {
+  public create = async (req: Request, res: Response) => {
     const [errors, createRoomDto] = CreateRoomDto.create(req.body);
 
     if (errors) {
@@ -65,7 +88,7 @@ export class RoomController {
       .catch((error) => this.handleError(res, error));
   };
 
-  public updateRoom = async (req: Request, res: Response) => {
+  public update = async (req: Request, res: Response) => {
     const [errors, updateRoomDto] = UpdateRoomDto.create(req.body);
 
     if (errors) {
@@ -77,7 +100,7 @@ export class RoomController {
       .catch((error) => this.handleError(res, error));
   };
 
-  public deletedRoom = async (req: Request, res: Response) => {
+  public delete = async (req: Request, res: Response) => {
     this.roomService
       .delete(req.params.id)
       .then((data) => res.json(data))

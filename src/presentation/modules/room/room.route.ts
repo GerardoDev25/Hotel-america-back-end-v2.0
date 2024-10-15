@@ -50,11 +50,12 @@ export class RoomRoute {
     };
 
     // * endpoints
-    route.get('/', controller.getAllRoom);
-    route.get('/:id', middleware.getById, controller.getByIdRoom);
-    route.post('/', middleware.create, controller.createRoom);
-    route.put('/', middleware.update, controller.updateRoom);
-    route.delete('/:id', middleware.delete, controller.deletedRoom);
+    route.get('/', controller.getAll);
+    route.post('/get-by-params', controller.getByParams);
+    route.get('/:id', middleware.getById, controller.getById);
+    route.post('/', middleware.create, controller.create);
+    route.put('/', middleware.update, controller.update);
+    route.delete('/:id', middleware.delete, controller.delete);
 
     return route;
   }
