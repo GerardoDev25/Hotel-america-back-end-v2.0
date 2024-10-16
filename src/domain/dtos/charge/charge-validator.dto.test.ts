@@ -1,6 +1,11 @@
 import { Uuid } from '@src/adapters';
 import { ChargeValidator, CreateChargeDto } from '.';
-import { ChargeTypeList, UpdateCharge } from '@src/domain/interfaces';
+import {
+  ChargeFilter,
+  ChargeTypeList,
+  UpdateCharge,
+} from '@src/domain/interfaces';
+import { Generator } from '@src/utils/generator';
 
 describe('charge-validator.dto.ts', () => {
   it('should get empty array if pass valid object (create)', () => {
@@ -51,6 +56,46 @@ describe('charge-validator.dto.ts', () => {
       'type most be: cafeteria, laundry, lodging, other, new_guest',
       'amount property most be a positive',
       'registerId is not a valid uuid',
+      'description property most be a string',
+    ]);
+  });
+
+  it('should get empty array if pass a valid object (filter)', () => {
+    const data: ChargeFilter = {
+      createdAt: Generator.randomDate(),
+      registerId: Uuid.v4(),
+      amount: 100,
+      type: ChargeTypeList.CAFETERIA,
+      description: 'hello world',
+    };
+
+    const errors = ChargeValidator.filter(data);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should get empty array if pass an empty object (filter)', () => {
+    const data = {};
+
+    const errors = ChargeValidator.filter(data);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should get error if properties are wrong (filter)', () => {
+    const data = {
+      createdAt: 'Generator.randomDate()',
+      registerId: 'Uuid.v4()',
+      amount: -100,
+      type: 'ChargeTypeList.CAFETERIA',
+      description: 12,
+    } as unknown as ChargeFilter;
+
+    const errors = ChargeValidator.filter(data);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors).toEqual([
+      'registerId is not a valid uuid',
+      'createdAt property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
+      'type most be: cafeteria, laundry, lodging, other, new_guest',
+      'amount property most be a positive',
       'description property most be a string',
     ]);
   });

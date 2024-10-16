@@ -88,6 +88,7 @@ export class UserValidator {
       const birdDateValid = DateValidator.isValid(birdDate);
       if (birdDateValid !== true) errors.push('birdDate ' + birdDateValid);
     }
+
     // * name
     if (name !== undefined) {
       const nameValid = StringValidator.isValid(name);
