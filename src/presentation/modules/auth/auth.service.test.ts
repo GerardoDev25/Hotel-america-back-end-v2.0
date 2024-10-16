@@ -35,7 +35,7 @@ describe('auth.service.ts', () => {
     expect(bcryptSpy).toHaveBeenCalledWith(user.password, passwordCrypt);
     expect(customErrorSpy).not.toHaveBeenCalled();
     expect(jwtAdapterSpy).toHaveBeenCalledWith({ payload: { id: userId } });
-    expect(userRepository.getByParam).toHaveBeenCalledWith({
+    expect(userRepository.getByParams).toHaveBeenCalledWith(1, 1, {
       username: user.username,
     });
   });

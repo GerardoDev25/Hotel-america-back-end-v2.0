@@ -1,13 +1,15 @@
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
-import { UserFilter, UserPagination } from '@domain/interfaces';
+import { IUserFilterDto, UserPagination } from '@domain/interfaces';
 import { UserEntity } from '@domain/entities';
 
 export abstract class UserRepository {
   abstract getById(id: string): Promise<{ ok: boolean; user: UserEntity }>;
 
-  abstract getByParam(
-    searchParam: UserFilter
-  ): Promise<{ ok: boolean; user: UserEntity | null }>;
+  abstract getByParams(
+    page: number,
+    limit: number,
+    searchParam: IUserFilterDto
+  ): Promise<UserPagination>;
 
   abstract getAll(
     page: number,

@@ -16,7 +16,11 @@ export class AuthService {
     const { username, password } = userLoginDto;
 
     try {
-      const { ok, user } = await this.userRepository.getByParam({ username });
+      const { users } = await this.userRepository.getByParams(1, 1, {
+        username,
+      });
+
+      const [user] = users;
 
       // ? if user not exist
       if (!user || !user.isActive) {
@@ -35,7 +39,7 @@ export class AuthService {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _, ...userWithoutPassword } = user;
 
-      return { ok, user: userWithoutPassword, token };
+      return { ok: true, user: userWithoutPassword, token };
     } catch (error) {
       throw this.handleError(error);
     }

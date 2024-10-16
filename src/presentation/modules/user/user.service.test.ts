@@ -11,7 +11,7 @@ describe('user.service.ts', () => {
   const mockUserRepository = {
     update: jest.fn(),
     delete: jest.fn(),
-    getByParam: jest.fn().mockReturnValue({ ok: true, user: false }),
+    getByParams: jest.fn().mockResolvedValue({ ok: true, users: [] }),
     getAll: jest.fn().mockResolvedValue({ ok: true, users: [] }),
     getById: jest
       .fn()
@@ -33,6 +33,21 @@ describe('user.service.ts', () => {
       paginationDto.page,
       paginationDto.limit,
       isActive
+    );
+  });
+
+  it('should to have been called with parameter (getByParams)', async () => {
+    const paginationDto = { page: 1, limit: 10 } as PaginationDto;
+    const params = { isActive: true, name: 'test', birdDate: new Date() };
+    const service = new UserService(mockUserRepository);
+
+    await service.getByParams(paginationDto, params);
+
+    expect(mockUserRepository.getByParams).toHaveBeenCalledTimes(1);
+    expect(mockUserRepository.getByParams).toHaveBeenCalledWith(
+      paginationDto.page,
+      paginationDto.limit,
+      params
     );
   });
 
@@ -63,11 +78,6 @@ describe('user.service.ts', () => {
     expect(errors).toBeUndefined();
     expect(mockUserRepository.create).toHaveBeenCalledTimes(1);
     expect(mockUserRepository.create).toHaveBeenCalledWith(user);
-
-    expect(mockUserRepository.getByParam).toHaveBeenCalledTimes(1);
-    expect(mockUserRepository.getByParam).toHaveBeenCalledWith({
-      username: user!.username,
-    });
   });
 
   it('should to have been called with parameter (update)', async () => {

@@ -1,5 +1,5 @@
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
-import { UserFilter, UserPagination } from '@domain/interfaces';
+import { IUserFilterDto, UserPagination } from '@domain/interfaces';
 import { UserDatasource } from '@domain/datasources';
 import { UserEntity } from '@domain/entities';
 import { UserRepository } from '@domain/repositories';
@@ -13,10 +13,12 @@ export class UserRepositoryImpl extends UserRepository {
     return this.userDataSource.getById(id);
   }
 
-  getByParam(
-    searchParam: UserFilter
-  ): Promise<{ ok: boolean; user: UserEntity | null }> {
-    return this.userDataSource.getByParam(searchParam);
+  getByParams(
+    page: number,
+    limit: number,
+    searchParam: IUserFilterDto
+  ): Promise<UserPagination> {
+    return this.userDataSource.getByParams(page, limit, searchParam);
   }
 
   getAll(

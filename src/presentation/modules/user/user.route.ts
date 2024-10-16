@@ -40,11 +40,12 @@ export class UserRoute {
     };
 
     // * endpoints
-    route.get('/', controller.getAllUsers);
-    route.get('/:id', middleware.getById, controller.getUserById);
-    route.post('/', middleware.create, controller.createUser);
-    route.put('/', middleware.update, controller.updateUser);
-    route.delete('/:id', middleware.delete, controller.deleteUser);
+    route.get('/', controller.getAll);
+    route.post('/get-by-params', controller.getByParams);
+    route.get('/:id', middleware.getById, controller.getById);
+    route.post('/', middleware.create, controller.create);
+    route.put('/', middleware.update, controller.update);
+    route.delete('/:id', middleware.delete, controller.delete);
 
     return route;
   }

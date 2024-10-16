@@ -2,7 +2,7 @@ import { User } from '@prisma/client';
 
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
 import { CustomError } from '@domain/error';
-import { UserFilter, UserPagination } from '@domain/interfaces';
+import { IUserFilterDto, UserPagination } from '@domain/interfaces';
 import { UserDatasource } from '@domain/datasources';
 import { UserEntity } from '@domain/entities';
 
@@ -46,14 +46,32 @@ export class UserDatasourceImpl extends UserDatasource {
     }
   }
 
-  async getByParam(
-    searchParam: UserFilter
-  ): Promise<{ ok: boolean; user: UserEntity | null }> {
+  async getByParams(
+    page: number,
+    limit: number,
+    searchParam: IUserFilterDto
+  ): Promise<UserPagination> {
     try {
-      const user = await prisma.user.findFirst({ where: searchParam });
-      if (!user) return { ok: false, user: null };
+      const where = cleanObject(searchParam);
 
-      return { ok: true, user: this.transformObject(user) };
+      const [total, usersDb] = await Promise.all([
+        prisma.user.count({ where }),
+        prisma.user.findMany({
+          where,
+          skip: (page - 1) * limit,
+          take: limit,
+        }),
+      ]);
+
+      const users = usersDb.map((user) => this.transformObject(user));
+      const { next, prev } = pagination({
+        page,
+        limit,
+        total: usersDb.length === 0 ? 0 : total,
+        path: 'user/get-by-params',
+      });
+
+      return { page, limit, total, next, prev, users };
     } catch (error: any) {
       throw this.handleError(error);
     }
@@ -106,6 +124,20 @@ export class UserDatasourceImpl extends UserDatasource {
   async create(
     createUserDto: CreateUserDto
   ): Promise<{ ok: boolean; user: UserEntity }> {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { username: createUserDto.username },
+      });
+
+      if (user) {
+        throw CustomError.conflict(
+          `username ${createUserDto.username} duplicated`
+        );
+      }
+    } catch (error) {
+      throw this.handleError(error);
+    }
+
     try {
       const newUser = await prisma.user.create({ data: createUserDto });
 

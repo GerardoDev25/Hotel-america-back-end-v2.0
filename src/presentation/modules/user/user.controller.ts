@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { ActiveDto, PaginationDto } from '@domain/dtos/share';
-import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { CreateUserDto, FilterUserDto, UpdateUserDto } from '@domain/dtos/user';
 import { CustomError } from '@domain/error';
 import { variables } from '@domain/variables';
 
@@ -21,7 +21,7 @@ export class UserController {
       .json({ ok: false, errors: [`Internal server error - check Logs`] });
   };
 
-  public getAllUsers = async (req: Request, res: Response) => {
+  public getAll = async (req: Request, res: Response) => {
     const page = req.query.page ?? variables.PAGINATION_PAGE_DEFAULT;
     const limit = req.query.limit ?? variables.PAGINATION_LIMIT_DEFAULT;
     const active = req.query.isActive as string;
@@ -45,14 +45,38 @@ export class UserController {
       .catch((error) => this.handleError(res, error));
   };
 
-  public getUserById = async (req: Request, res: Response) => {
+  public getByParams = async (req: Request, res: Response) => {
+    const page = req.query.page ?? variables.PAGINATION_PAGE_DEFAULT;
+    const limit = req.query.limit ?? variables.PAGINATION_LIMIT_DEFAULT;
+
+    const [paginationError, paginationDto] = PaginationDto.create(
+      +page,
+      +limit
+    );
+
+    if (paginationError) {
+      return res.status(400).json({ ok: false, errors: [paginationError] });
+    }
+
+    const [filterError, filterDto] = FilterUserDto.create(req.body);
+    if (filterError) {
+      return res.status(400).json({ ok: false, errors: [filterError] });
+    }
+
+    this.userService
+      .getByParams(paginationDto!, filterDto!)
+      .then((data) => res.json(data))
+      .catch((error) => this.handleError(res, error));
+  };
+
+  public getById = async (req: Request, res: Response) => {
     this.userService
       .getById(req.params.id)
       .then((data) => res.json(data))
       .catch((error) => this.handleError(res, error));
   };
 
-  public createUser = async (req: Request, res: Response) => {
+  public create = async (req: Request, res: Response) => {
     const [errors, createUserDto] = CreateUserDto.create(req.body);
 
     if (errors) {
@@ -65,7 +89,7 @@ export class UserController {
       .catch((error) => this.handleError(res, error));
   };
 
-  public updateUser = async (req: Request, res: Response) => {
+  public update = async (req: Request, res: Response) => {
     const [errors, updateUserDto] = UpdateUserDto.create(req.body);
 
     if (errors) {
@@ -78,7 +102,7 @@ export class UserController {
       .catch((error) => this.handleError(res, error));
   };
 
-  public deleteUser = async (req: Request, res: Response) => {
+  public delete = async (req: Request, res: Response) => {
     this.userService
       .delete(req.params.id)
       .then((data) => res.json(data))

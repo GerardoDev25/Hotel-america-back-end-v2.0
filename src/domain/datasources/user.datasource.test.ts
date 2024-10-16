@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
-import { UserFilter, UserPagination } from '@domain/interfaces';
+import { IUserFilterDto, UserPagination } from '@domain/interfaces';
 import { UserEntity } from '@domain/entities';
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
@@ -42,10 +42,12 @@ describe('user.database.ts', () => {
   };
 
   class MockUserDataSource implements UserDatasource {
-    async getByParam(
-      searchParam: UserFilter
-    ): Promise<{ ok: boolean; user: UserEntity | null }> {
-      return { ok: true, user: mockUser };
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: IUserFilterDto
+    ): Promise<UserPagination> {
+      return userPagination;
     }
 
     async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
@@ -95,11 +97,10 @@ describe('user.database.ts', () => {
   test('test in function getByParam()', async () => {
     const username = Generator.randomUsername();
 
-    expect(typeof mockUserDataSource.getByParam).toBe('function');
-    expect(mockUserDataSource.getByParam({ username })).resolves.toEqual({
-      ok: true,
-      user: mockUser,
-    });
+    expect(typeof mockUserDataSource.getByParams).toBe('function');
+    expect(
+      mockUserDataSource.getByParams(page, limit, { username })
+    ).resolves.toEqual(userPagination);
   });
 
   test('test in function getAll()', async () => {

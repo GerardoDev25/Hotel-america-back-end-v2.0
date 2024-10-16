@@ -5,6 +5,11 @@ import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 
 import { UserController, UserService } from '.';
+import {
+  UserFilter,
+  UserPagination,
+  UserRolesList,
+} from '@src/domain/interfaces';
 
 describe('user.controller.ts', () => {
   const user1 = {
@@ -13,29 +18,38 @@ describe('user.controller.ts', () => {
     password: Generator.randomPassword(),
     phone: Generator.randomPhone(),
     username: Generator.randomUsername().toLowerCase(),
-    role: 'admin',
+    role: UserRolesList.ADMIN,
     isActive: true,
   };
 
   const data = { ok: true, message: '' };
 
+  const pagination: UserPagination = {
+    users: [{ ...user1, id: Uuid.v4() }],
+    total: 0,
+    page: 0,
+    limit: 0,
+    prev: null,
+    next: null,
+  };
+
   const mockUserService = {
-    getAll: jest.fn().mockResolvedValue([user1]),
-    getById: jest.fn().mockResolvedValue(user1),
+    getAll: jest.fn().mockResolvedValue(pagination),
+    getById: jest.fn().mockResolvedValue(pagination),
     create: jest.fn().mockResolvedValue(user1),
     update: jest.fn().mockResolvedValue(data),
     delete: jest.fn().mockResolvedValue(data),
   } as unknown as UserService;
 
-  it('should return all users when getAllUsers is called (getAll)', async () => {
+  it('should return all users when getAll is called (getAll)', async () => {
     const req = { query: { page: '1', limit: '10', isActive: 'true' } } as any;
     const res = { json: jest.fn() } as any;
 
     const roomController = new UserController(mockUserService);
-    await roomController.getAllUsers(req, res);
+    await roomController.getAll(req, res);
 
     expect(mockUserService.getAll).toHaveBeenCalled();
-    expect(res.json).toHaveBeenCalledWith([user1]);
+    expect(res.json).toHaveBeenCalledWith(pagination);
   });
 
   it('should retrieve all users with default pagination (getAll)', async () => {
@@ -43,9 +57,9 @@ describe('user.controller.ts', () => {
     const res = { json: jest.fn(), status: jest.fn() } as any;
 
     const userController = new UserController(mockUserService);
-    await userController.getAllUsers(req, res);
+    await userController.getAll(req, res);
 
-    expect(res.json).toHaveBeenCalledWith([user1]);
+    expect(res.json).toHaveBeenCalledWith(pagination);
     expect(mockUserService.getAll).toHaveBeenCalledWith(
       expect.any(PaginationDto),
       undefined
@@ -57,7 +71,7 @@ describe('user.controller.ts', () => {
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const userController = new UserController(mockUserService);
-    await userController.getAllUsers(req, res);
+    await userController.getAll(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
@@ -71,7 +85,7 @@ describe('user.controller.ts', () => {
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const userController = new UserController(mockUserService);
-    await userController.getAllUsers(req, res);
+    await userController.getAll(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
@@ -80,14 +94,26 @@ describe('user.controller.ts', () => {
     });
   });
 
+  it('should return users when is called (getByParams)', async () => {
+    const body: UserFilter = { name: '' };
+    const req = { query: { page: '1', limit: '10', body } } as any;
+    const res = { json: jest.fn() } as any;
+
+    const roomController = new UserController(mockUserService);
+    await roomController.getAll(req, res);
+
+    expect(mockUserService.getAll).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith(pagination);
+  });
+
   it('should throw error when User ID does not exist (getById)', async () => {
     const req = { params: { id: 'non-existent-id' } } as any;
     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
 
     const roomController = new UserController(mockUserService);
-    await roomController.getUserById(req, res);
+    await roomController.getById(req, res);
 
-    expect(roomController.getUserById).rejects.toThrow();
+    expect(roomController.getById).rejects.toThrow();
     expect(mockUserService.getById).toHaveBeenCalledWith('non-existent-id');
   });
 
@@ -96,7 +122,7 @@ describe('user.controller.ts', () => {
     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
 
     const userController = new UserController(mockUserService);
-    await userController.createUser(req, res);
+    await userController.create(req, res);
 
     expect(mockUserService.create).toHaveBeenCalledWith({
       ...user1,
@@ -109,7 +135,7 @@ describe('user.controller.ts', () => {
     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
 
     const userController = new UserController(mockUserService);
-    await userController.updateUser(req, res);
+    await userController.update(req, res);
 
     expect(res.json).toHaveBeenCalledWith(data);
     expect(mockUserService.update).toHaveBeenCalledWith(
@@ -122,7 +148,7 @@ describe('user.controller.ts', () => {
     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
 
     const userController = new UserController(mockUserService);
-    await userController.deleteUser(req, res);
+    await userController.delete(req, res);
 
     expect(res.json).toHaveBeenCalledWith(data);
     expect(mockUserService.delete).toHaveBeenCalledWith(req.params.id);

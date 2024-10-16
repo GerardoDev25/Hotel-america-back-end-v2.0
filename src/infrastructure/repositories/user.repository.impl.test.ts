@@ -12,7 +12,7 @@ describe('user.repository.impl.ts', () => {
   const isActive = true;
 
   const mockDatasource: UserDatasource = {
-    getByParam: jest.fn(),
+    getByParams: jest.fn(),
     getById: jest.fn(),
     getAll: jest.fn(),
     getAllActive: jest.fn(),
@@ -32,12 +32,14 @@ describe('user.repository.impl.ts', () => {
     expect(mockDatasource.getById).toHaveBeenCalledWith(id);
   });
 
-  test('should call getByParam', async () => {
+  test('should call getByParams', async () => {
     const username = Generator.randomUsername();
-    await repository.getByParam({ username });
+    await repository.getByParams(page, limit, { username });
 
-    expect(mockDatasource.getByParam).toHaveBeenCalledTimes(1);
-    expect(mockDatasource.getByParam).toHaveBeenCalledWith({ username });
+    expect(mockDatasource.getByParams).toHaveBeenCalledTimes(1);
+    expect(mockDatasource.getByParams).toHaveBeenCalledWith(page, limit, {
+      username,
+    });
   });
 
   test('should call getAll', async () => {

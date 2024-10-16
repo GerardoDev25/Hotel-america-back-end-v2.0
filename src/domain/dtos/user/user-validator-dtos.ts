@@ -1,4 +1,9 @@
-import { CreateUser, UpdateUser, UserRolesList } from '@domain/interfaces';
+import {
+  CreateUser,
+  UpdateUser,
+  UserFilter,
+  UserRolesList,
+} from '@domain/interfaces';
 import {
   StringValidator,
   DateValidator,
@@ -58,15 +63,11 @@ export class UserValidator {
     return errors;
   }
 
-  static update(object: UpdateUser): string[] {
-    const errors: string[] = [];
-
-    const { id, role, birdDate, name, phone, username, password, isActive } =
+  static filter(object: UserFilter): string[] {
+    const { birdDate, isActive, name, password, phone, role, username } =
       object;
 
-    // * id
-    const idValid = StringValidator.isValidUUID(id);
-    if (idValid !== true) errors.push('id ' + idValid);
+    const errors: string[] = [];
 
     // * role
     if (role !== undefined) {
@@ -117,6 +118,16 @@ export class UserValidator {
       if (isActiveValid !== true) errors.push('isActive ' + isActiveValid);
     }
 
+    return errors;
+  }
+
+  static update(object: UpdateUser): string[] {
+    const { id, ...rest } = object;
+    const errors: string[] = UserValidator.filter(rest);
+
+    // * id
+    const idValid = StringValidator.isValidUUID(id);
+    if (idValid !== true) errors.push('id ' + idValid);
     return errors;
   }
 }

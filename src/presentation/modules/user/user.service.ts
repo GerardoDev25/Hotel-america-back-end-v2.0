@@ -1,4 +1,4 @@
-import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { CreateUserDto, FilterUserDto, UpdateUserDto } from '@domain/dtos/user';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
 import { UserRepository } from '@domain/repositories';
@@ -24,7 +24,30 @@ export class UserService {
       const usersMapped = users.map((user) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...restUser } = user;
+        return restUser;
+      });
 
+      return { ...rest, users: usersMapped };
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getByParams(
+    paginationDto: PaginationDto,
+    filterRoomDto: FilterUserDto
+  ) {
+    const { page, limit } = paginationDto;
+    try {
+      const { users, ...rest } = await this.userRepository.getByParams(
+        page,
+        limit,
+        filterRoomDto
+      );
+
+      const usersMapped = users.map((user) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...restUser } = user;
         return restUser;
       });
 
@@ -47,15 +70,15 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const { user } = await this.userRepository.getByParam({
-      username: createUserDto.username,
-    });
+    // const { users } = await this.userRepository.getByParams(1, 1, {
+    //   username: createUserDto.username,
+    // });
 
-    if (user) {
-      throw CustomError.conflict(
-        `username ${createUserDto.username} duplicated`
-      );
-    }
+    // if (users.length > 1) {
+    //   throw CustomError.conflict(
+    //     `username ${createUserDto.username} duplicated`
+    //   );
+    // }
 
     try {
       const { ok, user } = await this.userRepository.create(createUserDto);

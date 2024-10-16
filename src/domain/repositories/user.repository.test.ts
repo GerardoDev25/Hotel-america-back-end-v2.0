@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
-import { IUser, UserFilter, UserPagination } from '@domain/interfaces';
+import { IUser, IUserFilterDto, UserPagination } from '@domain/interfaces';
 import { UserEntity } from '@domain/entities';
 
 import { Generator } from '@src/utils/generator';
@@ -48,10 +48,12 @@ describe('user.repository.ts', () => {
       return { ok: true, user: mockUser };
     }
 
-    async getByParam(
-      searchParam: UserFilter
-    ): Promise<{ ok: boolean; user: UserEntity | null }> {
-      return { ok: true, user: mockUser };
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: IUserFilterDto
+    ): Promise<UserPagination> {
+      return getAllReturnValue;
     }
 
     async getAll(
@@ -94,19 +96,25 @@ describe('user.repository.ts', () => {
     expect(user).toBeInstanceOf(UserEntity);
   });
 
-  test('test in function getByParam()', async () => {
-    const searchParam: Partial<Pick<IUser, keyof IUser>> = { isActive: false };
+  test('test in function getByParams()', async () => {
+    const searchParam: IUserFilterDto = { isActive: false };
     const mockUserRepository = new MockUserRepository();
 
-    const { user } = await mockUserRepository.getByParam(searchParam);
+    const { users } = await mockUserRepository.getByParams(
+      page,
+      limit,
+      searchParam
+    );
 
-    expect(typeof mockUserRepository.getByParam).toBe('function');
-    expect(mockUserRepository.getByParam(searchParam)).resolves.toEqual({
-      ok: true,
-      user: mockUser,
+    expect(typeof mockUserRepository.getByParams).toBe('function');
+    expect(
+      mockUserRepository.getByParams(page, limit, searchParam)
+    ).resolves.toEqual(getAllReturnValue);
+
+    expect(users).toBeInstanceOf(Array);
+    users.forEach((user) => {
+      expect(user).toBeInstanceOf(UserEntity);
     });
-
-    expect(user).toBeInstanceOf(UserEntity);
   });
 
   test('test in function getAll()', async () => {

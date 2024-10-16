@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import { UserRolesList } from '@domain/interfaces';
+import { UserFilter, UserRolesList } from '@domain/interfaces';
 import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 import { prisma } from '@src/data/postgres';
@@ -29,10 +29,6 @@ describe('user.route.ts', () => {
   });
 
   beforeEach(async () => {
-    await prisma.guest.deleteMany();
-    await prisma.register.deleteMany();
-    await prisma.room.deleteMany();
-    await prisma.country.deleteMany();
     await prisma.user.deleteMany();
 
     // * create auth token
@@ -40,7 +36,7 @@ describe('user.route.ts', () => {
     token = await JwtAdapter.generateToken({ payload: { id: user.id } });
   });
 
-  test('should get all users (getAll)', async () => {
+  it('should get all users (getAll)', async () => {
     const page = 1;
     const limit = 10;
     await prisma.user.createMany({ data: seedData.users });
@@ -66,7 +62,7 @@ describe('user.route.ts', () => {
     });
   });
 
-  test('should get all users Active (getAll)', async () => {
+  it('should get all users Active (getAll)', async () => {
     const page = 1;
     const limit = 10;
     const isActive = true;
@@ -80,7 +76,7 @@ describe('user.route.ts', () => {
     });
   });
 
-  test('should get all users not Active (getAll)', async () => {
+  it('should get all users not Active (getAll)', async () => {
     const page = 1;
     const limit = 10;
     const isActive = false;
@@ -94,7 +90,7 @@ describe('user.route.ts', () => {
     });
   });
 
-  test('should get error message if isActive is not a boolean (getAll)', async () => {
+  it('should get error message if isActive is not a boolean (getAll)', async () => {
     const page = 1;
     const limit = 10;
     const isActive = 'not-boolean';
@@ -107,7 +103,7 @@ describe('user.route.ts', () => {
     expect(body.errors[0]).toBe('isActive most be true or false');
   });
 
-  test('should get error message if pagination is grown (getAll)', async () => {
+  it('should get error message if pagination is grown (getAll)', async () => {
     const page = 'page';
     const limit = 'limit';
     await prisma.user.createMany({ data: seedData.users });
@@ -119,7 +115,7 @@ describe('user.route.ts', () => {
     expect(body.errors[0]).toBe('Page and limit must be a number');
   });
 
-  test('should get error message if pagination contain negative numbers (getAll)', async () => {
+  it('should get error message if pagination contain negative numbers (getAll)', async () => {
     const page = -1;
     const limit = -3;
     await prisma.user.createMany({ data: seedData.users });
@@ -131,7 +127,30 @@ describe('user.route.ts', () => {
     expect(body.errors[0]).toBe('Page must be greaten than 0');
   });
 
-  test('should get a user by id (getById)', async () => {
+  it('should get users (getByParams)', async () => {
+    const page = 1;
+    const limit = 10;
+    const params: UserFilter = { role: 'laundry' };
+    await prisma.user.createMany({ data: seedData.users });
+    const { body } = await request(testServer.app)
+      .post('/api/user/get-by-params')
+      .send(params)
+      .expect(200);
+
+    expect(body.page).toBe(page);
+    expect(body.limit).toBe(limit);
+    expect(body.total).toBeDefined();
+    expect(body.next).toBeNull();
+    expect(body.prev).toBeNull();
+
+    expect(body.users).toBeInstanceOf(Array);
+
+    for (const user of body.users) {
+      expect(user.role).toBe(params.role);
+    }
+  });
+
+  it('should get a user by id (getById)', async () => {
     const userTest = await prisma.user.create({ data: seedData.users[0] });
     const { body } = await request(testServer.app)
       .get(`/api/user/${userTest.id}`)
@@ -150,7 +169,7 @@ describe('user.route.ts', () => {
     expect(userTest.isActive).toBe(user.isActive);
   });
 
-  test('should get not found message (getById)', async () => {
+  it('should get not found message (getById)', async () => {
     const id = Uuid.v4();
     const { body } = await request(testServer.app)
       .get(`/api/user/${id}`)
@@ -160,7 +179,7 @@ describe('user.route.ts', () => {
     expect(body.errors[0]).toEqual(`user with id: ${id} not found`);
   });
 
-  test('should create a user (create)', async () => {
+  it('should create a user (create)', async () => {
     const userCreated = seedData.users[0];
     const { body } = await request(testServer.app)
       .post('/api/user')
@@ -181,7 +200,7 @@ describe('user.route.ts', () => {
     expect(userCreated.isActive).toBe(user.isActive);
   });
 
-  test('should get and error if username is duplicated (create)', async () => {
+  it('should get and error if username is duplicated (create)', async () => {
     const userCreated = seedData.users[0];
     await prisma.user.create({ data: userCreated });
 
@@ -197,7 +216,7 @@ describe('user.route.ts', () => {
     expect(errors[0]).toEqual(`username ${userCreated.username} duplicated`);
   });
 
-  test('should get error white create user (create)', async () => {
+  it('should get error white create user (create)', async () => {
     const { body } = await request(testServer.app)
       .post('/api/user')
       .set('Authorization', `Bearer ${token}`)
@@ -217,7 +236,7 @@ describe('user.route.ts', () => {
     });
   });
 
-  test('should update a user (update)', async () => {
+  it('should update a user (update)', async () => {
     const userCreated = await prisma.user.create({ data: seedData.users[0] });
     const name = 'name_update';
 
@@ -232,7 +251,7 @@ describe('user.route.ts', () => {
     expect(message).toBe('user updated successfully');
   });
 
-  test('should get and error while updating a user (update)', async () => {
+  it('should get and error while updating a user (update)', async () => {
     const userCreated = await prisma.user.create({ data: seedData.users[0] });
     const name = false;
 
@@ -248,7 +267,7 @@ describe('user.route.ts', () => {
     });
   });
 
-  test('should delete a user by id (delete)', async () => {
+  it('should delete a user by id (delete)', async () => {
     const user = await prisma.user.create({ data: seedData.users[0] });
 
     const { body } = await request(testServer.app)
