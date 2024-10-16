@@ -7,6 +7,7 @@ import {
   ChargePagination,
   ChargeTypeList,
   ChargeFilter,
+  IChargeFilterDto,
 } from '@domain/interfaces';
 import { ChargeRepository } from '.';
 
@@ -36,10 +37,12 @@ describe('charge.repository.ts', () => {
       return { ok: true, charge: mockCharge };
     }
 
-    async getByParam(
-      searchParam: ChargeFilter
-    ): Promise<{ ok: boolean; charge: ChargeEntity | null }> {
-      return { ok: true, charge: mockCharge };
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: IChargeFilterDto
+    ): Promise<ChargePagination> {
+      return pagination;
     }
 
     async getAll(page: number, limit: number): Promise<ChargePagination> {
@@ -71,12 +74,11 @@ describe('charge.repository.ts', () => {
     expect(charge).toEqual(mockCharge);
   });
 
-  test('should call method (getByParam)', async () => {
-    const { ok, charge } = await mockChargeRepository.getByParam({
+  test('should call method (getByParams)', async () => {
+    const result = await mockChargeRepository.getByParams(page, limit, {
       amount: mockCharge.amount,
     });
-    expect(ok).toBeTruthy();
-    expect(charge).toEqual(mockCharge);
+    expect(result).toEqual(pagination);
   });
 
   test('should call method (getAll)', async () => {
