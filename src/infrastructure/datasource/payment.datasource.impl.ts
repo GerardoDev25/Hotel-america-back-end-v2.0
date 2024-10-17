@@ -1,12 +1,16 @@
 import { Payment } from '@prisma/client';
 import { prisma } from '@src/data/postgres';
-import { PaymentDatasource } from '@domain/datasources';
-import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
-import { PaymentEntity } from '@domain/entities';
 import { CustomError } from '@domain/error';
-import { PaymentFilter, PaymentPagination } from '@domain/interfaces';
-import { LoggerService } from '@presentation/services';
+import { PaymentEntity } from '@domain/entities';
 import { cleanObject, pagination } from '@src/utils';
+import { PaymentPagination } from '@domain/interfaces';
+import { LoggerService } from '@presentation/services';
+import { PaymentDatasource } from '@domain/datasources';
+import {
+  CreatePaymentDto,
+  FilterPaymentDto,
+  UpdatePaymentDto,
+} from '@domain/dtos/payment';
 
 export class PaymentDatasourceImpl extends PaymentDatasource {
   constructor(private readonly logger: LoggerService) {
@@ -43,14 +47,35 @@ export class PaymentDatasourceImpl extends PaymentDatasource {
     }
   }
 
-  async getByParam(
-    searchParam: PaymentFilter
-  ): Promise<{ ok: boolean; payment: PaymentEntity | null }> {
+  async getByParams(
+    page: number,
+    limit: number,
+    searchParam: FilterPaymentDto
+  ): Promise<PaymentPagination> {
     try {
-      const payment = await prisma.payment.findFirst({ where: searchParam });
-      if (!payment) return { ok: false, payment: null };
+      const where = cleanObject(searchParam);
 
-      return { ok: true, payment: this.transformObject(payment) };
+      const [totalDB, paymentsDb] = await Promise.all([
+        prisma.payment.count({ where }),
+        prisma.payment.findMany({
+          where,
+          skip: (page - 1) * limit,
+          take: limit,
+        }),
+      ]);
+
+      const payments = paymentsDb.map((payment) =>
+        this.transformObject(payment)
+      );
+      const total = paymentsDb.length === 0 ? 0 : totalDB;
+      const { next, prev } = pagination({
+        page,
+        limit,
+        total,
+        path: 'payment/get-by-params',
+      });
+
+      return { page, limit, total, next, prev, payments };
     } catch (error: any) {
       throw this.handleError(error);
     }

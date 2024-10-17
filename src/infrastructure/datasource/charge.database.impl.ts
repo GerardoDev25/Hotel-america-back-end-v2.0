@@ -56,7 +56,7 @@ export class ChargeDatasourceImpl extends ChargeDatasource {
     try {
       const where = cleanObject(searchParam);
 
-      const [total, chargesDb] = await Promise.all([
+      const [totalDB, chargesDb] = await Promise.all([
         prisma.charge.count({ where }),
         prisma.charge.findMany({
           where,
@@ -66,14 +66,15 @@ export class ChargeDatasourceImpl extends ChargeDatasource {
       ]);
 
       const charges = chargesDb.map((charge) => this.transformObject(charge));
+      const total = chargesDb.length === 0 ? 0 : totalDB;
       const { next, prev } = pagination({
         page,
         limit,
-        total: chargesDb.length === 0 ? 0 : total,
+        total,
         path: 'charge/get-by-params',
       });
 
-      return { page, limit, total, next, prev, charges: charges };
+      return { page, limit, total, next, prev, charges };
     } catch (error: any) {
       throw this.handleError(error);
     }

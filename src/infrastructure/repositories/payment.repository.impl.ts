@@ -1,8 +1,12 @@
-import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
-import { PaymentFilter, PaymentPagination } from '@domain/interfaces';
-import { PaymentDatasource } from '@domain/datasources';
 import { PaymentEntity } from '@domain/entities';
+import { PaymentPagination } from '@domain/interfaces';
+import { PaymentDatasource } from '@domain/datasources';
 import { PaymentRepository } from '@domain/repositories';
+import {
+  CreatePaymentDto,
+  FilterPaymentDto,
+  UpdatePaymentDto,
+} from '@domain/dtos/payment';
 
 export class PaymentRepositoryImpl extends PaymentRepository {
   constructor(private readonly paymentDatasource: PaymentDatasource) {
@@ -13,10 +17,12 @@ export class PaymentRepositoryImpl extends PaymentRepository {
     return this.paymentDatasource.getById(id);
   }
 
-  getByParam(
-    searchParam: PaymentFilter
-  ): Promise<{ ok: boolean; payment: PaymentEntity | null }> {
-    return this.paymentDatasource.getByParam(searchParam);
+  getByParams(
+    page: number,
+    limit: number,
+    searchParam: FilterPaymentDto
+  ): Promise<PaymentPagination> {
+    return this.paymentDatasource.getByParams(page, limit, searchParam);
   }
 
   getAll(page: number, limit: number): Promise<PaymentPagination> {

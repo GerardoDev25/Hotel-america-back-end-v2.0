@@ -54,7 +54,7 @@ export class UserDatasourceImpl extends UserDatasource {
     try {
       const where = cleanObject(searchParam);
 
-      const [total, usersDb] = await Promise.all([
+      const [totalDB, usersDb] = await Promise.all([
         prisma.user.count({ where }),
         prisma.user.findMany({
           where,
@@ -64,10 +64,11 @@ export class UserDatasourceImpl extends UserDatasource {
       ]);
 
       const users = usersDb.map((user) => this.transformObject(user));
+      const total = usersDb.length === 0 ? 0 : totalDB;
       const { next, prev } = pagination({
         page,
         limit,
-        total: usersDb.length === 0 ? 0 : total,
+        total,
         path: 'user/get-by-params',
       });
 
