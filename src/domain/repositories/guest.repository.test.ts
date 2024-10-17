@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
+import {
+  CreateGuestDto,
+  FilterGuestDto,
+  UpdateGuestDto,
+} from '@domain/dtos/guest';
 import { GuestRepository } from '.';
 import { GuestEntity } from '@domain/entities';
 import { GuestFilter, GuestPagination } from '@domain/interfaces';
@@ -38,18 +42,20 @@ describe('guest.repository.ts', () => {
   };
 
   class MockGuestRepository extends GuestRepository {
-    async getById(id: string): Promise<{ ok: boolean; guest: GuestEntity }> {
-      return { ok: true, guest: mockGuest };
-    }
-
-    async getByParam(
-      searchParam: GuestFilter
-    ): Promise<{ ok: boolean; guest: GuestEntity | null }> {
-      return { ok: true, guest: mockGuest };
-    }
-
     async getAll(page: number, limit: number): Promise<GuestPagination> {
       return pagination;
+    }
+
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: FilterGuestDto
+    ): Promise<GuestPagination> {
+      return pagination;
+    }
+
+    async getById(id: string): Promise<{ ok: boolean; guest: GuestEntity }> {
+      return { ok: true, guest: mockGuest };
     }
 
     async create(
@@ -80,14 +86,13 @@ describe('guest.repository.ts', () => {
     });
   });
 
-  it('test in function getByParam()', async () => {
-    const di = Generator.randomIdentityNumber();
+  it('test in function getByParams()', async () => {
+    const params: FilterGuestDto = { di: Generator.randomIdentityNumber() };
 
-    expect(typeof mockGuestRepository.getByParam).toBe('function');
-    expect(mockGuestRepository.getByParam({ di })).resolves.toEqual({
-      ok: true,
-      guest: mockGuest,
-    });
+    const result = await mockGuestRepository.getByParams(page, limit, params);
+
+    expect(typeof mockGuestRepository.getByParams).toBe('function');
+    expect(result).toEqual(pagination);
   });
 
   it('test in function getAll()', async () => {

@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
+import {
+  CreateGuestDto,
+  FilterGuestDto,
+  UpdateGuestDto,
+} from '@domain/dtos/guest';
 import { GuestDatasource } from '.';
 import { GuestEntity } from '@domain/entities';
 import { GuestPagination, GuestFilter } from '@domain/interfaces';
@@ -42,10 +46,12 @@ describe('guest.datasource.ts', () => {
       return { ok: true, guest: mockGuest };
     }
 
-    async getByParam(
-      searchParam: GuestFilter
-    ): Promise<{ ok: boolean; guest: GuestEntity | null }> {
-      return { ok: true, guest: mockGuest };
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: FilterGuestDto
+    ): Promise<GuestPagination> {
+      return pagination;
     }
 
     async getAll(page: number, limit: number): Promise<GuestPagination> {
@@ -70,25 +76,6 @@ describe('guest.datasource.ts', () => {
   }
 
   const mockGuestDataSource = new MockGuestDatasource();
-  it('test in function getById()', async () => {
-    const id = Uuid.v4();
-
-    expect(typeof mockGuestDataSource.getById).toBe('function');
-    expect(mockGuestDataSource.getById(id)).resolves.toEqual({
-      ok: true,
-      guest: mockGuest,
-    });
-  });
-
-  it('test in function getByParam()', async () => {
-    const di = Generator.randomIdentityNumber();
-
-    expect(typeof mockGuestDataSource.getByParam).toBe('function');
-    expect(mockGuestDataSource.getByParam({ di })).resolves.toEqual({
-      ok: true,
-      guest: mockGuest,
-    });
-  });
 
   it('test in function getAll()', async () => {
     const { guests } = await mockGuestDataSource.getAll(page, limit);
@@ -102,6 +89,25 @@ describe('guest.datasource.ts', () => {
     expect(guests).toHaveLength(1);
     guests.forEach((guest) => {
       expect(guest).toBeInstanceOf(GuestEntity);
+    });
+  });
+
+  it('test in function getByParams()', async () => {
+    const params: FilterGuestDto = { di: Generator.randomIdentityNumber() };
+
+    const result = await mockGuestDataSource.getByParams(page, limit, params);
+
+    expect(typeof mockGuestDataSource.getByParams).toBe('function');
+    expect(result).toEqual(pagination);
+  });
+
+  it('test in function getById()', async () => {
+    const id = Uuid.v4();
+
+    expect(typeof mockGuestDataSource.getById).toBe('function');
+    expect(mockGuestDataSource.getById(id)).resolves.toEqual({
+      ok: true,
+      guest: mockGuest,
     });
   });
 

@@ -1,13 +1,19 @@
-import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
-import { GuestPagination, GuestFilter } from '@domain/interfaces';
 import { GuestEntity } from '@domain/entities';
+import { GuestPagination } from '@domain/interfaces';
+import {
+  CreateGuestDto,
+  FilterGuestDto,
+  UpdateGuestDto,
+} from '@domain/dtos/guest';
 
 export abstract class GuestDatasource {
   abstract getById(id: string): Promise<{ ok: boolean; guest: GuestEntity }>;
 
-  abstract getByParam(
-    searchParam: GuestFilter
-  ): Promise<{ ok: boolean; guest: GuestEntity | null }>;
+  abstract getByParams(
+    page: number,
+    limit: number,
+    searchParam: FilterGuestDto
+  ): Promise<GuestPagination>;
 
   abstract getAll(page: number, limit: number): Promise<GuestPagination>;
 
