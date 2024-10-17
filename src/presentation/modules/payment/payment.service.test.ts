@@ -1,13 +1,19 @@
 import { Uuid } from '@src/adapters';
 import { PaymentRepository } from '@domain/repositories';
-import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
+import {
+  CreatePaymentDto,
+  FilterPaymentDto,
+  UpdatePaymentDto,
+} from '@domain/dtos/payment';
 import { PaymentService } from './';
 
 describe('payment.service.ts', () => {
+  const page = 2;
+  const limit = 10;
   const paymentRepository: PaymentRepository = {
     getAll: jest.fn(),
     getById: jest.fn(),
-    getByParam: jest.fn(),
+    getByParams: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -23,18 +29,19 @@ describe('payment.service.ts', () => {
     expect(paymentRepository.getById).toHaveBeenCalled();
   });
 
-  // test('should call (getByParam)', async () => {
-  //   const amount = 12;
-  //   await service.getByParam({ amount });
+  it('should call (getByParams)', async () => {
+    const params: FilterPaymentDto = { amount: 12, description: '' };
+    await service.getByParams({ page, limit }, params);
 
-  //   expect(paymentRepository.getByParam).toHaveBeenCalled();
-  //   expect(paymentRepository.getByParam).toHaveBeenCalledWith({ amount });
-  // });
+    expect(paymentRepository.getByParams).toHaveBeenCalled();
+    expect(paymentRepository.getByParams).toHaveBeenCalledWith(
+      page,
+      limit,
+      params
+    );
+  });
 
   test('should call getAll', async () => {
-    const page = 2;
-    const limit = 10;
-
     await service.getAll({ page, limit });
 
     expect(paymentRepository.getAll).toHaveBeenCalled();

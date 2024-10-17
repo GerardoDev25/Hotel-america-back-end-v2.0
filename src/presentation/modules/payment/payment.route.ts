@@ -27,6 +27,7 @@ export class PaymentRoute {
 
     const middleware = {
       getAll: [authMiddleware.validateJwt],
+      getByParams: [authMiddleware.validateJwt],
       getById: [authMiddleware.validateJwt, Commons.isValidUUID],
       create: [
         authMiddleware.validateJwt,
@@ -57,6 +58,11 @@ export class PaymentRoute {
 
     // * endpoints
     route.get('/', middleware.getAll, paymentController.getAll);
+    route.post(
+      '/get-by-params',
+      middleware.getByParams,
+      paymentController.getByParams
+    );
     route.get('/:id', middleware.getById, paymentController.getById);
     route.post('/', middleware.create, paymentController.create);
     route.put('/', middleware.update, paymentController.update);

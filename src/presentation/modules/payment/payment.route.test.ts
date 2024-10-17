@@ -10,6 +10,7 @@ import {
 } from '@domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
+import { FilterPaymentDto } from '@src/domain/dtos/payment';
 
 describe('payment.route.ts', () => {
   let token: string;
@@ -136,6 +137,84 @@ describe('payment.route.ts', () => {
 
     expect(body.ok).toBeFalsy();
     expect(body.errors[0]).toBe('Page must be greaten than 0');
+  });
+
+  it('should get payment by params (getByParams)', async () => {
+    const page = 1;
+    const limit = 10;
+    const [user, room] = await Promise.all([
+      await prisma.user.create({ data: rawUser }),
+      await prisma.room.create({ data: rawRoom }),
+    ]);
+    const register = await prisma.register.create({
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
+    });
+    const paymentDB = await prisma.payment.create({
+      data: { ...rawPayment, registerId: register.id },
+    });
+
+    const params: FilterPaymentDto = {
+      amount: paymentDB.amount,
+      type: paymentDB.type,
+    };
+
+    const { body } = await request(testServer.app)
+      .post('/api/payment/get-by-params')
+      .send(params)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(body.page).toBe(page);
+    expect(body.limit).toBe(limit);
+    expect(body.total).toBeDefined();
+    expect(body.next).toBe(null);
+    expect(body.prev).toBe(null);
+    expect(body.payments).toBeInstanceOf(Array);
+
+    for (const payment of body.payments) {
+      expect(payment).toMatchObject({
+        id: expect.any(String),
+        amount: params.amount,
+        description: expect.any(String),
+        paidAt: expect.any(String),
+        type: params.type,
+        registerId: register.id,
+      });
+    }
+  });
+
+  it('should get error message if pagination contain negative numbers (getByParams)', async () => {
+    const page = -1;
+    const limit = -3;
+
+    const { body } = await request(testServer.app)
+      .post(`/api/payment/get-by-params?page=${page}&limit=${limit}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+
+    expect(body.ok).toBeFalsy();
+    expect(body.errors[0]).toBe('Page must be greaten than 0');
+  });
+
+  it('should get error message with wrong params (getByParams)', async () => {
+    const params = { amount: false, type: 'test' };
+
+    const { body } = await request(testServer.app)
+      .post(`/api/payment/get-by-params`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(params)
+      .expect(400);
+
+    expect(body.ok).toBeFalsy();
+    expect(body.errors).toMatchObject([
+      'type most be: back, cash, credit_cart, qr',
+      'amount property most be a number',
+    ]);
   });
 
   test('should get a payment by id (getById)', async () => {

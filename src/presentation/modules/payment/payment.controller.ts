@@ -1,5 +1,9 @@
 import { Request, Response } from 'express';
-import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
+import {
+  CreatePaymentDto,
+  FilterPaymentDto,
+  UpdatePaymentDto,
+} from '@domain/dtos/payment';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
 import { variables } from '@domain/variables';
@@ -34,6 +38,30 @@ export class PaymentController {
 
     return this.paymentService
       .getAll(paginationDto!)
+      .then((data) => res.json(data))
+      .catch((error) => this.handleError(res, error));
+  };
+
+  getByParams = async (req: Request, res: Response) => {
+    const page = req.query.page ?? variables.PAGINATION_PAGE_DEFAULT;
+    const limit = req.query.limit ?? variables.PAGINATION_LIMIT_DEFAULT;
+
+    const [paginationError, paginationDto] = PaginationDto.create(
+      +page,
+      +limit
+    );
+
+    if (paginationError) {
+      return res.status(400).json({ ok: false, errors: [paginationError] });
+    }
+
+    const [filterError, filterDto] = FilterPaymentDto.create(req.body);
+    if (filterError) {
+      return res.status(400).json({ ok: false, errors: filterError });
+    }
+
+    return this.paymentService
+      .getByParams(paginationDto!, filterDto!)
       .then((data) => res.json(data))
       .catch((error) => this.handleError(res, error));
   };

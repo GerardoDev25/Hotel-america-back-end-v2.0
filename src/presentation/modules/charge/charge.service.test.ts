@@ -22,7 +22,7 @@ describe('charge.service.ts', () => {
 
   const service = new ChargeService(chargeRepository);
 
-  test('should call (getById)', async () => {
+  it('should call (getById)', async () => {
     const id = Uuid.v4();
     await service.getById(id);
 
@@ -30,7 +30,7 @@ describe('charge.service.ts', () => {
     expect(chargeRepository.getById).toHaveBeenCalled();
   });
 
-  test('should call (getByParams)', async () => {
+  it('should call (getByParams)', async () => {
     const params: FilterChargeDto = { amount: 12, description: '' };
     await service.getByParams({ page, limit }, params);
 
@@ -42,14 +42,14 @@ describe('charge.service.ts', () => {
     );
   });
 
-  test('should call getAll', async () => {
+  it('should call getAll', async () => {
     await service.getAll({ page, limit });
 
     expect(chargeRepository.getAll).toHaveBeenCalled();
     expect(chargeRepository.getAll).toHaveBeenCalledWith(page, limit);
   });
 
-  test('should call create', async () => {
+  it('should call create', async () => {
     const createCharge: CreateChargeDto = {
       amount: 12,
       type: 'cafeteria',
@@ -62,7 +62,7 @@ describe('charge.service.ts', () => {
     expect(chargeRepository.create).toHaveBeenCalledWith(createCharge);
   });
 
-  test('should call (update)', async () => {
+  it('should call (update)', async () => {
     const updateCharge: UpdateChargeDto = { id: Uuid.v4() };
 
     await service.update(updateCharge);
@@ -71,7 +71,7 @@ describe('charge.service.ts', () => {
     expect(chargeRepository.update).toHaveBeenCalledWith(updateCharge);
   });
 
-  test('should call (delete)', async () => {
+  it('should call (delete)', async () => {
     const id = Uuid.v4();
     await service.delete(id);
 
