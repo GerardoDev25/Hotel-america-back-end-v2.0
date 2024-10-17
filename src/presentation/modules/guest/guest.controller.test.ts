@@ -1,6 +1,6 @@
 import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
 import { GuestEntity } from '@domain/entities';
-import { GuestPagination } from '@domain/interfaces';
+import { GuestFilter, GuestPagination } from '@domain/interfaces';
 import { variables } from '@domain/variables';
 import { Uuid } from '@src/adapters';
 import { citiesList } from '@src/data/seed';
@@ -34,7 +34,7 @@ describe('guest.controller.ts', () => {
     next: null,
   };
 
-  it('should return all register (getAll)', async () => {
+  it('should return all guests (getAll)', async () => {
     const res = { json: jest.fn() } as any;
     const req = { query: { page: 1, limit: 10 } } as any;
 
@@ -59,6 +59,43 @@ describe('guest.controller.ts', () => {
     await guestController.getAll(req, res);
 
     expect(mockService.getAll).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      ok: false,
+      errors: ['Page must be greaten than 0'],
+    });
+  });
+
+  it('should return guests (getByParams)', async () => {
+    const body: GuestFilter = {
+      city: 'Cordoba',
+      checkIn: Generator.randomDate(),
+      checkOut: Generator.randomDate(),
+    };
+    const res = { json: jest.fn() } as any;
+    const req = { query: { page: 1, limit: 10 }, body } as any;
+
+    const mockService = {
+      getByParams: jest.fn().mockResolvedValue(pagination),
+    } as any;
+    const guestController = new GuestController(mockService);
+
+    await guestController.getByParams(req, res);
+
+    expect(mockService.getByParams).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith(pagination);
+  });
+
+  it('should throw error if not well paginated (getByParams)', async () => {
+    const req = { query: { page: false, limit: null } } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const mockService = { getByParams: jest.fn() } as any;
+    const guestController = new GuestController(mockService);
+
+    await guestController.getByParams(req, res);
+
+    expect(mockService.getByParams).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
       ok: false,

@@ -18,13 +18,13 @@ const generateGuest = (register: Registers, index: number) => {
     checkIn: new Date(register.checkIn).toISOString(),
     checkOut,
     dateOfBirth,
-    city: Generator.randomCity(citiesList),
-    name: fullName.split(' ').at(0)!,
-    lastName: fullName.split(' ').at(1)!,
-    phone: Generator.randomPhone(),
+    city: Generator.randomCity(citiesList).trim().toLowerCase(),
+    name: fullName.split(' ').at(0)!.trim().toLowerCase(),
+    lastName: fullName.split(' ').at(1)!.trim().toLowerCase(),
+    phone: Generator.randomPhone().trim(),
     roomNumber: register.room.roomNumber,
-    countryId: Generator.randomCountryId(countries),
-    registerId: register.id,
+    countryId: Generator.randomCountryId(countries).trim(),
+    registerId: register.id.trim(),
   };
   return guest;
 };

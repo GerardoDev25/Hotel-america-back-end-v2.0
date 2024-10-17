@@ -6,7 +6,7 @@ import { GuestPagination } from '@domain/interfaces';
 import { GuestRepository, RegisterRepository } from '@domain/repositories';
 import { variables } from '@domain/variables';
 import { Generator } from '@src/utils/generator';
-import { CreateGuestDto } from '@domain/dtos/guest';
+import { CreateGuestDto, FilterGuestDto } from '@domain/dtos/guest';
 import { CustomError } from '@domain/error';
 import { GuestService } from '.';
 
@@ -42,7 +42,7 @@ describe('guest.service.ts', () => {
   const mockGuestRepository: GuestRepository = {
     getAll: jest.fn().mockResolvedValue(pagination),
     getById: jest.fn().mockResolvedValue({ ok: true, guest }),
-    getByParam: jest.fn().mockResolvedValue({ ok: true, guest }),
+    getByParams: jest.fn().mockResolvedValue(pagination),
     create: jest.fn().mockResolvedValue({ ok: true, guest }),
     update: jest.fn().mockResolvedValue(resolveData),
     delete: jest.fn().mockResolvedValue(resolveData),
@@ -52,7 +52,7 @@ describe('guest.service.ts', () => {
     getById: jest.fn(),
   } as unknown as RegisterRepository;
 
-  test('should have been call with parameters (getAll)', async () => {
+  it('should have been call with parameters (getAll)', async () => {
     const paginationDto: PaginationDto = { page: 1, limit: 10 };
     const guestService = new GuestService(
       mockGuestRepository,
@@ -67,7 +67,24 @@ describe('guest.service.ts', () => {
     );
   });
 
-  test('should have been call with parameters (getById)', async () => {
+  it('should have been call with parameters (getByParams)', async () => {
+    const paginationDto: PaginationDto = { page: 1, limit: 10 };
+    const params: FilterGuestDto = { checkIn: new Date() };
+    const guestService = new GuestService(
+      mockGuestRepository,
+      mockRegisterRepository
+    );
+
+    await guestService.getByParams(paginationDto, params);
+
+    expect(mockGuestRepository.getById).toHaveBeenCalledWith(
+      paginationDto.page,
+      paginationDto.limit,
+      params
+    );
+  });
+
+  it('should have been call with parameters (getById)', async () => {
     const id = Uuid.v4();
     const guestService = new GuestService(
       mockGuestRepository,
@@ -79,7 +96,7 @@ describe('guest.service.ts', () => {
     expect(mockGuestRepository.getById).toHaveBeenCalledWith(id);
   });
 
-  test('should have been call with parameters (create)', async () => {
+  it('should have been call with parameters (create)', async () => {
     const guestDto = { registerId: Uuid.v4() } as CreateGuestDto;
     const guestService = new GuestService(
       mockGuestRepository,
@@ -94,7 +111,7 @@ describe('guest.service.ts', () => {
     );
   });
 
-  test('should throw error if register not found (create)', async () => {
+  it('should throw error if register not found (create)', async () => {
     const guestDto = { registerId: Uuid.v4() } as CreateGuestDto;
 
     const mockRegisterRepository = {
@@ -115,7 +132,7 @@ describe('guest.service.ts', () => {
     }
   });
 
-  test('should have been call with parameters (update)', async () => {
+  it('should have been call with parameters (update)', async () => {
     const guestService = new GuestService(
       mockGuestRepository,
       mockRegisterRepository
@@ -126,7 +143,7 @@ describe('guest.service.ts', () => {
     expect(mockGuestRepository.update).toHaveBeenCalledWith({ id: guest.id });
   });
 
-  test('should have been call with parameters (delete)', async () => {
+  it('should have been call with parameters (delete)', async () => {
     const guestService = new GuestService(
       mockGuestRepository,
       mockRegisterRepository

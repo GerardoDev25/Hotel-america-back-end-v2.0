@@ -3,7 +3,11 @@ import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
 import { prisma } from '@src/data/postgres';
 import { CreateRegisterDto } from '@src/domain/dtos/register';
 import { CreateRoomDto } from '@src/domain/dtos/room';
-import { RoomTypesList, UserRolesList } from '@src/domain/interfaces';
+import {
+  GuestFilter,
+  RoomTypesList,
+  UserRolesList,
+} from '@src/domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
 import { CreateGuestDto } from '@src/domain/dtos/guest';
@@ -58,12 +62,12 @@ describe('guest.route.ts', () => {
 
   const rawGuest: CreateGuestDto = {
     di: Generator.randomIdentityNumber(),
-    city: Generator.randomCity(citiesList),
-    name: fullName.split(' ').at(0)!,
-    lastName: fullName.split(' ').at(1)!,
-    phone: Generator.randomPhone(),
+    city: Generator.randomCity(citiesList).trim().toLowerCase(),
+    name: fullName.split(' ').at(0)!.trim().toLowerCase(),
+    lastName: fullName.split(' ').at(1)!.trim().toLowerCase(),
+    phone: Generator.randomPhone().trim(),
     roomNumber: 1,
-    countryId: rawCountry.id,
+    countryId: rawCountry.id.trim(),
     registerId: '',
     dateOfBirth: new Date(),
     checkOut: new Date(),
@@ -134,7 +138,7 @@ describe('guest.route.ts', () => {
     });
   });
 
-  test('should get error message if pagination contain negative numbers (getAll)', async () => {
+  it('should get error message if pagination contain negative numbers (getAll)', async () => {
     const page = -1;
     const limit = -3;
 
@@ -146,7 +150,69 @@ describe('guest.route.ts', () => {
     expect(body.errors[0]).toBe('Page must be greaten than 0');
   });
 
-  test('should get a guest by id (getById)', async () => {
+  it('should get guests by params (getByParams)', async () => {
+    const page = 1;
+    const limit = 10;
+    const params: GuestFilter = { city: rawGuest.city };
+    const [country, user, room] = await Promise.all([
+      await prisma.country.create({ data: rawCountry }),
+      await prisma.user.create({ data: rawUser }),
+      await prisma.room.create({ data: rawRoom }),
+    ]);
+    const register = await prisma.register.create({
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
+    });
+    await prisma.guest.createMany({
+      data: [{ ...rawGuest, registerId: register.id, countryId: country.id }],
+    });
+    const { body } = await request(testServer.app)
+      .post('/api/guest/get-by-params')
+      .send(params)
+      .expect(200);
+
+    expect(body.page).toBe(page);
+    expect(body.limit).toBe(limit);
+    expect(body.total).toBeDefined();
+    expect(body.next).toBe(null);
+    expect(body.prev).toBe(null);
+    expect(body.guests).toBeInstanceOf(Array);
+
+    for (const guest of body.guests) {
+      expect(guest).toEqual({
+        id: expect.any(String),
+        di: expect.any(String),
+        checkIn: expect.any(String),
+        checkOut: expect.any(String),
+        dateOfBirth: expect.any(String),
+        city: expect.any(String),
+        name: expect.any(String),
+        lastName: expect.any(String),
+        phone: expect.any(String),
+        roomNumber: expect.any(Number),
+        countryId: expect.any(String),
+        registerId: expect.any(String),
+      });
+    }
+  });
+
+  it('should get error message if pagination contain negative numbers (getByParams)', async () => {
+    const page = -1;
+    const limit = -3;
+
+    const { body } = await request(testServer.app)
+      .post(`/api/guest/get-by-params?page=${page}&limit=${limit}`)
+      .expect(400);
+
+    expect(body.ok).toBeFalsy();
+    expect(body.errors[0]).toBe('Page must be greaten than 0');
+  });
+
+  it('should get a guest by id (getById)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
       await prisma.user.create({ data: rawUser }),
@@ -184,7 +250,7 @@ describe('guest.route.ts', () => {
     expect(guest.registerId).toBe(guestDB.registerId);
   });
 
-  test('should get not found message (getById)', async () => {
+  it('should get not found message (getById)', async () => {
     const id = Uuid.v4();
     const { body } = await request(testServer.app)
       .get(`/api/guest/${id}`)
@@ -194,7 +260,7 @@ describe('guest.route.ts', () => {
     expect(body.errors[0]).toEqual(`guest with id: ${id} not found`);
   });
 
-  test('should create a user (create)', async () => {
+  it('should create a user (create)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
       await prisma.user.create({ data: rawUser }),
@@ -232,7 +298,7 @@ describe('guest.route.ts', () => {
     expect(guest.registerId).toBeDefined();
   });
 
-  test('should get and error if register not found (create)', async () => {
+  it('should get and error if register not found (create)', async () => {
     const registerId = Uuid.v4();
 
     const { body } = await request(testServer.app)
@@ -247,7 +313,7 @@ describe('guest.route.ts', () => {
     expect(errors[0]).toEqual(`register with id ${registerId} not found`);
   });
 
-  test('should get error white create guest (create)', async () => {
+  it('should get error white create guest (create)', async () => {
     const { body } = await request(testServer.app)
       .post('/api/guest')
       .set('Authorization', `Bearer ${token}`)
@@ -271,7 +337,7 @@ describe('guest.route.ts', () => {
     });
   });
 
-  test('should update a guest (update)', async () => {
+  it('should update a guest (update)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
       await prisma.user.create({ data: rawUser }),
@@ -308,7 +374,7 @@ describe('guest.route.ts', () => {
     expect(guestUpdate?.name).toBe(name);
   });
 
-  test('should get and error while updating a guest (update)', async () => {
+  it('should get and error while updating a guest (update)', async () => {
     const name = false;
 
     const { body } = await request(testServer.app)
@@ -323,7 +389,7 @@ describe('guest.route.ts', () => {
     });
   });
 
-  test('should delete a guest by id (delete)', async () => {
+  it('should delete a guest by id (delete)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
       await prisma.user.create({ data: rawUser }),
@@ -362,7 +428,7 @@ describe('guest.route.ts', () => {
     expect(message).toBe('guest deleted successfully');
   });
 
-  test('should not delete a guest if there is only one (delete)', async () => {
+  it('should not delete a guest if there is only one (delete)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
       await prisma.user.create({ data: rawUser }),

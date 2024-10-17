@@ -56,6 +56,7 @@ export class GuestRoute {
 
     // * endpoints
     route.get('/', guestController.getAll);
+    route.post('/get-by-params', guestController.getByParams);
     route.get('/:id', middleware.getById, guestController.getById);
     route.post('/', middleware.create, guestController.create);
     route.put('/', middleware.update, guestController.update);

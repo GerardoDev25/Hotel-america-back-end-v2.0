@@ -56,7 +56,6 @@ export class GuestDatasourceImpl extends GuestDatasource {
   ): Promise<GuestPagination> {
     try {
       const where = cleanObject(searchParam);
-
       const [totalDB, guestsDb] = await Promise.all([
         prisma.guest.count({ where }),
         prisma.guest.findMany({

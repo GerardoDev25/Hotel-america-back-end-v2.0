@@ -1,7 +1,11 @@
 import { GuestRepository, RegisterRepository } from '@domain/repositories';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
-import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
+import {
+  CreateGuestDto,
+  UpdateGuestDto,
+  FilterGuestDto,
+} from '@domain/dtos/guest';
 
 export class GuestService {
   constructor(
@@ -17,6 +21,14 @@ export class GuestService {
   async getAll(paginationDto: PaginationDto) {
     const { page, limit } = paginationDto;
     return this.guestRepository.getAll(page, limit);
+  }
+
+  async getByParams(
+    paginationDto: PaginationDto,
+    filterGuestDto: FilterGuestDto
+  ) {
+    const { page, limit } = paginationDto;
+    return this.guestRepository.getByParams(page, limit, filterGuestDto);
   }
 
   async getById(id: string) {
