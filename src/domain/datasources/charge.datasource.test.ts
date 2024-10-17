@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
 import { ChargeEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
+import { ChargePagination, ChargeTypeList } from '@domain/interfaces';
 import {
-  ChargePagination,
-  ChargeTypeList,
-  IChargeFilterDto,
-} from '@domain/interfaces';
+  CreateChargeDto,
+  UpdateChargeDto,
+  FilterChargeDto,
+} from '@domain/dtos/charge';
 import { ChargeDatasource } from '.';
 
 describe('charge.datasource.ts', () => {
@@ -39,7 +39,7 @@ describe('charge.datasource.ts', () => {
     async getByParams(
       page: number,
       limit: number,
-      searchParam: IChargeFilterDto
+      searchParam: FilterChargeDto
     ): Promise<ChargePagination> {
       return pagination;
     }

@@ -1,6 +1,10 @@
 import { ChargeRepository } from '@domain/repositories';
-import { CreateChargeDto, UpdateChargeDto } from '@src/domain/dtos/charge';
-import { PaginationDto } from '@src/domain/dtos/share';
+import { PaginationDto } from '@domain/dtos/share';
+import {
+  CreateChargeDto,
+  FilterChargeDto,
+  UpdateChargeDto,
+} from '@domain/dtos/charge';
 
 export class ChargeService {
   constructor(private readonly chargeRepository: ChargeRepository) {}
@@ -8,6 +12,14 @@ export class ChargeService {
   async getAll(paginationDto: PaginationDto) {
     const { page, limit } = paginationDto;
     return this.chargeRepository.getAll(page, limit);
+  }
+
+  async getByParams(
+    paginationDto: PaginationDto,
+    filterChargeDto: FilterChargeDto
+  ) {
+    const { page, limit } = paginationDto;
+    return this.chargeRepository.getByParams(page, limit, filterChargeDto);
   }
 
   async getById(id: string) {

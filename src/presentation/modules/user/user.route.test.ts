@@ -156,6 +156,21 @@ describe('user.route.ts', () => {
     }
   });
 
+  it('should get error message with wrong params (getByParams)', async () => {
+    const params = { name: false, phone: 12 };
+
+    const { body } = await request(testServer.app)
+      .post(`/api/user/get-by-params`)
+      .send(params)
+      .expect(400);
+
+    expect(body.ok).toBeFalsy();
+    expect(body.errors).toMatchObject([
+      'name property most be a string',
+      'phone property most be a string',
+    ]);
+  });
+
   it('should get a user by id (getById)', async () => {
     const userTest = await prisma.user.create({ data: seedData.users[0] });
     const { body } = await request(testServer.app)

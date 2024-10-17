@@ -1,9 +1,13 @@
 import { Charge } from '@prisma/client';
 import { ChargeDatasource } from '@domain/datasources';
-import { ChargeEntity } from '@domain/entities';
-import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
 import { CustomError } from '@domain/error';
-import { ChargePagination, ChargeFilter } from '@domain/interfaces';
+import { ChargeEntity } from '@domain/entities';
+import { ChargePagination } from '@domain/interfaces';
+import {
+  CreateChargeDto,
+  UpdateChargeDto,
+  FilterChargeDto,
+} from '@domain/dtos/charge';
 
 import { prisma } from '@src/data/postgres';
 import { LoggerService } from '@presentation/services';
@@ -44,14 +48,32 @@ export class ChargeDatasourceImpl extends ChargeDatasource {
     }
   }
 
-  async getByParam(
-    searchParam: ChargeFilter
-  ): Promise<{ ok: boolean; charge: ChargeEntity | null }> {
+  async getByParams(
+    page: number,
+    limit: number,
+    searchParam: FilterChargeDto
+  ): Promise<ChargePagination> {
     try {
-      const charge = await prisma.charge.findFirst({ where: searchParam });
-      if (!charge) return { ok: false, charge: null };
+      const where = cleanObject(searchParam);
 
-      return { ok: true, charge: this.transformObject(charge) };
+      const [total, chargesDb] = await Promise.all([
+        prisma.charge.count({ where }),
+        prisma.charge.findMany({
+          where,
+          skip: (page - 1) * limit,
+          take: limit,
+        }),
+      ]);
+
+      const charges = chargesDb.map((charge) => this.transformObject(charge));
+      const { next, prev } = pagination({
+        page,
+        limit,
+        total: chargesDb.length === 0 ? 0 : total,
+        path: 'charge/get-by-params',
+      });
+
+      return { page, limit, total, next, prev, charges: charges };
     } catch (error: any) {
       throw this.handleError(error);
     }

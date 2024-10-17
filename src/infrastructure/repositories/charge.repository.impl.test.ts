@@ -1,13 +1,20 @@
 import { ChargeDatasource } from '@domain/datasources';
-import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
 import { Uuid } from '@src/adapters';
+import {
+  CreateChargeDto,
+  UpdateChargeDto,
+  FilterChargeDto,
+} from '@domain/dtos/charge';
 import { ChargeRepositoryImpl } from '.';
 
 describe('charge.repository.impl.ts', () => {
+  const page = 2;
+  const limit = 10;
+
   const chargeDatasource: ChargeDatasource = {
     getAll: jest.fn(),
     getById: jest.fn(),
-    getByParam: jest.fn(),
+    getByParams: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -23,18 +30,19 @@ describe('charge.repository.impl.ts', () => {
     expect(chargeDatasource.getById).toHaveBeenCalled();
   });
 
-  test('should call (getByParam)', async () => {
-    const amount = 12;
-    await repository.getByParam({ amount });
+  test('should call (getByParams)', async () => {
+    const params: FilterChargeDto = { amount: 12 };
+    await repository.getByParams(page, limit, params);
 
-    expect(chargeDatasource.getByParam).toHaveBeenCalled();
-    expect(chargeDatasource.getByParam).toHaveBeenCalledWith({ amount });
+    expect(chargeDatasource.getByParams).toHaveBeenCalled();
+    expect(chargeDatasource.getByParams).toHaveBeenCalledWith(
+      page,
+      limit,
+      params
+    );
   });
 
   test('should call getAll', async () => {
-    const page = 2;
-    const limit = 10;
-
     await repository.getAll(page, limit);
 
     expect(chargeDatasource.getAll).toHaveBeenCalled();

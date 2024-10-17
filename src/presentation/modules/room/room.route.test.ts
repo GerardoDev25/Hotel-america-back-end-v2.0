@@ -16,6 +16,7 @@ describe('room.route.ts', () => {
   });
 
   beforeEach(async () => {
+    await prisma.register.deleteMany();
     await prisma.room.deleteMany();
     await prisma.user.deleteMany();
   });
@@ -171,6 +172,21 @@ describe('room.route.ts', () => {
     expect(body.prev).toBe(
       `/api/room/get-by-params?page=${page - 1}&limit=${limit}`
     );
+  });
+
+  it('should get error message with wrong params (getByParams)', async () => {
+    const params = { roomNumber: false, betsNumber: '' };
+
+    const { body } = await request(testServer.app)
+      .post(`/api/room/get-by-params`)
+      .send(params)
+      .expect(400);
+
+    expect(body.ok).toBeFalsy();
+    expect(body.errors).toMatchObject([
+      'roomNumber property most be a number',
+      'betsNumber property most be a number',
+    ]);
   });
 
   it('should get a room by id (getById)', async () => {

@@ -55,6 +55,39 @@ describe('charge.controller.ts', () => {
     });
   });
 
+  it('should return all charges (getByParams)', async () => {
+    const body = { type: ChargeTypeList.LAUNDRY };
+    const res = { json: jest.fn() } as any;
+    const req = { query: { page: 1, limit: 10 }, body } as any;
+
+    const mockService = {
+      getByParams: jest.fn().mockResolvedValue(pagination),
+    } as any;
+    const chargeController = new ChargeController(mockService);
+
+    await chargeController.getByParams(req, res);
+
+    expect(mockService.getByParams).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith(pagination);
+  });
+
+  it('should throw error if not well paginated (getByParams)', async () => {
+    const req = { query: { page: false, limit: null } } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const mockService = { getByParams: jest.fn() } as any;
+    const chargeController = new ChargeController(mockService);
+
+    await chargeController.getByParams(req, res);
+
+    expect(mockService.getByParams).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      ok: false,
+      errors: ['Page must be greaten than 0'],
+    });
+  });
+
   it('should return a register by id (getById)', async () => {
     const id = chargeEntity.id;
     const req = { params: { id } } as any;

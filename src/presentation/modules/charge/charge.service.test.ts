@@ -1,13 +1,20 @@
 import { Uuid } from '@src/adapters';
 import { ChargeRepository } from '@domain/repositories';
-import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
+import {
+  CreateChargeDto,
+  FilterChargeDto,
+  UpdateChargeDto,
+} from '@domain/dtos/charge';
 import { ChargeService } from '.';
 
 describe('charge.service.ts', () => {
+  const page = 2;
+  const limit = 10;
+
   const chargeRepository: ChargeRepository = {
     getAll: jest.fn(),
     getById: jest.fn(),
-    getByParam: jest.fn(),
+    getByParams: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -23,18 +30,19 @@ describe('charge.service.ts', () => {
     expect(chargeRepository.getById).toHaveBeenCalled();
   });
 
-  // test('should call (getByParam)', async () => {
-  //   const amount = 12;
-  //   await service.getByParam({ amount });
+  test('should call (getByParams)', async () => {
+    const params: FilterChargeDto = { amount: 12, description: '' };
+    await service.getByParams({ page, limit }, params);
 
-  //   expect(chargeRepository.getByParam).toHaveBeenCalled();
-  //   expect(chargeRepository.getByParam).toHaveBeenCalledWith({ amount });
-  // });
+    expect(chargeRepository.getByParams).toHaveBeenCalled();
+    expect(chargeRepository.getByParams).toHaveBeenCalledWith(
+      page,
+      limit,
+      params
+    );
+  });
 
   test('should call getAll', async () => {
-    const page = 2;
-    const limit = 10;
-
     await service.getAll({ page, limit });
 
     expect(chargeRepository.getAll).toHaveBeenCalled();

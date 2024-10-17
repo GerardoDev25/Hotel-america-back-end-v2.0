@@ -10,6 +10,7 @@ import {
 } from '@domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
+import { FilterChargeDto } from '@src/domain/dtos/charge';
 
 describe('charge.route.ts', () => {
   let token: string;
@@ -74,7 +75,7 @@ describe('charge.route.ts', () => {
     token = await JwtAdapter.generateToken({ payload: { id: user.id } });
   });
 
-  it('should get all register (getAll)', async () => {
+  it('should get all charges (getAll)', async () => {
     const page = 1;
     const limit = 10;
     const [user, room] = await Promise.all([
@@ -113,7 +114,7 @@ describe('charge.route.ts', () => {
     });
   });
 
-  test('should get error message if not have auth token (getAll)', async () => {
+  it('should get error message if not have auth token (getAll)', async () => {
     const { body } = await request(testServer.app)
       .get(`/api/charge`)
       .expect(401);
@@ -122,7 +123,7 @@ describe('charge.route.ts', () => {
     expect(body.errors[0]).toBe('Token not provided');
   });
 
-  test('should get error message if pagination contain negative numbers (getAll)', async () => {
+  it('should get error message if pagination contain negative numbers (getAll)', async () => {
     const page = -1;
     const limit = -3;
 
@@ -135,7 +136,85 @@ describe('charge.route.ts', () => {
     expect(body.errors[0]).toBe('Page must be greaten than 0');
   });
 
-  test('should get a charge by id (getById)', async () => {
+  it('should get charge by params (getByParams)', async () => {
+    const page = 1;
+    const limit = 10;
+    const [user, room] = await Promise.all([
+      await prisma.user.create({ data: rawUser }),
+      await prisma.room.create({ data: rawRoom }),
+    ]);
+    const register = await prisma.register.create({
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
+    });
+    const chargeDB = await prisma.charge.create({
+      data: { ...rawCharge, registerId: register.id },
+    });
+
+    const params: FilterChargeDto = {
+      amount: chargeDB.amount,
+      type: chargeDB.type,
+    };
+
+    const { body } = await request(testServer.app)
+      .post('/api/charge/get-by-params')
+      .send(params)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(body.page).toBe(page);
+    expect(body.limit).toBe(limit);
+    expect(body.total).toBeDefined();
+    expect(body.next).toBe(null);
+    expect(body.prev).toBe(null);
+    expect(body.charges).toBeInstanceOf(Array);
+
+    for (const charge of body.charges) {
+      expect(charge).toMatchObject({
+        id: expect.any(String),
+        amount: params.amount,
+        description: expect.any(String),
+        createdAt: expect.any(String),
+        type: params.type,
+        registerId: register.id,
+      });
+    }
+  });
+
+  it('should get error message if pagination contain negative numbers (getByParams)', async () => {
+    const page = -1;
+    const limit = -3;
+
+    const { body } = await request(testServer.app)
+      .post(`/api/charge/get-by-params?page=${page}&limit=${limit}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+
+    expect(body.ok).toBeFalsy();
+    expect(body.errors[0]).toBe('Page must be greaten than 0');
+  });
+
+  it('should get error message with wrong params (getByParams)', async () => {
+    const params = { amount: false, type: 'test' };
+
+    const { body } = await request(testServer.app)
+      .post(`/api/charge/get-by-params`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(params)
+      .expect(400);
+
+    expect(body.ok).toBeFalsy();
+    expect(body.errors).toMatchObject([
+      'type most be: cafeteria, laundry, lodging, other, new_guest',
+      'amount property most be a number',
+    ]);
+  });
+
+  it('should get a charge by id (getById)', async () => {
     const [user, room] = await Promise.all([
       await prisma.user.create({ data: rawUser }),
       await prisma.room.create({ data: rawRoom }),
@@ -164,7 +243,7 @@ describe('charge.route.ts', () => {
     });
   });
 
-  test('should get not found message (getById)', async () => {
+  it('should get not found message (getById)', async () => {
     const id = Uuid.v4();
     const { body } = await request(testServer.app)
       .get(`/api/charge/${id}`)
@@ -177,7 +256,7 @@ describe('charge.route.ts', () => {
     });
   });
 
-  test('should create a charge (create)', async () => {
+  it('should create a charge (create)', async () => {
     const [user, room] = await Promise.all([
       await prisma.user.create({ data: rawUser }),
       await prisma.room.create({ data: rawRoom }),
@@ -210,7 +289,7 @@ describe('charge.route.ts', () => {
     });
   });
 
-  test('should get unauthorize error message (create)', async () => {
+  it('should get unauthorize error message (create)', async () => {
     const { body } = await request(testServer.app)
       .post('/api/charge')
       .send({})
@@ -218,7 +297,7 @@ describe('charge.route.ts', () => {
     expect(body).toMatchObject({ ok: false, errors: ['Token not provided'] });
   });
 
-  test('should get and error if register not found (create)', async () => {
+  it('should get and error if register not found (create)', async () => {
     const id = Uuid.v4();
     const { body } = await request(testServer.app)
       .post('/api/charge')
@@ -232,7 +311,7 @@ describe('charge.route.ts', () => {
     });
   });
 
-  test('should verify if is valid object (create)', async () => {
+  it('should verify if is valid object (create)', async () => {
     const { body } = await request(testServer.app)
       .post('/api/charge')
       .send({ description: 12 })
@@ -250,7 +329,7 @@ describe('charge.route.ts', () => {
     });
   });
 
-  test('should update a charge (update)', async () => {
+  it('should update a charge (update)', async () => {
     const [user, room] = await Promise.all([
       await prisma.user.create({ data: rawUser }),
       await prisma.room.create({ data: rawRoom }),
@@ -285,7 +364,7 @@ describe('charge.route.ts', () => {
     expect(chargeUpdate?.description).toBe(description);
   });
 
-  test('should get unauthorize message (update)', async () => {
+  it('should get unauthorize message (update)', async () => {
     const { body } = await request(testServer.app)
       .put(`/api/charge`)
       .send({})
@@ -294,7 +373,7 @@ describe('charge.route.ts', () => {
     expect(body).toMatchObject({ ok: false, errors: ['Token not provided'] });
   });
 
-  test('should get 404 code if charge not found (update)', async () => {
+  it('should get 404 code if charge not found (update)', async () => {
     const id = Uuid.v4();
     const { body } = await request(testServer.app)
       .put(`/api/charge`)
@@ -308,7 +387,7 @@ describe('charge.route.ts', () => {
     });
   });
 
-  test('should get and error while updating a charge (update)', async () => {
+  it('should get and error while updating a charge (update)', async () => {
     const { body } = await request(testServer.app)
       .put(`/api/charge`)
       .set('Authorization', `Bearer ${token}`)
@@ -330,7 +409,7 @@ describe('charge.route.ts', () => {
     });
   });
 
-  test('should delete a charge by id (delete)', async () => {
+  it('should delete a charge by id (delete)', async () => {
     const [user, room] = await Promise.all([
       await prisma.user.create({ data: rawUser }),
       await prisma.room.create({ data: rawRoom }),
@@ -363,7 +442,7 @@ describe('charge.route.ts', () => {
     });
   });
 
-  test('should get unauthorize message (delete)', async () => {
+  it('should get unauthorize message (delete)', async () => {
     const id = Uuid.v4();
     const { body } = await request(testServer.app)
       .delete(`/api/charge/${id}`)
@@ -372,7 +451,7 @@ describe('charge.route.ts', () => {
     expect(body).toMatchObject({ ok: false, errors: ['Token not provided'] });
   });
 
-  test('should get 404 code if charge not found (delete)', async () => {
+  it('should get 404 code if charge not found (delete)', async () => {
     const id = Uuid.v4();
     const { body } = await request(testServer.app)
       .delete(`/api/charge/${id}`)

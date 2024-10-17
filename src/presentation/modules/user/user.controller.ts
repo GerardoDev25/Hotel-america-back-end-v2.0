@@ -60,7 +60,7 @@ export class UserController {
 
     const [filterError, filterDto] = FilterUserDto.create(req.body);
     if (filterError) {
-      return res.status(400).json({ ok: false, errors: [filterError] });
+      return res.status(400).json({ ok: false, errors: filterError });
     }
 
     this.userService

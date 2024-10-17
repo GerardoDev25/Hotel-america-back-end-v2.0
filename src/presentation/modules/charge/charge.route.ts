@@ -27,6 +27,7 @@ export class ChargeRoute {
 
     const middleware = {
       getAll: [authMiddleware.validateJwt],
+      getByParams: [authMiddleware.validateJwt],
       getById: [authMiddleware.validateJwt, Commons.isValidUUID],
       create: [
         authMiddleware.validateJwt,
@@ -57,6 +58,11 @@ export class ChargeRoute {
 
     // * endpoints
     route.get('/', middleware.getAll, chargeController.getAll);
+    route.post(
+      '/get-by-params',
+      middleware.getByParams,
+      chargeController.getByParams
+    );
     route.get('/:id', middleware.getById, chargeController.getById);
     route.post('/', middleware.create, chargeController.create);
     route.put('/', middleware.update, chargeController.update);

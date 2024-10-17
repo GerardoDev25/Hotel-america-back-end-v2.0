@@ -1,8 +1,12 @@
-import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
-import { ChargePagination, ChargeFilter } from '@domain/interfaces';
-import { ChargeDatasource } from '@domain/datasources';
 import { ChargeEntity } from '@domain/entities';
+import { ChargeDatasource } from '@domain/datasources';
 import { ChargeRepository } from '@domain/repositories';
+import { ChargePagination } from '@domain/interfaces';
+import {
+  CreateChargeDto,
+  FilterChargeDto,
+  UpdateChargeDto,
+} from '@domain/dtos/charge';
 
 export class ChargeRepositoryImpl extends ChargeRepository {
   constructor(private readonly chargeDatasource: ChargeDatasource) {
@@ -13,10 +17,12 @@ export class ChargeRepositoryImpl extends ChargeRepository {
     return this.chargeDatasource.getById(id);
   }
 
-  getByParam(
-    searchParam: ChargeFilter
-  ): Promise<{ ok: boolean; charge: ChargeEntity | null }> {
-    return this.chargeDatasource.getByParam(searchParam);
+  getByParams(
+    page: number,
+    limit: number,
+    searchParam: FilterChargeDto
+  ): Promise<ChargePagination> {
+    return this.chargeDatasource.getByParams(page, limit, searchParam);
   }
 
   getAll(page: number, limit: number): Promise<ChargePagination> {
