@@ -1,5 +1,9 @@
 import { Uuid } from '@src/adapters';
-import { PaymentTypeList, UpdatePayment } from '@domain/interfaces';
+import {
+  PaymentFilter,
+  PaymentTypeList,
+  UpdatePayment,
+} from '@domain/interfaces';
 import { PaymentValidator, CreatePaymentDto } from '.';
 
 describe('payment-validator.dto.ts', () => {
@@ -55,7 +59,47 @@ describe('payment-validator.dto.ts', () => {
     ]);
   });
 
-  it('should get empty array if pass a valid object update()', () => {
+  it('should get empty array if pass a valid object (filter)', () => {
+    const data: PaymentFilter = {
+      paidAt: new Date().toISOString(),
+      registerId: Uuid.v4(),
+      amount: 100,
+      type: PaymentTypeList.BACK,
+      description: 'hello world',
+    };
+
+    const errors = PaymentValidator.filter(data);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should get empty array if pass an empty object (filter)', () => {
+    const data = {};
+
+    const errors = PaymentValidator.filter(data);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should get error if properties are wrong (filter)', () => {
+    const data = {
+      paidAt: 'new Date().toISOString()',
+      registerId: 'Uuid.v4()',
+      amount: false,
+      type: 'PaymentTypeList.BACK',
+      description: 12,
+    } as unknown as PaymentFilter;
+
+    const errors = PaymentValidator.filter(data);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors).toEqual([
+      'registerId is not a valid uuid',
+      'paidAt property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
+      'type most be: back, cash, credit_cart, qr',
+      'amount property most be a number',
+      'description property most be a string',
+    ]);
+  });
+
+  it('should get empty array if pass a valid object (update)', () => {
     const data = {
       id: Uuid.v4(),
       amount: 100,
@@ -67,14 +111,14 @@ describe('payment-validator.dto.ts', () => {
     expect(errors.length).toBe(0);
   });
 
-  it('should get empty array if pass an empty object update()', () => {
+  it('should get empty array if pass an empty object (update)', () => {
     const data = { id: Uuid.v4() };
 
     const errors = PaymentValidator.update(data);
     expect(errors.length).toBe(0);
   });
 
-  it('should get error if properties are wrong update()', () => {
+  it('should get error if properties are wrong (update)', () => {
     const data = {
       id: 'Uuid.v4()',
       amount: -100,
