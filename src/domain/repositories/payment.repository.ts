@@ -1,15 +1,21 @@
-import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
-import { PaymentFilter, PaymentPagination } from '@domain/interfaces';
 import { PaymentEntity } from '@domain/entities';
+import { PaymentPagination } from '@domain/interfaces';
+import {
+  CreatePaymentDto,
+  FilterPaymentDto,
+  UpdatePaymentDto,
+} from '@domain/dtos/payment';
 
 export abstract class PaymentRepository {
   abstract getById(
     id: string
   ): Promise<{ ok: boolean; payment: PaymentEntity }>;
 
-  abstract getByParam(
-    searchParam: PaymentFilter
-  ): Promise<{ ok: boolean; payment: PaymentEntity | null }>;
+  abstract getByParams(
+    page: number,
+    limit: number,
+    searchParam: FilterPaymentDto
+  ): Promise<PaymentPagination>;
 
   abstract getAll(page: number, limit: number): Promise<PaymentPagination>;
 

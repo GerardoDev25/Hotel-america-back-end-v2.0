@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
+import {
+  CreatePaymentDto,
+  FilterPaymentDto,
+  UpdatePaymentDto,
+} from '@domain/dtos/payment';
 import { PaymentEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 import { PaymentDatasource } from '.';
-import {
-  PaymentFilter,
-  PaymentPagination,
-  PaymentTypeList,
-} from '@domain/interfaces';
+import { PaymentPagination, PaymentTypeList } from '@domain/interfaces';
 
 describe('payment.datasource.ts', () => {
   const page = 2;
@@ -38,10 +38,12 @@ describe('payment.datasource.ts', () => {
       return { ok: true, payment: mockPayment };
     }
 
-    async getByParam(
-      searchParam: PaymentFilter
-    ): Promise<{ ok: boolean; payment: PaymentEntity | null }> {
-      return { ok: true, payment: mockPayment };
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: FilterPaymentDto
+    ): Promise<PaymentPagination> {
+      return pagination;
     }
 
     async getAll(page: number, limit: number): Promise<PaymentPagination> {
@@ -73,12 +75,10 @@ describe('payment.datasource.ts', () => {
     expect(payment).toEqual(mockPayment);
   });
 
-  test('should call method (getByParam)', async () => {
-    const { ok, payment } = await mockPaymentDatasource.getByParam({
-      amount: mockPayment.amount,
-    });
-    expect(ok).toBeTruthy();
-    expect(payment).toEqual(mockPayment);
+  test('should call method (getByParams)', async () => {
+    const params = { amount: mockPayment.amount };
+    const result = await mockPaymentDatasource.getByParams(page, limit, params);
+    expect(result).toEqual(pagination);
   });
 
   test('should call method (getAll)', async () => {

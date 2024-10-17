@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
+import {
+  CreatePaymentDto,
+  FilterPaymentDto,
+  UpdatePaymentDto,
+} from '@domain/dtos/payment';
 import { PaymentEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
@@ -38,10 +42,12 @@ describe('payment.repository.ts', () => {
       return { ok: true, payment: mockPayment };
     }
 
-    async getByParam(
-      searchParam: PaymentFilter
-    ): Promise<{ ok: boolean; payment: PaymentEntity | null }> {
-      return { ok: true, payment: mockPayment };
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: FilterPaymentDto
+    ): Promise<PaymentPagination> {
+      return pagination;
     }
 
     async getAll(page: number, limit: number): Promise<PaymentPagination> {
@@ -73,12 +79,10 @@ describe('payment.repository.ts', () => {
     expect(payment).toEqual(mockPayment);
   });
 
-  test('should call method (getByParam)', async () => {
-    const { ok, payment } = await mockPaymentRepository.getByParam({
-      amount: mockPayment.amount,
-    });
-    expect(ok).toBeTruthy();
-    expect(payment).toEqual(mockPayment);
+  test('should call method (getByParams)', async () => {
+    const params = { amount: mockPayment.amount };
+    const result = await mockPaymentRepository.getByParams(page, limit, params);
+    expect(result).toEqual(pagination);
   });
 
   test('should call method (getAll)', async () => {
