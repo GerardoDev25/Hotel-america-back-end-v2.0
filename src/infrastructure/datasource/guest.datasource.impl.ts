@@ -1,8 +1,12 @@
-import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
+import {
+  CreateGuestDto,
+  FilterGuestDto,
+  UpdateGuestDto,
+} from '@domain/dtos/guest';
 import { CustomError } from '@domain/error';
 import { GuestDatasource } from '@domain/datasources';
 import { GuestEntity } from '@domain/entities';
-import { GuestPagination, GuestFilter } from '@domain/interfaces';
+import { GuestPagination } from '@domain/interfaces';
 import { LoggerService } from '@presentation/services';
 import { Guest } from '@prisma/client';
 import { prisma } from '@src/data/postgres';
@@ -45,19 +49,37 @@ export class GuestDatasourceImpl extends GuestDatasource {
     }
   }
 
-  async getByParam(
-    searchParam: GuestFilter
-  ): Promise<{ ok: boolean; guest: GuestEntity | null }> {
+  async getByParams(
+    page: number,
+    limit: number,
+    searchParam: FilterGuestDto
+  ): Promise<GuestPagination> {
     try {
-      const guest = await prisma.guest.findFirst({ where: searchParam });
-      if (!guest) return { ok: false, guest: null };
+      const where = cleanObject(searchParam);
 
-      return { ok: true, guest: this.transformObject(guest) };
+      const [totalDB, guestsDb] = await Promise.all([
+        prisma.guest.count({ where }),
+        prisma.guest.findMany({
+          where,
+          take: limit,
+          skip: (page - 1) * limit,
+        }),
+      ]);
+
+      const guests = guestsDb.map((guest) => this.transformObject(guest));
+      const total = guestsDb.length === 0 ? 0 : totalDB;
+      const { next, prev } = pagination({
+        page,
+        limit,
+        total,
+        path: 'guest/get-by-params',
+      });
+
+      return { page, limit, total, next, prev, guests };
     } catch (error: any) {
       throw this.handleError(error);
     }
   }
-
   async getAll(page: number, limit: number): Promise<GuestPagination> {
     try {
       const [total, guestsDb] = await Promise.all([

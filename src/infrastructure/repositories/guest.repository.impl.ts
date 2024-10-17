@@ -1,8 +1,12 @@
-import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
+import {
+  CreateGuestDto,
+  FilterGuestDto,
+  UpdateGuestDto,
+} from '@domain/dtos/guest';
 import { GuestDatasource } from '@domain/datasources/guest.datasource';
 import { GuestEntity } from '@domain/entities';
 import { GuestRepository } from '@domain/repositories';
-import { GuestPagination, GuestFilter } from '@domain/interfaces';
+import { GuestPagination } from '@domain/interfaces';
 
 export class GuestRepositoryImpl extends GuestRepository {
   constructor(private readonly guestDatasource: GuestDatasource) {
@@ -13,10 +17,12 @@ export class GuestRepositoryImpl extends GuestRepository {
     return this.guestDatasource.getById(id);
   }
 
-  getByParam(
-    searchParam: GuestFilter
-  ): Promise<{ ok: boolean; guest: GuestEntity | null }> {
-    return this.guestDatasource.getByParam(searchParam);
+  getByParams(
+    page: number,
+    limit: number,
+    searchParam: FilterGuestDto
+  ): Promise<GuestPagination> {
+    return this.guestDatasource.getByParams(page, limit, searchParam);
   }
 
   getAll(page: number, limit: number): Promise<GuestPagination> {

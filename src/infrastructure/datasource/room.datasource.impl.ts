@@ -76,7 +76,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
     try {
       const where = cleanObject(searchParam);
 
-      const [total, roomsDb] = await Promise.all([
+      const [totalDB, roomsDb] = await Promise.all([
         prisma.room.count({ where }),
         prisma.room.findMany({
           where,
@@ -87,10 +87,11 @@ export class RoomDatasourceImpl extends RoomDatasource {
       ]);
 
       const rooms = roomsDb.map((room) => RoomEntity.fromObject(room));
+      const total = roomsDb.length === 0 ? 0 : totalDB;
       const { next, prev } = pagination({
         page,
         limit,
-        total: roomsDb.length === 0 ? 0 : total,
+        total,
         path: 'room/get-by-params',
       });
 

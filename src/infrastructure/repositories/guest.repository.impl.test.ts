@@ -2,12 +2,16 @@ import { GuestDatasource } from '@src/domain/datasources';
 import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
 import { Uuid } from '@src/adapters';
 import { GuestRepositoryImpl } from '.';
+import { IGuestFilterDto } from '@src/domain/interfaces';
 
 describe('guest.repository.impl.ts', () => {
+  const page = 2;
+  const limit = 10;
+
   const mockDataSource: GuestDatasource = {
     getAll: jest.fn(),
     getById: jest.fn(),
-    getByParam: jest.fn(),
+    getByParams: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -24,18 +28,20 @@ describe('guest.repository.impl.ts', () => {
     expect(mockDataSource.getById).toHaveBeenCalledWith(id);
   });
 
-  test('should call (getByParam)', async () => {
-    const dateOfBirth = '';
-    await repository.getByParam({ dateOfBirth });
+  test('should call (getByParams)', async () => {
+    const params: IGuestFilterDto = { dateOfBirth: new Date() };
 
-    expect(mockDataSource.getByParam).toHaveBeenCalled();
-    expect(mockDataSource.getByParam).toHaveBeenCalledWith({ dateOfBirth });
+    await repository.getByParams(page, limit, params);
+
+    expect(mockDataSource.getByParams).toHaveBeenCalled();
+    expect(mockDataSource.getByParams).toHaveBeenCalledWith(
+      page,
+      limit,
+      params
+    );
   });
 
   test('should call getAll', async () => {
-    const page = 2;
-    const limit = 10;
-
     await repository.getAll(page, limit);
 
     expect(mockDataSource.getAll).toHaveBeenCalled();
