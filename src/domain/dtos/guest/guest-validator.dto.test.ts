@@ -3,6 +3,7 @@ import { variables } from '@domain/variables';
 import { Uuid } from '@src/adapters';
 import { citiesList } from '@src/data/seed';
 import { GuestValidator } from './';
+import { GuestFilter } from '@src/domain/interfaces';
 
 describe('guest-validator.dto.ts', () => {
   it('should get empty array if pass a valid object (create)', () => {
@@ -70,6 +71,59 @@ describe('guest-validator.dto.ts', () => {
     expect(errors).toContain(
       'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format'
     );
+  });
+
+  it('should get everything optional but id required (filter)', () => {
+    const data = {};
+    const errors = GuestValidator.filter(data);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should get empty array if pass a valid object (filter)', () => {
+    const fullName = Generator.randomName();
+    const data: GuestFilter = {
+      di: Generator.randomIdentityNumber(),
+      city: Generator.randomCity(citiesList),
+      name: fullName.split(' ').at(0)!,
+      lastName: fullName.split(' ').at(1)!,
+      phone: Generator.randomPhone(),
+      roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
+      countryId: 'BO',
+      registerId: Uuid.v4(),
+      dateOfBirth: Generator.randomDate(),
+      checkOut: Generator.randomDate(),
+    };
+
+    const errors = GuestValidator.filter(data);
+
+    expect(errors.length).toBe(0);
+  });
+
+  it('should get error if properties are wrong (filter)', () => {
+    const data = {
+      di: 'false',
+      city: 'undefined',
+      name: 'true',
+      lastName: '12',
+      phone: 'new Date()',
+      roomNumber: -4,
+      countryId: 'B',
+      registerId: 'Uuid.v4()',
+      dateOfBirth: 'Generator.randomDate()',
+      checkOut: 'Generator.randomDate()',
+    };
+    const errors = GuestValidator.filter(data);
+
+    expect(errors.length).toBeGreaterThan(0);
+
+    expect(errors).toMatchObject([
+      'phone property most have a valid format',
+      'roomNumber property most be greater than or equal to 1',
+      'countryId not valid',
+      'registerId is not a valid uuid',
+      'dateOfBirth property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
+      'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
+    ]);
   });
 
   it('should get everything optional but id required (update)', () => {

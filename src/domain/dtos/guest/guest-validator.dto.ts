@@ -1,10 +1,10 @@
-import { CreateGuest, UpdateGuest } from '@domain/interfaces';
+import { CreateGuest, GuestFilter, UpdateGuest } from '@domain/interfaces';
+import { variables } from '@domain/variables';
 import {
   DateValidator,
   NumberValidator,
   StringValidator,
 } from '@domain/type-validators';
-import { variables } from '@src/domain/variables';
 
 export class GuestValidator {
   static create(object: CreateGuest) {
@@ -95,10 +95,9 @@ export class GuestValidator {
     return errors;
   }
 
-  static update(object: UpdateGuest) {
+  static filter(object: GuestFilter) {
     const errors: string[] = [];
     const {
-      id,
       di,
       city,
       name,
@@ -110,12 +109,6 @@ export class GuestValidator {
       dateOfBirth,
       checkOut,
     } = object;
-
-    // * id
-    const idValid = StringValidator.isValidUUID(id);
-    if (idValid !== true) {
-      errors.push(`id ${idValid}`);
-    }
 
     // * di
     if (di !== undefined) {
@@ -201,6 +194,20 @@ export class GuestValidator {
       if (checkOutValid !== true) {
         errors.push(`checkOut ${checkOutValid}`);
       }
+    }
+
+    return errors;
+  }
+
+  static update(object: UpdateGuest) {
+    const { id, ...rest } = object;
+
+    const errors: string[] = GuestValidator.filter(rest);
+
+    // * id
+    const idValid = StringValidator.isValidUUID(id);
+    if (idValid !== true) {
+      errors.push(`id ${idValid}`);
     }
 
     return errors;

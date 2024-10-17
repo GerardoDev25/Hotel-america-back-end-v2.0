@@ -1,9 +1,8 @@
 import { IGuestFilterDto } from '@src/domain/interfaces';
 import { GuestValidator } from './guest-validator.dto';
 
-export class UpdateGuestDto implements IGuestFilterDto {
+export class FilterGuestDto implements IGuestFilterDto {
   private constructor(
-    public readonly id: string,
     public readonly di?: string,
     public readonly city?: string,
     public readonly name?: string,
@@ -13,12 +12,12 @@ export class UpdateGuestDto implements IGuestFilterDto {
     public readonly countryId?: string,
     public readonly registerId?: string,
     public readonly dateOfBirth?: Date,
+    public readonly checkIn?: Date,
     public readonly checkOut?: Date
   ) {}
 
-  static create(props: Record<string, any>): [string[]?, UpdateGuestDto?] {
+  static create(props: Record<string, any>): [string[]?, FilterGuestDto?] {
     const {
-      id,
       di,
       city,
       name,
@@ -28,11 +27,11 @@ export class UpdateGuestDto implements IGuestFilterDto {
       countryId,
       registerId,
       dateOfBirth,
+      checkIn,
       checkOut,
     } = props;
 
-    const errors = GuestValidator.update({
-      id,
+    const errors = GuestValidator.filter({
       di,
       city,
       name,
@@ -42,6 +41,7 @@ export class UpdateGuestDto implements IGuestFilterDto {
       countryId,
       registerId,
       dateOfBirth,
+      checkIn,
       checkOut,
     });
 
@@ -49,8 +49,7 @@ export class UpdateGuestDto implements IGuestFilterDto {
 
     return [
       undefined,
-      new UpdateGuestDto(
-        (id as string).trim(),
+      new FilterGuestDto(
         di !== undefined ? (di as string).trim() : undefined,
         city !== undefined ? (city as string).trim().toLowerCase() : undefined,
         name !== undefined ? (name as string).trim().toLowerCase() : undefined,
@@ -62,6 +61,7 @@ export class UpdateGuestDto implements IGuestFilterDto {
         countryId !== undefined ? (countryId as string).trim() : undefined,
         registerId !== undefined ? (registerId as string).trim() : undefined,
         dateOfBirth !== undefined ? new Date(dateOfBirth) : undefined,
+        checkIn !== undefined ? new Date(checkIn) : undefined,
         checkOut !== undefined ? new Date(checkOut) : undefined
       ),
     ];

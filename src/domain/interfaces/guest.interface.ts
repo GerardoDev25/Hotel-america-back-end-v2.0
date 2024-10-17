@@ -23,6 +23,14 @@ export interface GuestPagination {
 }
 
 export type GuestFilter = Partial<Omit<IGuest, 'id'>>;
+export type IGuestFilterDto = Partial<
+  Omit<GuestFilter, 'checkIn' | 'checkOut' | 'dateOfBirth'>
+> & {
+  checkIn?: Date;
+  checkOut?: Date;
+  dateOfBirth?: Date;
+};
+
 export type CreateGuest = Omit<IGuest, 'id' | 'registerId' | 'checkIn'> & {
   registerId?: string;
 };

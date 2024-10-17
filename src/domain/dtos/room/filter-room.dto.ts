@@ -1,9 +1,9 @@
 import { BooleanValidator } from '@domain/type-validators';
-import { RoomType } from '@domain/interfaces/';
+import { RoomFilter, RoomType } from '@domain/interfaces/';
 import { RoomValidator } from './room-validator-dtos';
 import { RoomState } from '@prisma/client';
 
-export class FilterRoomDto {
+export class FilterRoomDto implements RoomFilter {
   private constructor(
     public readonly roomType?: RoomType,
     public readonly state?: RoomState,
