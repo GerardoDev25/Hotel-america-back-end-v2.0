@@ -1,4 +1,8 @@
-import { CreateRegister, UpdateRegister } from '@domain/interfaces';
+import {
+  CreateRegister,
+  RegisterFilter,
+  UpdateRegister,
+} from '@domain/interfaces';
 import {
   DateValidator,
   NumberValidator,
@@ -57,16 +61,10 @@ export class RegisterValidator {
     return errors;
   }
 
-  static update(object: UpdateRegister): string[] {
+  static filter(object: RegisterFilter): string[] {
     const errors: string[] = [];
-    const { id, guestsNumber, discount, price, userId, roomId, checkOut } =
+    const { guestsNumber, discount, price, userId, roomId, checkOut, checkIn } =
       object;
-
-    // * id
-    const idValid = StringValidator.isValidUUID(id);
-    if (idValid !== true) {
-      errors.push(`id ${idValid}`);
-    }
 
     // * guestsNumber
     if (guestsNumber !== undefined) {
@@ -119,6 +117,26 @@ export class RegisterValidator {
       }
     }
 
+    // * checkIn
+    if (checkIn !== undefined) {
+      const checkInValid = DateValidator.isValid(checkIn);
+      if (checkInValid !== true) {
+        errors.push(`checkIn ${checkInValid}`);
+      }
+    }
+
+    return errors;
+  }
+  static update(object: UpdateRegister): string[] {
+    const { id, ...rest } = object;
+
+    const errors: string[] = RegisterValidator.filter(rest);
+
+    // * id
+    const idValid = StringValidator.isValidUUID(id);
+    if (idValid !== true) {
+      errors.push(`id ${idValid}`);
+    }
     return errors;
   }
 }

@@ -1,12 +1,13 @@
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
-import { UpdateRegisterDto } from './update-register.dto';
+import { FilterRegisterDto } from '.';
+import { RegisterFilter } from '@domain/interfaces';
 
-describe('update-register.dto.ts', () => {
-  test('should create an instance if UpdateRegisterDto', () => {
-    const data = {
-      id: Uuid.v4(),
+describe('filter-register.dto.ts', () => {
+  it('should create an instance if FilterRegisterDto', () => {
+    const data: RegisterFilter = {
       checkOut: Generator.randomDate(),
+      checkIn: Generator.randomDate(),
       guestsNumber: 4,
       discount: 0,
       price: 302,
@@ -14,19 +15,22 @@ describe('update-register.dto.ts', () => {
       roomId: Uuid.v4(),
     };
 
-    const [errors, updateRegister] = UpdateRegisterDto.create(data);
-    const checkOut = data.checkOut ? new Date(data.checkOut) : undefined;
+    const [errors, updateRegister] = FilterRegisterDto.create(data);
+    const checkOut =
+      data.checkOut !== undefined ? new Date(data.checkOut) : undefined;
+    const checkIn =
+      data.checkIn !== undefined ? new Date(data.checkIn) : undefined;
 
     expect(errors).toBeUndefined();
-    expect(updateRegister).toBeInstanceOf(UpdateRegisterDto);
+    expect(updateRegister).toBeInstanceOf(FilterRegisterDto);
     expect(updateRegister).toEqual(
-      expect.objectContaining({ ...data, checkOut })
+      expect.objectContaining({ ...data, checkOut, checkIn })
     );
   });
 
   it('should get error if properties are wrong', () => {
     const data = {
-      id: 'no valid uuid',
+      checkIn: 'no valid date',
       checkOut: 'no valid date',
       guestsNumber: '4',
       discount: true,
@@ -35,7 +39,7 @@ describe('update-register.dto.ts', () => {
       roomId: 'no valid uuid',
     };
 
-    const [errors, updateRegister] = UpdateRegisterDto.create(data);
+    const [errors, updateRegister] = FilterRegisterDto.create(data);
 
     expect(updateRegister).toBeUndefined();
     expect(errors).toBeInstanceOf(Array);
@@ -45,7 +49,7 @@ describe('update-register.dto.ts', () => {
       'userId is not a valid uuid',
       'roomId is not a valid uuid',
       'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
-      'id is not a valid uuid',
+      'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
     ]);
   });
 });

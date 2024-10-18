@@ -84,6 +84,13 @@ export interface RegisterPagination {
 }
 
 export type RegisterFilter = Partial<Omit<IRegister, 'id'>>;
+export type IRegisterFilterDto = Omit<
+  RegisterFilter,
+  'checkIn' | 'checkOut'
+> & {
+  checkIn?: Date;
+  checkOut?: Date;
+};
 
 export type CreateRegister = Omit<
   IRegister,
