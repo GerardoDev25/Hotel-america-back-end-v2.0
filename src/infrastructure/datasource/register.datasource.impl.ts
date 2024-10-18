@@ -71,6 +71,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
 
     return checkOutDetail;
   }
+
   private transformGuestObject(entities: Guest[]): GuestEntity[] {
     const guestEntities = entities.map((guest) =>
       GuestEntity.fromObject({
@@ -193,33 +194,35 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     return checkOut;
   }
 
-  async getById(
-    id: string
-  ): Promise<{ ok: boolean; register: RegisterEntity }> {
-    try {
-      const register = await prisma.register.findUnique({ where: { id } });
-
-      if (!register) {
-        throw CustomError.notFound(`register with id ${id} not found`);
-      }
-
-      return { ok: true, register: this.transformObject(register) };
-    } catch (error: any) {
-      throw this.handleError(error);
-    }
-  }
-
-  async getByParam(
+  async getByParams(
+    page: number,
+    limit: number,
     searchParam: RegisterFilter
-  ): Promise<{ ok: boolean; register: RegisterEntity | null }> {
+  ): Promise<RegisterPagination> {
     try {
-      const register = await prisma.register.findFirst({ where: searchParam });
+      const where = cleanObject(searchParam);
 
-      if (!register) {
-        return { ok: true, register: null };
-      }
+      const [totalDB, registersDb] = await Promise.all([
+        prisma.register.count({ where }),
+        prisma.register.findMany({
+          where,
+          take: limit,
+          skip: (page - 1) * limit,
+        }),
+      ]);
 
-      return { ok: true, register: this.transformObject(register) };
+      const registers = registersDb.map((register) =>
+        this.transformObject(register)
+      );
+      const total = registersDb.length === 0 ? 0 : totalDB;
+      const { next, prev } = pagination({
+        page,
+        limit,
+        total,
+        path: 'register/get-by-params',
+      });
+
+      return { page, limit, total, next, prev, registers };
     } catch (error: any) {
       throw this.handleError(error);
     }
@@ -248,6 +251,22 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
 
       return { page, limit, total, next, prev, registers };
     } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getById(
+    id: string
+  ): Promise<{ ok: boolean; register: RegisterEntity }> {
+    try {
+      const register = await prisma.register.findUnique({ where: { id } });
+
+      if (!register) {
+        throw CustomError.notFound(`register with id ${id} not found`);
+      }
+
+      return { ok: true, register: this.transformObject(register) };
+    } catch (error: any) {
       throw this.handleError(error);
     }
   }

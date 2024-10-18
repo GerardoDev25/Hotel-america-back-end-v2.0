@@ -22,10 +22,12 @@ export class RegisterRepositoryImpl extends RegisterRepository {
     return this.registerDataSource.getById(id);
   }
 
-  getByParam(
+  getByParams(
+    page: number,
+    limit: number,
     searchParam: RegisterFilter
-  ): Promise<{ ok: boolean; register: RegisterEntity | null }> {
-    return this.registerDataSource.getByParam(searchParam);
+  ): Promise<RegisterPagination> {
+    return this.registerDataSource.getByParams(page, limit, searchParam);
   }
 
   create(

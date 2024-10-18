@@ -10,10 +10,13 @@ import { citiesList } from '@src/data/seed';
 import { RegisterRepositoryImpl } from '.';
 
 describe('register.repository.impl.ts', () => {
+  const page = 2;
+  const limit = 10;
+
   const mockDataSource: RegisterDatasource = {
     getAll: jest.fn(),
     getById: jest.fn(),
-    getByParam: jest.fn(),
+    getByParams: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -25,30 +28,29 @@ describe('register.repository.impl.ts', () => {
 
   beforeEach(() => jest.clearAllMocks());
 
+  it('should call getAll', async () => {
+    await repository.getAll(page, limit);
+
+    expect(mockDataSource.getAll).toHaveBeenCalled();
+    expect(mockDataSource.getAll).toHaveBeenCalledWith(page, limit);
+  });
+
+  it('should call getByParams', async () => {
+    const roomId = Uuid.v4();
+    await repository.getByParams(page, limit, { roomId });
+
+    expect(mockDataSource.getByParams).toHaveBeenCalled();
+    expect(mockDataSource.getByParams).toHaveBeenCalledWith(page, limit, {
+      roomId,
+    });
+  });
+
   it('should call getById', async () => {
     const id = Uuid.v4();
     await repository.getById(id);
 
     expect(mockDataSource.getById).toHaveBeenCalled();
     expect(mockDataSource.getById).toHaveBeenCalledWith(id);
-  });
-
-  it('should call getByParam', async () => {
-    const roomId = Uuid.v4();
-    await repository.getByParam({ roomId });
-
-    expect(mockDataSource.getByParam).toHaveBeenCalled();
-    expect(mockDataSource.getByParam).toHaveBeenCalledWith({ roomId });
-  });
-
-  it('should call getAll', async () => {
-    const page = 2;
-    const limit = 10;
-
-    await repository.getAll(page, limit);
-
-    expect(mockDataSource.getAll).toHaveBeenCalled();
-    expect(mockDataSource.getAll).toHaveBeenCalledWith(page, limit);
   });
 
   it('should call create', async () => {
