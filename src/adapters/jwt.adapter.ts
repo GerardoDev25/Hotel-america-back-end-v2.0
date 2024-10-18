@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { envs } from './../config/envs';
+import { envs } from '@src/config/envs';
 
 const jwt_seed = envs.JWT_SEED;
 const jwt_duration = envs.JWT_DURATION;

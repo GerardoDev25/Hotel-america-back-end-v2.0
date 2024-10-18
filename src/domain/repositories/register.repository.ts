@@ -14,9 +14,11 @@ export abstract class RegisterRepository {
     id: string
   ): Promise<{ ok: boolean; register: RegisterEntity }>;
 
-  abstract getByParam(
+  abstract getByParams(
+    page: number,
+    limit: number,
     searchParam: RegisterFilter
-  ): Promise<{ ok: boolean; register: RegisterEntity | null }>;
+  ): Promise<RegisterPagination>;
 
   abstract create(
     createRegisterDto: CreateRegisterDto

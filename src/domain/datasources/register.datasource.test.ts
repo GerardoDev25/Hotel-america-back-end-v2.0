@@ -70,7 +70,7 @@ describe('register.datasource.ts', () => {
     registerId: Uuid.v4(),
   });
 
-  const registerPagination: RegisterPagination = {
+  const pagination: RegisterPagination = {
     registers: [mockRegister, mockRegister2],
     total: 0,
     page: 0,
@@ -80,20 +80,22 @@ describe('register.datasource.ts', () => {
   };
 
   class MockRegisterDataSource implements RegisterDatasource {
+    async getAll(page: number, limit: number): Promise<RegisterPagination> {
+      return pagination;
+    }
+
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: RegisterFilter
+    ): Promise<RegisterPagination> {
+      return pagination;
+    }
+
     async getById(
       id: string
     ): Promise<{ ok: boolean; register: RegisterEntity }> {
       return { ok: true, register: mockRegister };
-    }
-
-    async getByParam(
-      searchParam: RegisterFilter
-    ): Promise<{ ok: boolean; register: RegisterEntity | null }> {
-      return { ok: true, register: mockRegister };
-    }
-
-    async getAll(page: number, limit: number): Promise<RegisterPagination> {
-      return registerPagination;
     }
 
     async create(
@@ -132,27 +134,7 @@ describe('register.datasource.ts', () => {
 
   const mockRegisterDataSource = new MockRegisterDataSource();
 
-  it('should get default value getById()', async () => {
-    const id = Uuid.v4();
-    const { ok, register } = await mockRegisterDataSource.getById(id);
-
-    expect(typeof mockRegisterDataSource.getById).toBe('function');
-    expect(ok).toBeTruthy();
-    expect(register).toBeInstanceOf(RegisterEntity);
-  });
-
-  it('should get default value getByParam()', async () => {
-    const userId = Uuid.v4();
-    const { ok, register } = await mockRegisterDataSource.getByParam({
-      userId,
-    });
-
-    expect(typeof mockRegisterDataSource.getByParam).toBe('function');
-    expect(ok).toBeTruthy();
-    expect(register).toBeInstanceOf(RegisterEntity);
-  });
-
-  it('should get default value getAll()', async () => {
+  it('should get default value (getAll)', async () => {
     const { registers } = await mockRegisterDataSource.getAll(page, limit);
 
     expect(typeof mockRegisterDataSource.getAll).toBe('function');
@@ -163,7 +145,33 @@ describe('register.datasource.ts', () => {
     });
   });
 
-  it('should get default behavior create()', async () => {
+  it('should get default value (getByParams)', async () => {
+    const params = { userId: Uuid.v4() };
+
+    const { registers } = await mockRegisterDataSource.getByParams(
+      page,
+      limit,
+      params
+    );
+
+    expect(typeof mockRegisterDataSource.getByParams).toBe('function');
+    expect(registers).toBeInstanceOf(Array);
+    expect(registers).toHaveLength(2);
+    registers.forEach((register) => {
+      expect(register).toBeInstanceOf(RegisterEntity);
+    });
+  });
+
+  it('should get default value (getById)', async () => {
+    const id = Uuid.v4();
+    const { ok, register } = await mockRegisterDataSource.getById(id);
+
+    expect(typeof mockRegisterDataSource.getById).toBe('function');
+    expect(ok).toBeTruthy();
+    expect(register).toBeInstanceOf(RegisterEntity);
+  });
+
+  it('should get default behavior (create)', async () => {
     const { id, ...rest } = mockRegister;
     const checkOut = rest.checkOut ? new Date(rest.checkOut) : undefined;
     const newRegister = { ...rest, checkOut };
@@ -179,7 +187,7 @@ describe('register.datasource.ts', () => {
     });
   });
 
-  it('should get default behavior checkIn()', async () => {
+  it('should get default behavior (checkIn)', async () => {
     const { id, ...restRegister } = mockRegister;
     const checkOut = restRegister.checkOut
       ? new Date(restRegister.checkOut)
@@ -219,7 +227,7 @@ describe('register.datasource.ts', () => {
     });
   });
 
-  it('should get default behavior checkOut()', async () => {
+  it('should get default behavior (checkOut)', async () => {
     const id = Uuid.v4();
 
     const { ok, registerCheckOutDetail } =
@@ -230,7 +238,7 @@ describe('register.datasource.ts', () => {
     expect(registerCheckOutDetail).toBeInstanceOf(Object);
   });
 
-  it('should get default behavior update()', async () => {
+  it('should get default behavior (update)', async () => {
     const checkOut = mockRegister.checkOut
       ? new Date(mockRegister.checkOut)
       : undefined;
@@ -247,7 +255,7 @@ describe('register.datasource.ts', () => {
     });
   });
 
-  it('should get default behavior delete()', async () => {
+  it('should get default behavior (delete)', async () => {
     const id = Uuid.v4();
 
     const { ok, message } = await mockRegisterDataSource.delete(id);

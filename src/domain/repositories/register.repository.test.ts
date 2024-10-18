@@ -79,20 +79,22 @@ describe('register.repository.ts', () => {
   });
 
   class MockRegisterRepository implements RegisterRepository {
+    async getAll(page: number, limit: number): Promise<RegisterPagination> {
+      return registerPagination;
+    }
+
+    async getByParams(
+      page: number,
+      limit: number,
+      searchParam: RegisterFilter
+    ): Promise<RegisterPagination> {
+      return registerPagination;
+    }
+
     async getById(
       id: string
     ): Promise<{ ok: boolean; register: RegisterEntity }> {
       return { ok: true, register: mockRegister };
-    }
-
-    async getByParam(
-      searchParam: RegisterFilter
-    ): Promise<{ ok: boolean; register: RegisterEntity | null }> {
-      return { ok: true, register: mockRegister };
-    }
-
-    async getAll(page: number, limit: number): Promise<RegisterPagination> {
-      return registerPagination;
     }
 
     async create(
@@ -129,7 +131,7 @@ describe('register.repository.ts', () => {
     }
   }
 
-  test('should get default value getById()', async () => {
+  it('should get default value (getById)', async () => {
     const id = Uuid.v4();
     const mockRegisterRepository = new MockRegisterRepository();
     const { ok, register } = await mockRegisterRepository.getById(id);
@@ -139,19 +141,25 @@ describe('register.repository.ts', () => {
     expect(register).toBeInstanceOf(RegisterEntity);
   });
 
-  test('should get default value getByParam()', async () => {
-    const userId = Uuid.v4();
+  it('should get default value (getByParams)', async () => {
+    const params = { userId: Uuid.v4() };
     const mockRegisterRepository = new MockRegisterRepository();
-    const { ok, register } = await mockRegisterRepository.getByParam({
-      userId,
-    });
 
-    expect(typeof mockRegisterRepository.getByParam).toBe('function');
-    expect(ok).toBeTruthy();
-    expect(register).toBeInstanceOf(RegisterEntity);
+    const { registers } = await mockRegisterRepository.getByParams(
+      page,
+      limit,
+      params
+    );
+
+    expect(typeof mockRegisterRepository.getByParams).toBe('function');
+    expect(registers).toBeInstanceOf(Array);
+    expect(registers).toHaveLength(2);
+    registers.forEach((register) => {
+      expect(register).toBeInstanceOf(RegisterEntity);
+    });
   });
 
-  test('should get default value getAll()', async () => {
+  it('should get default value (getAll)', async () => {
     const mockRegisterRepository = new MockRegisterRepository();
     const { registers } = await mockRegisterRepository.getAll(page, limit);
 
@@ -163,7 +171,7 @@ describe('register.repository.ts', () => {
     });
   });
 
-  test('should get default behavior create()', async () => {
+  it('should get default behavior (create)', async () => {
     const mockRegisterRepository = new MockRegisterRepository();
 
     const { id, ...rest } = mockRegister;
@@ -181,7 +189,7 @@ describe('register.repository.ts', () => {
     });
   });
 
-  test('should get default behavior checkIn()', async () => {
+  it('should get default behavior (checkIn)', async () => {
     const mockRegisterRepository = new MockRegisterRepository();
 
     const { id, ...restRegister } = mockRegister;
@@ -223,7 +231,7 @@ describe('register.repository.ts', () => {
     });
   });
 
-  it('should get default behavior checkOut()', async () => {
+  it('should get default behavior (checkOut)', async () => {
     const id = Uuid.v4();
     const mockRegisterRepository = new MockRegisterRepository();
 
@@ -235,7 +243,7 @@ describe('register.repository.ts', () => {
     expect(registerCheckOutDetail).toBeInstanceOf(Object);
   });
 
-  test('should get default behavior update()', async () => {
+  it('should get default behavior (update)', async () => {
     const mockRegisterRepository = new MockRegisterRepository();
 
     const checkOut = mockRegister.checkOut
@@ -254,7 +262,7 @@ describe('register.repository.ts', () => {
     });
   });
 
-  test('should get default behavior delete()', async () => {
+  it('should get default behavior (delete)', async () => {
     const id = Uuid.v4();
     const mockRegisterRepository = new MockRegisterRepository();
 
