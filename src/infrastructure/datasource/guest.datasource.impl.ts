@@ -105,6 +105,18 @@ export class GuestDatasourceImpl extends GuestDatasource {
     }
 
     try {
+      const register = await prisma.register.findFirst({
+        where: { id: registerId },
+      });
+
+      if (!register) {
+        throw CustomError.notFound(`register with id: ${registerId} not found`);
+      }
+    } catch (error) {
+      throw this.handleError(error);
+    }
+
+    try {
       const newGuest = await prisma.$transaction(async (tx) => {
         await tx.register.update({
           where: { id: createGuestDto.registerId },

@@ -310,7 +310,7 @@ describe('guest.route.ts', () => {
     const { ok, errors } = body;
 
     expect(ok).toBeFalsy();
-    expect(errors[0]).toEqual(`register with id ${registerId} not found`);
+    expect(errors[0]).toEqual(`register with id: ${registerId} not found`);
   });
 
   it('should get error white create guest (create)', async () => {

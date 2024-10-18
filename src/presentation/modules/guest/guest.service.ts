@@ -1,5 +1,4 @@
-import { GuestRepository, RegisterRepository } from '@domain/repositories';
-import { CustomError } from '@domain/error';
+import { GuestRepository } from '@domain/repositories';
 import { PaginationDto } from '@domain/dtos/share';
 import {
   CreateGuestDto,
@@ -8,15 +7,7 @@ import {
 } from '@domain/dtos/guest';
 
 export class GuestService {
-  constructor(
-    private readonly guestRepository: GuestRepository,
-    private readonly registerRepository: RegisterRepository
-  ) {}
-
-  private handleError(error: unknown) {
-    if (error instanceof CustomError) throw error;
-    throw CustomError.internalServerError('Internal Server Error');
-  }
+  constructor(private readonly guestRepository: GuestRepository) {}
 
   async getAll(paginationDto: PaginationDto) {
     const { page, limit } = paginationDto;
@@ -36,12 +27,6 @@ export class GuestService {
   }
 
   async create(createGuestDto: CreateGuestDto) {
-    try {
-      await this.registerRepository.getById(createGuestDto.registerId!);
-    } catch (error) {
-      throw this.handleError(error);
-    }
-
     return this.guestRepository.create(createGuestDto);
   }
 

@@ -288,7 +288,6 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       await this.checkGuestsCountryIds(guestDtos);
 
       const checkInTx = await this.createCheckIn({ registerDto, guestDtos });
-      // console.log(checkInTx);
       return { ok: true, ...checkInTx };
     } catch (error) {
       throw this.handleError(error);

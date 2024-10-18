@@ -3,11 +3,10 @@ import { citiesList } from '@src/data/seed';
 import { PaginationDto } from '@domain/dtos/share';
 import { GuestEntity } from '@domain/entities';
 import { GuestPagination } from '@domain/interfaces';
-import { GuestRepository, RegisterRepository } from '@domain/repositories';
+import { GuestRepository } from '@domain/repositories';
 import { variables } from '@domain/variables';
 import { Generator } from '@src/utils/generator';
 import { CreateGuestDto, FilterGuestDto } from '@domain/dtos/guest';
-import { CustomError } from '@domain/error';
 import { GuestService } from '.';
 
 describe('guest.service.ts', () => {
@@ -48,16 +47,9 @@ describe('guest.service.ts', () => {
     delete: jest.fn().mockResolvedValue(resolveData),
   };
 
-  const mockRegisterRepository = {
-    getById: jest.fn(),
-  } as unknown as RegisterRepository;
-
   it('should have been call with parameters (getAll)', async () => {
     const paginationDto: PaginationDto = { page: 1, limit: 10 };
-    const guestService = new GuestService(
-      mockGuestRepository,
-      mockRegisterRepository
-    );
+    const guestService = new GuestService(mockGuestRepository);
 
     await guestService.getAll(paginationDto);
 
@@ -70,14 +62,11 @@ describe('guest.service.ts', () => {
   it('should have been call with parameters (getByParams)', async () => {
     const paginationDto: PaginationDto = { page: 1, limit: 10 };
     const params: FilterGuestDto = { checkIn: new Date() };
-    const guestService = new GuestService(
-      mockGuestRepository,
-      mockRegisterRepository
-    );
+    const guestService = new GuestService(mockGuestRepository);
 
     await guestService.getByParams(paginationDto, params);
 
-    expect(mockGuestRepository.getById).toHaveBeenCalledWith(
+    expect(mockGuestRepository.getByParams).toHaveBeenCalledWith(
       paginationDto.page,
       paginationDto.limit,
       params
@@ -86,10 +75,7 @@ describe('guest.service.ts', () => {
 
   it('should have been call with parameters (getById)', async () => {
     const id = Uuid.v4();
-    const guestService = new GuestService(
-      mockGuestRepository,
-      mockRegisterRepository
-    );
+    const guestService = new GuestService(mockGuestRepository);
 
     await guestService.getById(id);
 
@@ -97,46 +83,16 @@ describe('guest.service.ts', () => {
   });
 
   it('should have been call with parameters (create)', async () => {
-    const guestDto = { registerId: Uuid.v4() } as CreateGuestDto;
-    const guestService = new GuestService(
-      mockGuestRepository,
-      mockRegisterRepository
-    );
+    const guestDto = {} as CreateGuestDto;
+    const guestService = new GuestService(mockGuestRepository);
 
     await guestService.create(guestDto);
 
     expect(mockGuestRepository.create).toHaveBeenCalledWith(guestDto);
-    expect(mockRegisterRepository.getById).toHaveBeenCalledWith(
-      guestDto.registerId
-    );
-  });
-
-  it('should throw error if register not found (create)', async () => {
-    const guestDto = { registerId: Uuid.v4() } as CreateGuestDto;
-
-    const mockRegisterRepository = {
-      getById: jest.fn().mockRejectedValue(CustomError.badRequest('')),
-    } as unknown as RegisterRepository;
-
-    const guestService = new GuestService(
-      mockGuestRepository,
-      mockRegisterRepository
-    );
-    try {
-      await guestService.create(guestDto);
-    } catch {
-      expect(mockGuestRepository.create).not.toHaveBeenCalled();
-      expect(mockRegisterRepository.getById).toHaveBeenCalledWith(
-        guestDto.registerId
-      );
-    }
   });
 
   it('should have been call with parameters (update)', async () => {
-    const guestService = new GuestService(
-      mockGuestRepository,
-      mockRegisterRepository
-    );
+    const guestService = new GuestService(mockGuestRepository);
 
     await guestService.update({ id: guest.id });
 
@@ -144,10 +100,7 @@ describe('guest.service.ts', () => {
   });
 
   it('should have been call with parameters (delete)', async () => {
-    const guestService = new GuestService(
-      mockGuestRepository,
-      mockRegisterRepository
-    );
+    const guestService = new GuestService(mockGuestRepository);
 
     await guestService.delete(guest.id);
 
