@@ -495,6 +495,16 @@ describe('register.route.ts', () => {
     const { ok, registerCheckOutDetail } = body;
     const { guests, charges, payments, ...rest } = registerCheckOutDetail;
 
+    const [chargesDB, paymentsDB, guestsDB] = await Promise.all([
+      prisma.charge.findMany({ where: { registerId: rest.id } }),
+      prisma.payment.findMany({ where: { registerId: rest.id } }),
+      prisma.guest.findMany({ where: { registerId: rest.id } }),
+    ]);
+
+    expect(chargesDB.length).toBe(0);
+    expect(paymentsDB.length).toBe(0);
+    expect(guestsDB.length).toBe(0);
+
     expect(ok).toBeTruthy();
     expect(rest).toMatchObject({
       id: expect.any(String),

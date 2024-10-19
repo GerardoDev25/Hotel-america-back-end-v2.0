@@ -173,12 +173,16 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
         },
       });
 
-      const totalCharges = registerToDelete!.Charge.reduce(
+      if (!registerToDelete) {
+        throw CustomError.notFound(`Register with id ${id} not found`);
+      }
+
+      const totalCharges = registerToDelete.Charge.reduce(
         (total, charge) => total + charge.amount,
         0
       );
 
-      const totalPayments = registerToDelete!.Payment.reduce(
+      const totalPayments = registerToDelete.Payment.reduce(
         (total, payment) => total + payment.amount,
         0
       );
@@ -198,7 +202,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       ]);
       await tx.register.delete({ where: { id } });
 
-      return { ...registerToDelete!, totalCharges, totalPayments };
+      return { ...registerToDelete, totalCharges, totalPayments };
     });
 
     return checkOut;
