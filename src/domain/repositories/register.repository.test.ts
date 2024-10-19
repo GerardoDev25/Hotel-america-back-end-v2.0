@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { CreateGuestDto } from '@domain/dtos/guest';
+import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
 import {
-  RegisterCheckOut,
-  RegisterFilter,
-  RegisterPagination,
-} from '@domain/interfaces';
+  CreateRegisterDto,
+  FilterRegisterDto,
+  UpdateRegisterDto,
+} from '@domain/dtos/register';
 import { RegisterEntity, GuestEntity } from '@domain/entities';
 import { variables } from '@domain/variables';
 
@@ -86,7 +86,7 @@ describe('register.repository.ts', () => {
     async getByParams(
       page: number,
       limit: number,
-      searchParam: RegisterFilter
+      searchParam: FilterRegisterDto
     ): Promise<RegisterPagination> {
       return registerPagination;
     }

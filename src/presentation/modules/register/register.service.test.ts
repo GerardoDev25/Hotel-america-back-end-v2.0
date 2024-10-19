@@ -12,6 +12,9 @@ import { variables } from '@src/domain/variables';
 import { CreateGuestDto } from '@src/domain/dtos/guest';
 
 describe('register.service.ts', () => {
+  const page = 1;
+  const limit = 1;
+
   const register = new RegisterEntity({
     id: Uuid.v4(),
     userId: Uuid.v4(),
@@ -67,7 +70,7 @@ describe('register.service.ts', () => {
   const mockRegisterRepository: RegisterRepository = {
     getAll: jest.fn().mockResolvedValue(pagination),
     getById: jest.fn().mockResolvedValue({ ok: true, register }),
-    getByParam: jest.fn().mockResolvedValue({ ok: true, register }),
+    getByParams: jest.fn().mockResolvedValue(pagination),
     create: jest.fn().mockResolvedValue({ ok: true, register }),
     update: jest.fn().mockResolvedValue(resolveData),
     delete: jest.fn().mockResolvedValue(resolveData),
@@ -115,7 +118,9 @@ describe('register.service.ts', () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
 
     const mockRegisterRepository = {
-      getByParam: jest.fn().mockResolvedValue({ ok: false, register: null }),
+      getByParams: jest
+        .fn()
+        .mockResolvedValue({ ...pagination, registers: [] }),
       create: jest.fn().mockResolvedValue({ ok: true, register }),
     } as any;
 
@@ -128,16 +133,22 @@ describe('register.service.ts', () => {
 
     expect(mockRegisterRepository.create).toHaveBeenCalledWith(registerDto);
     expect(mockRoomRepository.getById).toHaveBeenCalledWith(registerDto.roomId);
-    expect(mockRegisterRepository.getByParam).toHaveBeenCalledWith({
-      roomId: registerDto.roomId,
-    });
+    expect(mockRegisterRepository.getByParams).toHaveBeenCalledWith(
+      page,
+      limit,
+      {
+        roomId: registerDto.roomId,
+      }
+    );
   });
 
   it('should throw error if room is not available (create)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
 
     const mockRegisterRepository = {
-      getByParam: jest.fn().mockResolvedValue({ ok: false, register: null }),
+      getByParams: jest
+        .fn()
+        .mockResolvedValue({ ...pagination, registers: [] }),
       create: jest.fn(),
     } as any;
 
@@ -165,7 +176,9 @@ describe('register.service.ts', () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
 
     const mockRegisterRepository = {
-      getByParam: jest.fn().mockResolvedValue({ ok: false, register: {} }),
+      getByParams: jest
+        .fn()
+        .mockResolvedValue({ ...pagination, registers: [] }),
       create: jest.fn(),
     } as any;
 
@@ -190,7 +203,9 @@ describe('register.service.ts', () => {
     const guestDtos = [] as CreateGuestDto[];
 
     const mockRegisterRepository = {
-      getByParam: jest.fn().mockResolvedValue({ ok: false, register: null }),
+      getByParams: jest
+        .fn()
+        .mockResolvedValue({ ...pagination, registers: [] }),
       checkIn: jest
         .fn()
         .mockResolvedValue({ ok: true, register, guests: [guest] }),
@@ -208,9 +223,11 @@ describe('register.service.ts', () => {
       guestDtos,
     });
     expect(mockRoomRepository.getById).toHaveBeenCalledWith(registerDto.roomId);
-    expect(mockRegisterRepository.getByParam).toHaveBeenCalledWith({
-      roomId: registerDto.roomId,
-    });
+    expect(mockRegisterRepository.getByParams).toHaveBeenCalledWith(
+      page,
+      limit,
+      { roomId: registerDto.roomId }
+    );
   });
 
   it('should throw error if room is not available (checkIn)', async () => {
@@ -218,7 +235,9 @@ describe('register.service.ts', () => {
     const guestDtos = [] as CreateGuestDto[];
 
     const mockRegisterRepository = {
-      getByParam: jest.fn().mockResolvedValue({ ok: false, register: null }),
+      getByParams: jest
+        .fn()
+        .mockResolvedValue({ ...pagination, registers: [] }),
       checkIn: jest.fn(),
     } as unknown as RegisterRepository;
 
@@ -260,7 +279,7 @@ describe('register.service.ts', () => {
     const guestDtos = [] as CreateGuestDto[];
 
     const mockRegisterRepository = {
-      getByParam: jest.fn().mockResolvedValue({ ok: false, register: {} }),
+      getByParams: jest.fn().mockResolvedValue(pagination),
       checkIn: jest.fn(),
     } as unknown as RegisterRepository;
 

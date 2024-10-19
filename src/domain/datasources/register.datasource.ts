@@ -1,10 +1,10 @@
-import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
-import {
-  RegisterCheckOut,
-  RegisterPagination,
-  RegisterFilter,
-} from '@domain/interfaces';
+import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
+import {
+  CreateRegisterDto,
+  FilterRegisterDto,
+  UpdateRegisterDto,
+} from '@domain/dtos/register';
 import { CreateGuestDto } from '@domain/dtos/guest';
 
 export abstract class RegisterDatasource {
@@ -17,7 +17,7 @@ export abstract class RegisterDatasource {
   abstract getByParams(
     page: number,
     limit: number,
-    searchParam: RegisterFilter
+    searchParam: FilterRegisterDto
   ): Promise<RegisterPagination>;
 
   abstract create(

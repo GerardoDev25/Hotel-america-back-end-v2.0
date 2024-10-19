@@ -69,10 +69,13 @@ export class RegisterRoute {
 
     // * endpoints
     route.get('/', registerController.getAll);
+    route.post('/get-by-params', registerController.getByParams);
     route.get('/:id', middleware.getById, registerController.getById);
+
     route.post('/', middleware.create, registerController.create);
     route.post('/check-in/', middleware.checkIn, registerController.checkIn);
     route.put('/', middleware.update, registerController.update);
+
     route.delete('/:id', middleware.delete, registerController.delete);
     route.delete(
       '/check-out/:id',

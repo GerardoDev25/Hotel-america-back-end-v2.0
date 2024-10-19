@@ -2,6 +2,7 @@ import request from 'supertest';
 import {
   ChargeTypeList,
   PaymentTypeList,
+  RegisterFilter,
   RoomTypesList,
   UserRolesList,
 } from '@domain/interfaces';
@@ -149,6 +150,100 @@ describe('register.route.ts', () => {
 
     expect(body.ok).toBeFalsy();
     expect(body.errors[0]).toBe('Page must be greaten than 0');
+  });
+
+  it('should get registers by params (getByParams)', async () => {
+    const page = 1;
+    const limit = 10;
+
+    const [user, room] = await Promise.all([
+      prisma.user.create({ data: rawUser }),
+      prisma.room.create({ data: rawRoom }),
+    ]);
+
+    const register = await prisma.register.create({
+      data: {
+        ...rawRegister,
+        userId: user.id,
+        roomId: room.id,
+        guestsNumber: rawRegister.guestsNumber ?? 1,
+      },
+    });
+
+    const params: RegisterFilter = {
+      checkIn: register.checkIn.toISOString().split('T').at(0),
+      checkOut: register.checkOut?.toISOString().split('T').at(0),
+      discount: register.discount,
+      price: register.price,
+      guestsNumber: register.guestsNumber,
+      roomId: register.roomId,
+      userId: register.userId,
+    };
+
+    const { body } = await request(testServer.app)
+      .post('/api/register/get-by-params')
+      .send(params)
+      .expect(200);
+
+    expect(body.page).toBe(page);
+    expect(body.limit).toBe(limit);
+    expect(body.total).toBeDefined();
+    expect(body.next).toBe(null);
+    expect(body.prev).toBe(null);
+    expect(body.registers).toBeInstanceOf(Array);
+
+    for (const register of body.registers) {
+      expect(register).toEqual({
+        id: expect.any(String),
+        checkIn: expect.any(String),
+        checkOut: expect.any(String),
+        guestsNumber: expect.any(Number),
+        discount: expect.any(Number),
+        price: expect.any(Number),
+        userId: expect.any(String),
+        roomId: expect.any(String),
+      });
+    }
+  });
+
+  it('should get error if is not well paginated (getByParams)', async () => {
+    const page = false;
+    const limit = false;
+
+    const { body } = await request(testServer.app)
+      .post(`/api/register/get-by-params?page=${page}&limit=${limit}`)
+      .expect(400);
+
+    expect(body.ok).toBeFalsy();
+    expect(body.errors[0]).toBe('Page and limit must be a number');
+  });
+
+  it('should get error if params are wrong (getByParams)', async () => {
+    const params: RegisterFilter = {
+      checkIn: 'not valid',
+      checkOut: 'not valid',
+      discount: -12,
+      guestsNumber: -45,
+      price: -12,
+      roomId: '',
+      userId: '',
+    };
+
+    const { body } = await request(testServer.app)
+      .post(`/api/register/get-by-params`)
+      .send(params)
+      .expect(400);
+
+    expect(body.ok).toBeFalsy();
+    expect(body.errors).toMatchObject([
+      'guestsNumber property most be greater than or equal to 1',
+      'discount property most be a positive',
+      'price property most be a positive',
+      'userId property is empty',
+      'roomId property is empty',
+      'checkOut property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
+      'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
+    ]);
   });
 
   it('should get a register by id (getById)', async () => {

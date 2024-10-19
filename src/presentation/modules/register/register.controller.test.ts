@@ -1,6 +1,10 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
-import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
+import {
+  RegisterCheckOut,
+  RegisterFilter,
+  RegisterPagination,
+} from '@domain/interfaces';
 import { variables } from '@domain/variables';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
@@ -80,6 +84,66 @@ describe('register.controller.ts', () => {
     await registerController.getAll(req, res);
 
     expect(mockService.getAll).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      ok: false,
+      errors: ['Page must be greaten than 0'],
+    });
+  });
+
+  it('should return registers by params (getByParams)', async () => {
+    const body: RegisterFilter = {
+      checkIn: Generator.randomDate(),
+      discount: 12,
+    };
+    const res = { json: jest.fn() } as any;
+    const req = { query: { page: 1, limit: 10 }, body } as any;
+
+    const mockService = {
+      getByParams: jest.fn().mockResolvedValue(pagination),
+    } as any;
+    const registerController = new RegisterController(mockService);
+
+    await registerController.getByParams(req, res);
+
+    expect(mockService.getByParams).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith(pagination);
+  });
+
+  it('should return error if params are wrong (getByParams)', async () => {
+    const body: RegisterFilter = {
+      checkIn: 'Generator.randomDate()',
+      discount: -12,
+    };
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+    const req = { query: { page: 1, limit: 10 }, body } as any;
+
+    const mockService = { getByParams: jest.fn() } as any;
+    const registerController = new RegisterController(mockService);
+
+    await registerController.getByParams(req, res);
+
+    expect(mockService.getByParams).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      errors: [
+        'discount property most be a positive',
+        'checkIn property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
+      ],
+      ok: false,
+    });
+  });
+
+  it('should throw error if not well paginated (getByParams)', async () => {
+    const req = { query: { page: false, limit: null } } as any;
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+
+    const mockService = { getByParams: jest.fn() } as any;
+    const registerController = new RegisterController(mockService);
+
+    await registerController.getByParams(req, res);
+
+    expect(mockService.getByParams).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
       ok: false,

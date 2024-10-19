@@ -2,12 +2,12 @@
 import { variables } from '@domain/variables';
 import { CreateGuestDto } from '@domain/dtos/guest';
 import { GuestEntity, RegisterEntity } from '@domain/entities/';
-import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
+import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
 import {
-  RegisterCheckOut,
-  RegisterFilter,
-  RegisterPagination,
-} from '@domain/interfaces';
+  CreateRegisterDto,
+  FilterRegisterDto,
+  UpdateRegisterDto,
+} from '@domain/dtos/register';
 
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
@@ -87,7 +87,7 @@ describe('register.datasource.ts', () => {
     async getByParams(
       page: number,
       limit: number,
-      searchParam: RegisterFilter
+      searchParam: FilterRegisterDto
     ): Promise<RegisterPagination> {
       return pagination;
     }

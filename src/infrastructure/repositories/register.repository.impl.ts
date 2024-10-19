@@ -1,13 +1,13 @@
-import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { RegisterDatasource } from '@domain/datasources';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { RegisterRepository } from '@domain/repositories';
 import { CreateGuestDto } from '@domain/dtos/guest';
+import { RegisterPagination, RegisterCheckOut } from '@domain/interfaces';
 import {
-  RegisterPagination,
-  RegisterCheckOut,
-  RegisterFilter,
-} from '@domain/interfaces';
+  CreateRegisterDto,
+  FilterRegisterDto,
+  UpdateRegisterDto,
+} from '@domain/dtos/register';
 
 export class RegisterRepositoryImpl extends RegisterRepository {
   constructor(private readonly registerDataSource: RegisterDatasource) {
@@ -25,7 +25,7 @@ export class RegisterRepositoryImpl extends RegisterRepository {
   getByParams(
     page: number,
     limit: number,
-    searchParam: RegisterFilter
+    searchParam: FilterRegisterDto
   ): Promise<RegisterPagination> {
     return this.registerDataSource.getByParams(page, limit, searchParam);
   }

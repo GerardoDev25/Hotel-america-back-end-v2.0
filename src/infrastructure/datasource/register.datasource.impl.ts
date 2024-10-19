@@ -1,6 +1,4 @@
 import { Guest, Register } from '@prisma/client';
-
-import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
 import { RegisterDatasource } from '@domain/datasources';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
@@ -8,8 +6,13 @@ import {
   RegisterPagination,
   RegisterCheckOut,
   RegisterCheckOutDB,
-  RegisterFilter,
+  IRegisterFilterDto,
 } from '@domain/interfaces';
+import {
+  CreateRegisterDto,
+  FilterRegisterDto,
+  UpdateRegisterDto,
+} from '@domain/dtos/register';
 
 import { LoggerService } from '@presentation/services';
 
@@ -197,10 +200,12 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
   async getByParams(
     page: number,
     limit: number,
-    searchParam: RegisterFilter
+    searchParam: FilterRegisterDto
   ): Promise<RegisterPagination> {
     try {
-      const where = cleanObject(searchParam);
+      const where: IRegisterFilterDto = cleanObject(searchParam);
+      if (searchParam.checkIn) where.checkIn = { gte: searchParam.checkIn };
+      if (searchParam.checkOut) where.checkOut = { gte: searchParam.checkOut };
 
       const [totalDB, registersDb] = await Promise.all([
         prisma.register.count({ where }),

@@ -1,5 +1,9 @@
 import { Response, Request } from 'express';
-import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
+import {
+  CreateRegisterDto,
+  FilterRegisterDto,
+  UpdateRegisterDto,
+} from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
 import { variables } from '@domain/variables';
@@ -52,7 +56,7 @@ export class RegisterController {
     return [undefined, { registerDto: registerDto!, guestDtos }];
   };
 
-  public getAll = async (req: Request, res: Response) => {
+  getAll = async (req: Request, res: Response) => {
     const page = req.query.page ?? variables.PAGINATION_PAGE_DEFAULT;
     const limit = req.query.limit ?? variables.PAGINATION_LIMIT_DEFAULT;
 
@@ -71,14 +75,38 @@ export class RegisterController {
       .catch((error) => this.handleError(res, error));
   };
 
-  public getById = async (req: Request, res: Response) => {
+  getByParams = async (req: Request, res: Response) => {
+    const page = req.query.page ?? variables.PAGINATION_PAGE_DEFAULT;
+    const limit = req.query.limit ?? variables.PAGINATION_LIMIT_DEFAULT;
+
+    const [paginationError, paginationDto] = PaginationDto.create(
+      +page,
+      +limit
+    );
+
+    if (paginationError) {
+      return res.status(400).json({ ok: false, errors: [paginationError] });
+    }
+
+    const [filterError, filterDto] = FilterRegisterDto.create(req.body);
+    if (filterError) {
+      return res.status(400).json({ ok: false, errors: filterError });
+    }
+
+    return this.registerService
+      .getByParams(paginationDto!, filterDto!)
+      .then((data) => res.json(data))
+      .catch((error) => this.handleError(res, error));
+  };
+
+  getById = async (req: Request, res: Response) => {
     this.registerService
       .getById(req.params.id)
       .then((data) => res.json(data))
       .catch((error) => this.handleError(res, error));
   };
 
-  public create = async (req: Request, res: Response) => {
+  create = async (req: Request, res: Response) => {
     const [errors, createRegisterDto] = CreateRegisterDto.create(req.body);
 
     if (errors) {
@@ -91,7 +119,7 @@ export class RegisterController {
       .catch((error) => this.handleError(res, error));
   };
 
-  public checkIn = async (req: Request, res: Response) => {
+  checkIn = async (req: Request, res: Response) => {
     const [errors, data] = this.verifyCheckIn(req);
 
     if (errors) {
@@ -104,14 +132,14 @@ export class RegisterController {
       .catch((error) => this.handleError(res, error));
   };
 
-  public checkOut = async (req: Request, res: Response) => {
+  checkOut = async (req: Request, res: Response) => {
     this.registerService
       .checkOut(req.params.id)
       .then((data) => res.json(data))
       .catch((error) => this.handleError(res, error));
   };
 
-  public update = async (req: Request, res: Response) => {
+  update = async (req: Request, res: Response) => {
     const [errors, updateRegisterDto] = UpdateRegisterDto.create(req.body);
 
     if (errors) {
@@ -124,7 +152,7 @@ export class RegisterController {
       .catch((error) => this.handleError(res, error));
   };
 
-  public delete = async (req: Request, res: Response) => {
+  delete = async (req: Request, res: Response) => {
     this.registerService
       .delete(req.params.id)
       .then((data) => res.json(data))
