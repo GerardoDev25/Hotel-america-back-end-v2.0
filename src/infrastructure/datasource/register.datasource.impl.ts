@@ -108,18 +108,25 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     guestDtos: CreateGuestDto[];
   }) {
     const checkInTx = await prisma.$transaction(async (tx) => {
-      // * 1 create register
-
       const newRegister = await tx.register.create({
-        data: { ...registerDto, guestsNumber: guestDtos.length },
-      });
-
-      // * 2 create guests
-      await tx.guest.createMany({
-        data: guestDtos.map((guestDto) => ({
-          ...guestDto,
-          registerId: newRegister.id,
-        })),
+        data: {
+          ...registerDto,
+          guestsNumber: guestDtos.length,
+          Guest: {
+            createMany: {
+              data: guestDtos.map((guestDto) => ({
+                ...guestDto,
+              })),
+            },
+          },
+          Charge: {
+            create: {
+              amount: registerDto.price,
+              description: 'Check-in charge',
+              type: 'lodging',
+            },
+          },
+        },
       });
 
       const guestsDB = await tx.guest.findMany({

@@ -350,32 +350,43 @@ describe('register.route.ts', () => {
       register: { ...restRegister, roomId: room.id },
       guests: [{ ...rawGuest, countryId: country.id }],
     };
-    return request(testServer.app)
+    const { body } = await request(testServer.app)
       .post('/api/register/check-in')
       .set('Authorization', `Bearer ${token}`)
       .send(data)
-      .expect(201)
-      .expect(({ body }) => {
-        const { register, guests, ok } = body;
+      .expect(201);
 
-        expect(ok).toBeTruthy();
-        expect(register.id).toBeDefined();
-        expect(register.guestsNumber).toBe(rawRegister.guestsNumber);
-        expect(register.discount).toBe(rawRegister.discount);
-        expect(register.price).toBe(rawRegister.price);
-        expect(register.userId).toBe(user.id);
-        expect(register.roomId).toBe(room.id);
+    const { register, guests, ok } = body;
 
-        expect(guests[0].id).toBeDefined();
-        expect(guests[0].di).toBe(rawGuest.di);
-        expect(DateValidator.isValid(guests[0].checkIn)).toBeTruthy();
-        expect(DateValidator.isValid(guests[0].dateOfBirth)).toBeTruthy();
-        expect(guests[0].city).toBe(rawGuest.city);
-        expect(guests[0].name).toBe(rawGuest.name);
-        expect(guests[0].lastName).toBe(rawGuest.lastName);
-        expect(guests[0].phone).toBe(rawGuest.phone);
-        expect(guests[0].registerId).toBe(register.id);
-      });
+    const charges = await prisma.charge.findMany({
+      where: { type: 'lodging', registerId: register.id },
+    });
+
+    expect(charges.length).toBe(1);
+
+    expect(ok).toBeTruthy();
+    expect(register.id).toBeDefined();
+    expect(register.guestsNumber).toBe(rawRegister.guestsNumber);
+    expect(register.discount).toBe(rawRegister.discount);
+    expect(register.price).toBe(rawRegister.price);
+    expect(register.userId).toBe(user.id);
+    expect(register.roomId).toBe(room.id);
+
+    expect(guests[0].id).toBeDefined();
+    expect(guests[0].di).toBe(rawGuest.di);
+    expect(DateValidator.isValid(guests[0].checkIn)).toBeTruthy();
+    expect(DateValidator.isValid(guests[0].dateOfBirth)).toBeTruthy();
+    expect(guests[0].city).toBe(rawGuest.city);
+    expect(guests[0].name).toBe(rawGuest.name);
+    expect(guests[0].lastName).toBe(rawGuest.lastName);
+    expect(guests[0].phone).toBe(rawGuest.phone);
+    expect(guests[0].registerId).toBe(register.id);
+
+    // const charge = await prisma.charge.findFirst({
+    //   where: { type: 'lodging', registerId: register.id },
+    // });
+
+    // console.log(charge);
   });
 
   it('should get error if pass invalid data (CheckIn)', async () => {
