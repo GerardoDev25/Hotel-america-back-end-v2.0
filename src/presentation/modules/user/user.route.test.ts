@@ -136,7 +136,9 @@ describe('user.route.ts', () => {
   it('should get users (getByParams)', async () => {
     const page = 1;
     const limit = 10;
-    const params: UserFilter = { role: 'laundry' };
+    const params: UserFilter = {
+      birdDate: seedData.users[0].birdDate.toISOString().split('T')[0],
+    };
     await prisma.user.createMany({ data: seedData.users });
     const { body } = await request(testServer.app)
       .post('/api/user/get-by-params')
@@ -152,7 +154,7 @@ describe('user.route.ts', () => {
     expect(body.users).toBeInstanceOf(Array);
 
     for (const user of body.users) {
-      expect(user.role).toBe(params.role);
+      expect(user.birdDate).toBe(params.birdDate);
     }
   });
 

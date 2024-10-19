@@ -1,8 +1,11 @@
 import { GuestDatasource } from '@src/domain/datasources';
-import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
 import { Uuid } from '@src/adapters';
 import { GuestRepositoryImpl } from '.';
-import { IGuestFilterDto } from '@src/domain/interfaces';
+import {
+  CreateGuestDto,
+  FilterGuestDto,
+  UpdateGuestDto,
+} from '@domain/dtos/guest';
 
 describe('guest.repository.impl.ts', () => {
   const page = 2;
@@ -29,7 +32,7 @@ describe('guest.repository.impl.ts', () => {
   });
 
   test('should call (getByParams)', async () => {
-    const params: IGuestFilterDto = { dateOfBirth: new Date() };
+    const params: FilterGuestDto = { dateOfBirth: new Date() };
 
     await repository.getByParams(page, limit, params);
 

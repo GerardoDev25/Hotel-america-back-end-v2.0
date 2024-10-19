@@ -27,7 +27,7 @@ export interface PaymentPagination {
 
 export type PaymentFilter = Partial<Omit<IPayment, 'id'>>;
 export type IPaymentFilterDto = Partial<Omit<PaymentFilter, 'paidAt'>> & {
-  paidAt?: Date;
+  paidAt?: Date | { gte: Date; lt: Date };
 };
 
 export type CreatePayment = Omit<IPayment, 'id' | 'paidAt'>;

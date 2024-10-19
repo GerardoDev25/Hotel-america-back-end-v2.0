@@ -16,7 +16,7 @@ import {
 
 import { LoggerService } from '@presentation/services';
 
-import { cleanObject, pagination } from '@src/utils';
+import { cleanObject, HandleDate, pagination } from '@src/utils';
 import { prisma } from '@src/data/postgres';
 import { CreateGuestDto } from '@src/domain/dtos/guest';
 
@@ -204,8 +204,17 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
   ): Promise<RegisterPagination> {
     try {
       const where: IRegisterFilterDto = cleanObject(searchParam);
-      if (searchParam.checkIn) where.checkIn = { gte: searchParam.checkIn };
-      if (searchParam.checkOut) where.checkOut = { gte: searchParam.checkOut };
+      if (searchParam.checkIn)
+        where.checkIn = {
+          gte: searchParam.checkIn,
+          lt: HandleDate.nextDay(searchParam.checkIn),
+        };
+
+      if (searchParam.checkOut)
+        where.checkOut = {
+          gte: searchParam.checkOut,
+          lt: HandleDate.nextDay(searchParam.checkOut),
+        };
 
       const [totalDB, registersDb] = await Promise.all([
         prisma.register.count({ where }),

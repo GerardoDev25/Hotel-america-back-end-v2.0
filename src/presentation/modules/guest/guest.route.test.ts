@@ -153,7 +153,6 @@ describe('guest.route.ts', () => {
   it('should get guests by params (getByParams)', async () => {
     const page = 1;
     const limit = 10;
-    const params: GuestFilter = { city: rawGuest.city };
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
       await prisma.user.create({ data: rawUser }),
@@ -167,9 +166,15 @@ describe('guest.route.ts', () => {
         guestsNumber: rawRegister.guestsNumber ?? 1,
       },
     });
-    await prisma.guest.createMany({
-      data: [{ ...rawGuest, registerId: register.id, countryId: country.id }],
+    const guest = await prisma.guest.create({
+      data: { ...rawGuest, registerId: register.id, countryId: country.id },
     });
+
+    const params: GuestFilter = {
+      city: guest.city,
+      checkIn: guest.checkIn.toISOString().split('T')[0],
+    };
+
     const { body } = await request(testServer.app)
       .post('/api/guest/get-by-params')
       .send(params)
@@ -186,10 +191,10 @@ describe('guest.route.ts', () => {
       expect(guest).toEqual({
         id: expect.any(String),
         di: expect.any(String),
-        checkIn: expect.any(String),
+        checkIn: params.checkIn,
         checkOut: expect.any(String),
         dateOfBirth: expect.any(String),
-        city: expect.any(String),
+        city: params.city,
         name: expect.any(String),
         lastName: expect.any(String),
         phone: expect.any(String),

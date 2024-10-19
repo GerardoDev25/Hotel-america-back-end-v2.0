@@ -6,11 +6,11 @@ import {
 import { CustomError } from '@domain/error';
 import { GuestDatasource } from '@domain/datasources';
 import { GuestEntity } from '@domain/entities';
-import { GuestPagination } from '@domain/interfaces';
+import { GuestPagination, IGuestFilterDto } from '@domain/interfaces';
 import { LoggerService } from '@presentation/services';
 import { Guest } from '@prisma/client';
 import { prisma } from '@src/data/postgres';
-import { cleanObject, pagination } from '@src/utils';
+import { cleanObject, HandleDate, pagination } from '@src/utils';
 
 export class GuestDatasourceImpl extends GuestDatasource {
   constructor(private readonly logger: LoggerService) {
@@ -55,7 +55,26 @@ export class GuestDatasourceImpl extends GuestDatasource {
     searchParam: FilterGuestDto
   ): Promise<GuestPagination> {
     try {
-      const where = cleanObject(searchParam);
+      const where: IGuestFilterDto = cleanObject(searchParam);
+
+      if (searchParam.checkIn)
+        where.checkIn = {
+          gte: searchParam.checkIn,
+          lt: HandleDate.nextDay(searchParam.checkIn),
+        };
+
+      if (searchParam.checkOut)
+        where.checkOut = {
+          gte: searchParam.checkOut,
+          lt: HandleDate.nextDay(searchParam.checkOut),
+        };
+
+      if (searchParam.dateOfBirth)
+        where.dateOfBirth = {
+          gte: searchParam.dateOfBirth,
+          lt: HandleDate.nextDay(searchParam.dateOfBirth),
+        };
+
       const [totalDB, guestsDb] = await Promise.all([
         prisma.guest.count({ where }),
         prisma.guest.findMany({

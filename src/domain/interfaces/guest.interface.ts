@@ -26,9 +26,9 @@ export type GuestFilter = Partial<Omit<IGuest, 'id'>>;
 export type IGuestFilterDto = Partial<
   Omit<GuestFilter, 'checkIn' | 'checkOut' | 'dateOfBirth'>
 > & {
-  checkIn?: Date;
-  checkOut?: Date;
-  dateOfBirth?: Date;
+  checkIn?: Date | { gte: Date; lt: Date };
+  checkOut?: Date | { gte: Date; lt: Date };
+  dateOfBirth?: Date | { gte: Date; lt: Date };
 };
 
 export type CreateGuest = Omit<IGuest, 'id' | 'registerId' | 'checkIn'> & {

@@ -2,7 +2,7 @@ import { Charge } from '@prisma/client';
 import { ChargeDatasource } from '@domain/datasources';
 import { CustomError } from '@domain/error';
 import { ChargeEntity } from '@domain/entities';
-import { ChargePagination } from '@domain/interfaces';
+import { ChargePagination, IChargeFilterDto } from '@domain/interfaces';
 import {
   CreateChargeDto,
   UpdateChargeDto,
@@ -11,7 +11,7 @@ import {
 
 import { prisma } from '@src/data/postgres';
 import { LoggerService } from '@presentation/services';
-import { cleanObject, pagination } from '@src/utils';
+import { cleanObject, HandleDate, pagination } from '@src/utils';
 
 export class ChargeDatasourceImpl extends ChargeDatasource {
   constructor(private readonly logger: LoggerService) {
@@ -54,7 +54,12 @@ export class ChargeDatasourceImpl extends ChargeDatasource {
     searchParam: FilterChargeDto
   ): Promise<ChargePagination> {
     try {
-      const where = cleanObject(searchParam);
+      const where: IChargeFilterDto = cleanObject(searchParam);
+      if (searchParam.createdAt)
+        where.createdAt = {
+          gte: searchParam.createdAt,
+          lt: HandleDate.nextDay(searchParam.createdAt),
+        };
 
       const [totalDB, chargesDb] = await Promise.all([
         prisma.charge.count({ where }),

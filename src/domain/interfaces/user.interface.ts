@@ -29,7 +29,7 @@ export interface UserPagination {
 
 export type UserFilter = Partial<Omit<IUser, 'id'>>;
 export type IUserFilterDto = Partial<Omit<UserFilter, 'birdDate'>> & {
-  birdDate?: Date;
+  birdDate?: Date | { gte: Date; lt: Date };
 };
 export type CreateUser = Omit<IUser, 'id'>;
 export type UpdateUser = Partial<CreateUser> & { id: string };

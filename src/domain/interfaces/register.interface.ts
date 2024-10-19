@@ -88,8 +88,8 @@ export type IRegisterFilterDto = Omit<
   RegisterFilter,
   'checkIn' | 'checkOut'
 > & {
-  checkIn?: Date | { gte: Date };
-  checkOut?: Date | { gte: Date };
+  checkIn?: Date | { gte: Date; lt: Date };
+  checkOut?: Date | { gte: Date; lt: Date };
 };
 
 export type CreateRegister = Omit<

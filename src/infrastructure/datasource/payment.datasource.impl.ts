@@ -2,8 +2,8 @@ import { Payment } from '@prisma/client';
 import { prisma } from '@src/data/postgres';
 import { CustomError } from '@domain/error';
 import { PaymentEntity } from '@domain/entities';
-import { cleanObject, pagination } from '@src/utils';
-import { PaymentPagination } from '@domain/interfaces';
+import { cleanObject, HandleDate, pagination } from '@src/utils';
+import { IPaymentFilterDto, PaymentPagination } from '@domain/interfaces';
 import { LoggerService } from '@presentation/services';
 import { PaymentDatasource } from '@domain/datasources';
 import {
@@ -53,7 +53,13 @@ export class PaymentDatasourceImpl extends PaymentDatasource {
     searchParam: FilterPaymentDto
   ): Promise<PaymentPagination> {
     try {
-      const where = cleanObject(searchParam);
+      const where: IPaymentFilterDto = cleanObject(searchParam);
+
+      if (searchParam.paidAt)
+        where.paidAt = {
+          gte: searchParam.paidAt,
+          lt: HandleDate.nextDay(searchParam.paidAt),
+        };
 
       const [totalDB, paymentsDb] = await Promise.all([
         prisma.payment.count({ where }),

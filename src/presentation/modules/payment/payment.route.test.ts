@@ -3,14 +3,14 @@ import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
 import { prisma } from '@src/data/postgres';
 import { CreateRegisterDto } from '@domain/dtos/register';
 import { CreateRoomDto } from '@domain/dtos/room';
+import { testServer } from '@src/test-server';
+import { Generator } from '@src/utils/generator';
 import {
   UserRolesList,
   RoomTypesList,
   PaymentTypeList,
+  PaymentFilter,
 } from '@domain/interfaces';
-import { testServer } from '@src/test-server';
-import { Generator } from '@src/utils/generator';
-import { FilterPaymentDto } from '@src/domain/dtos/payment';
 
 describe('payment.route.ts', () => {
   let token: string;
@@ -158,9 +158,10 @@ describe('payment.route.ts', () => {
       data: { ...rawPayment, registerId: register.id },
     });
 
-    const params: FilterPaymentDto = {
+    const params: PaymentFilter = {
       amount: paymentDB.amount,
       type: paymentDB.type,
+      paidAt: paymentDB.paidAt.toISOString().split('T')[0],
     };
 
     const { body } = await request(testServer.app)
@@ -181,7 +182,7 @@ describe('payment.route.ts', () => {
         id: expect.any(String),
         amount: params.amount,
         description: expect.any(String),
-        paidAt: expect.any(String),
+        paidAt: params.paidAt,
         type: params.type,
         registerId: register.id,
       });

@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 
-import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { CreateUserDto, FilterUserDto, UpdateUserDto } from '@domain/dtos/user';
 import { CustomError } from '@domain/error';
 import { IUserFilterDto, UserPagination } from '@domain/interfaces';
 import { UserDatasource } from '@domain/datasources';
@@ -8,7 +8,7 @@ import { UserEntity } from '@domain/entities';
 
 import { LoggerService } from '@presentation/services';
 
-import { cleanObject, pagination } from '@src/utils';
+import { cleanObject, HandleDate, pagination } from '@src/utils';
 import { prisma } from '@src/data/postgres';
 
 export class UserDatasourceImpl extends UserDatasource {
@@ -49,10 +49,15 @@ export class UserDatasourceImpl extends UserDatasource {
   async getByParams(
     page: number,
     limit: number,
-    searchParam: IUserFilterDto
+    searchParam: FilterUserDto
   ): Promise<UserPagination> {
     try {
-      const where = cleanObject(searchParam);
+      const where: IUserFilterDto = cleanObject(searchParam);
+      if (searchParam.birdDate)
+        where.birdDate = {
+          gte: searchParam.birdDate,
+          lt: HandleDate.nextDay(searchParam.birdDate),
+        };
 
       const [totalDB, usersDb] = await Promise.all([
         prisma.user.count({ where }),

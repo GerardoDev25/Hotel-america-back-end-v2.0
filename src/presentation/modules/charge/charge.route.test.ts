@@ -7,10 +7,11 @@ import {
   UserRolesList,
   RoomTypesList,
   ChargeTypeList,
+  ChargeFilter,
 } from '@domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
-import { FilterChargeDto } from '@src/domain/dtos/charge';
+// import { FilterChargeDto } from '@src/domain/dtos/charge';
 
 describe('charge.route.ts', () => {
   let token: string;
@@ -155,9 +156,10 @@ describe('charge.route.ts', () => {
       data: { ...rawCharge, registerId: register.id },
     });
 
-    const params: FilterChargeDto = {
+    const params: ChargeFilter = {
       amount: chargeDB.amount,
       type: chargeDB.type,
+      createdAt: chargeDB.createdAt.toISOString().split('T')[0],
     };
 
     const { body } = await request(testServer.app)
