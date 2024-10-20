@@ -122,7 +122,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
           Charge: {
             create: {
               amount: registerDto.price,
-              description: 'Check-in charge',
+              description: 'lodging charge',
               type: 'lodging',
             },
           },

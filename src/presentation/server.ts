@@ -2,7 +2,7 @@ import path from 'node:path';
 import express, { Router } from 'express';
 import cors, { CorsOptions } from 'cors';
 
-import { LoggerService } from '@presentation/services';
+import { CreateRecordsService, LoggerService } from '@presentation/services';
 
 import { checkDatabaseConnection } from '@src/data/postgres';
 import { envs } from '@src/config';
@@ -13,6 +13,7 @@ interface Options {
   public_path?: string;
   logger?: LoggerService;
   corsOptions?: CorsOptions;
+  createRecordsService?: CreateRecordsService;
 }
 
 export class Server {
@@ -24,6 +25,7 @@ export class Server {
   private readonly routes: Router;
   private readonly logger: LoggerService | undefined;
   private readonly corsOptions: CorsOptions | undefined;
+  private readonly createRecordsService: CreateRecordsService | undefined;
 
   constructor(options: Options) {
     const {
@@ -32,12 +34,14 @@ export class Server {
       public_path = 'public',
       logger,
       corsOptions,
+      createRecordsService,
     } = options;
     this.port = port;
     this.publicPath = public_path;
     this.routes = routes;
     this.logger = logger;
     this.corsOptions = corsOptions;
+    this.createRecordsService = createRecordsService;
   }
 
   private loadMiddleware() {
@@ -66,6 +70,7 @@ export class Server {
 
     if (isDatabaseConnected) {
       this.loadMiddleware();
+      this.createRecordsService?.execute();
       this.serverListener = this.app.listen(this.port, () => {
         if (envs.NODE_ENV !== 'test') {
           // eslint-disable-next-line no-console
@@ -79,6 +84,7 @@ export class Server {
   }
 
   close() {
+    this.createRecordsService?.stop();
     this.serverListener?.close();
   }
 }
