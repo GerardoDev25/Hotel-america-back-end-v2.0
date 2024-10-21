@@ -122,6 +122,17 @@ model Guest {
 
   register   Register @relation(fields: [registerId], references: [id])
   registerId String
+
+  Cafeteria Cafeteria[]
+}
+
+model Cafeteria {
+  id       String   @id @default(uuid())
+  checkIn  DateTime @default(now())
+  isServed Boolean  @default(false)
+
+  guest   Guest  @relation(fields: [guestId], references: [id])
+  guestId String
 }
 
 model Payment {
@@ -145,5 +156,3 @@ model Charge {
   register   Register @relation(fields: [registerId], references: [id])
   registerId String
 }
-
-// todo add cafeteria model

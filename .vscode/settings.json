@@ -1,5 +1,12 @@
 {
-  "conventionalCommits.scopes": ["config", "dev", "test", "refactor", "doc"],
+  "conventionalCommits.scopes": [
+    "config",
+    "dev",
+    "test",
+    "refactor",
+    "doc",
+    "db"
+  ],
   "cSpell.words": [
     "datasource",
     "datasources",
