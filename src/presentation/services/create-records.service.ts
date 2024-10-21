@@ -8,8 +8,10 @@ interface ICreateCharge {
 }
 
 export class CreateRecordsService {
-  private tasks = CronServiceSingleton.getInstance();
-  constructor(private readonly logger: LoggerService) {}
+  constructor(
+    private readonly logger: LoggerService,
+    private readonly tasks: CronServiceSingleton
+  ) {}
 
   private createCharge = async ({ price, registerId }: ICreateCharge) => {
     const today = new Date();
