@@ -1,6 +1,6 @@
 import { prisma } from '@src/data/postgres';
 import { HandleDate } from '@src/utils';
-import { CronService, LoggerService } from '.';
+import { CronServiceSingleton, LoggerService } from '.';
 
 interface ICreateCharge {
   registerId: string;
@@ -8,7 +8,7 @@ interface ICreateCharge {
 }
 
 export class CreateRecordsService {
-  private tasks = CronService.getInstance();
+  private tasks = CronServiceSingleton.getInstance();
   constructor(private readonly logger: LoggerService) {}
 
   private createCharge = async ({ price, registerId }: ICreateCharge) => {
