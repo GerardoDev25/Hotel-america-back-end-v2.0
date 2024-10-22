@@ -127,9 +127,9 @@ model Guest {
 }
 
 model Cafeteria {
-  id       String   @id @default(uuid())
-  checkIn  DateTime @default(now())
-  isServed Boolean  @default(false)
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  isServed  Boolean  @default(false)
 
   guest   Guest  @relation(fields: [guestId], references: [id])
   guestId String

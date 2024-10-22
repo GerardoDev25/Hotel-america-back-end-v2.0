@@ -1,3 +1,4 @@
+export * from './cafeteria.repository.impl';
 export * from './charge.repository.impl';
 export * from './guest.repository.impl';
 export * from './payment.repository.impl';

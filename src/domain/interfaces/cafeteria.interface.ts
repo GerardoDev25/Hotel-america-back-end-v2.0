@@ -1,6 +1,6 @@
 export interface ICafeteria {
   id: string;
-  checkIn: string;
+  createdAt: string;
   guestId: string;
   isServed: boolean;
 }
@@ -18,4 +18,4 @@ export type CafeteriaList = {
   items: CafeteriaItem[];
 };
 
-export type UpdateCafeteria = Omit<ICafeteria, 'checkIn' | 'guestId'>;
+export type UpdateCafeteria = Omit<ICafeteria, 'createdAt' | 'guestId'>;
