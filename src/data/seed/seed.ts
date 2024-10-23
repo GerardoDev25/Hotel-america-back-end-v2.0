@@ -1,6 +1,8 @@
 import { checkDatabaseConnection, prisma } from '../postgres';
+import { generateChargesToDB } from './charge';
 import { seedData } from './data';
 import { generateGuestsToDB } from './guest';
+import { generatePaymentsToDB } from './payment';
 
 (async () => {
   try {
@@ -22,6 +24,7 @@ async function main() {
   await checkDatabaseConnection();
 
   // * delete data
+  await prisma.cafeteria.deleteMany();
   await prisma.charge.deleteMany();
   await prisma.payment.deleteMany();
   await prisma.guest.deleteMany();
@@ -56,7 +59,7 @@ async function main() {
       data: { isAvailable: false },
     });
 
-    // * 2 create register
+    // * 2 create register and initial charge
     await tx.register.createMany({
       data: roomsId.map((id) => ({
         userId: user!.id,
@@ -80,6 +83,28 @@ async function main() {
     },
   });
 
+  // * create guests
   const guests = generateGuestsToDB(registersDB);
   await prisma.guest.createMany({ data: guests });
+
+  // * create charges
+  const charges = generateChargesToDB(registersDB);
+  await prisma.charge.createMany({ data: charges });
+
+  // * create payments
+  const payments = generatePaymentsToDB(registersDB);
+  await prisma.payment.createMany({ data: payments });
+
+  // * create cafeteria records
+  const guestIds = await prisma.guest.findMany({ select: { id: true } });
+  await Promise.all(
+    guestIds.map(({ id }) =>
+      prisma.cafeteria.create({
+        data: {
+          isServed: false,
+          guest: { connect: { id } },
+        },
+      })
+    )
+  );
 }
