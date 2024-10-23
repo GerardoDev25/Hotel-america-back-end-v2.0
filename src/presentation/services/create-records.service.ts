@@ -36,6 +36,27 @@ export class CreateRecordsService {
     }
   };
 
+  private recordCafeteriaPerDay = async () => {
+    this.logger.log('creating cafeteria records per day');
+
+    try {
+      const guestIds = await prisma.guest.findMany({ select: { id: true } });
+
+      await Promise.all(
+        guestIds.map(({ id }) =>
+          prisma.cafeteria.create({
+            data: {
+              isServed: false,
+              guest: { connect: { id } },
+            },
+          })
+        )
+      );
+    } catch (error) {
+      this.logger.error((error as Error).message);
+    }
+  };
+
   private recordChargesPerDay = async () => {
     this.logger.log('creating charges lodging per day');
     try {
@@ -52,16 +73,30 @@ export class CreateRecordsService {
   };
 
   execute = () => {
+    // ? charges
     this.logger.log('Job with id "create-new-lodging" started.');
     this.tasks.startJob(
       'create-new-lodging',
       '0 12 * * *',
       this.recordChargesPerDay
     );
+
+    // ? cafeteria
+    this.logger.log('Job with id "create-new-cafeteria" started.');
+    this.tasks.startJob(
+      'create-new-cafeteria',
+      '0 6 * * *',
+      this.recordCafeteriaPerDay
+    );
   };
 
   stop = () => {
+    // * charges
     this.logger.log('Job with id "create-new-lodging" stopped.');
     this.tasks.stopJob('create-new-lodging');
+
+    // * cafeteria
+    this.logger.log('Job with id "create-new-cafeteria" stopped.');
+    this.tasks.stopJob('create-new-cafeteria');
   };
 }

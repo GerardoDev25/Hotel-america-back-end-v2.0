@@ -8,6 +8,7 @@ import { Generator } from '@src/utils/generator';
 describe('cafeteria.datasource.ts', () => {
   const cafe: CafeteriaItem = {
     id: Uuid.v4(),
+    createdAt: new Date().toISOString(),
     guestId: Uuid.v4(),
     guestName: Generator.randomName(),
     roomNumber: 0,
