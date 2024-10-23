@@ -7,6 +7,7 @@ import {
   RoomRoute,
   UserRoute,
   ChargeRoute,
+  CafeteriaRoute,
 } from '@presentation/modules';
 
 export class AppRoute {
@@ -17,6 +18,7 @@ export class AppRoute {
 
     route.use('/api/auth', AuthRoute.routes);
     route.use('/api/charge', ChargeRoute.routes);
+    route.use('/api/cafeteria', CafeteriaRoute.routes);
     route.use('/api/guest', GuestRoute.routes);
     route.use('/api/payment', PaymentRoute.routes);
     route.use('/api/register', RegisterRoute.routes);

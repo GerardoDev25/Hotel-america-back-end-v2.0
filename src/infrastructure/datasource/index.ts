@@ -1,3 +1,4 @@
+export * from './cafeteria.database.impl';
 export * from './charge.database.impl';
 export * from './guest.datasource.impl';
 export * from './payment.datasource.impl';

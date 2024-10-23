@@ -11,7 +11,6 @@ import {
 } from '@domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
-// import { FilterChargeDto } from '@src/domain/dtos/charge';
 
 describe('charge.route.ts', () => {
   let token: string;

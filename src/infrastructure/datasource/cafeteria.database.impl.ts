@@ -36,14 +36,18 @@ export class CafeteriaDatasourceImpl extends CafeteriaDatasource {
   }
 
   async getAll(): Promise<CafeteriaList> {
-    const today = new Date();
+    const todayTime = new Date().toISOString().split('T')[0];
+    const todayBegin = new Date(todayTime);
     try {
       const cafeteriaListDB = await prisma.cafeteria.findMany({
-        where: { createdAt: { gte: today, lt: HandleDate.nextDay(today) } },
+        where: {
+          createdAt: { gte: todayBegin, lt: HandleDate.nextDay(todayBegin) },
+        },
         select: {
           id: true,
           guestId: true,
           isServed: true,
+          createdAt: true,
           guest: {
             select: {
               name: true,
@@ -57,6 +61,7 @@ export class CafeteriaDatasourceImpl extends CafeteriaDatasource {
       const cafeteriaList: CafeteriaItem[] = cafeteriaListDB.map(
         (cafeteria) => ({
           id: cafeteria.id,
+          createdAt: cafeteria.createdAt.toISOString().split('T')[0],
           guestName: `${cafeteria.guest.name} ${cafeteria.guest.lastName}`,
           guestId: cafeteria.guestId,
           isServed: cafeteria.isServed,

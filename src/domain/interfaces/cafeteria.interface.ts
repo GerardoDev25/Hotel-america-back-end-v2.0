@@ -7,6 +7,7 @@ export interface ICafeteria {
 
 export interface CafeteriaItem {
   id: string;
+  createdAt: string;
   guestId: string;
   guestName: string;
   roomNumber: number;
