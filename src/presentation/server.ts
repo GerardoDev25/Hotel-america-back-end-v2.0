@@ -1,6 +1,9 @@
 import path from 'node:path';
 import express, { Router } from 'express';
 import cors, { CorsOptions } from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'js-yaml';
+import fs from 'node:fs';
 
 import { CreateRecordsService, LoggerService } from '@presentation/services';
 
@@ -48,6 +51,14 @@ export class Server {
     if (this.corsOptions) {
       this.app.use(cors(this.corsOptions));
     }
+
+    const filePath = path.resolve(__dirname, '../../doc/swagger.yaml');
+    const swaggerDocument: any = yaml.load(fs.readFileSync(filePath, 'utf8'));
+    this.app.use(
+      '/api/docs',
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument)
+    );
 
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
