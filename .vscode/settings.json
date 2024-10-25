@@ -5,7 +5,8 @@
     "test",
     "refactor",
     "doc",
-    "db"
+    "db",
+    "revert"
   ],
   "cSpell.words": [
     "datasource",
