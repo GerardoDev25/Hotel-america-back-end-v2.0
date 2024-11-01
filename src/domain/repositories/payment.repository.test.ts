@@ -7,12 +7,8 @@ import {
 import { PaymentEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
+import { PaymentPagination } from '@domain/interfaces';
 import { PaymentRepository } from '.';
-import {
-  PaymentFilter,
-  PaymentPagination,
-  PaymentTypeList,
-} from '@domain/interfaces';
 
 describe('payment.repository.ts', () => {
   const page = 2;
@@ -22,7 +18,7 @@ describe('payment.repository.ts', () => {
     id: Uuid.v4(),
     amount: 100,
     paidAt: Generator.randomDate(),
-    type: PaymentTypeList.BACK,
+    type: 'back',
     registerId: Uuid.v4(),
   });
 

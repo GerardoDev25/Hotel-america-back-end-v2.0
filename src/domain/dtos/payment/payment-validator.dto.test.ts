@@ -1,9 +1,5 @@
 import { Uuid } from '@src/adapters';
-import {
-  PaymentFilter,
-  PaymentTypeList,
-  UpdatePayment,
-} from '@domain/interfaces';
+import { PaymentFilter, UpdatePayment } from '@domain/interfaces';
 import { PaymentValidator, CreatePaymentDto } from '.';
 
 describe('payment-validator.dto.ts', () => {
@@ -64,7 +60,7 @@ describe('payment-validator.dto.ts', () => {
       paidAt: new Date().toISOString(),
       registerId: Uuid.v4(),
       amount: 100,
-      type: PaymentTypeList.BACK,
+      type: 'back',
       description: 'hello world',
     };
 
@@ -84,7 +80,7 @@ describe('payment-validator.dto.ts', () => {
       paidAt: 'new Date().toISOString()',
       registerId: 'Uuid.v4()',
       amount: false,
-      type: 'PaymentTypeList.BACK',
+      type: 'BACKss',
       description: 12,
     } as unknown as PaymentFilter;
 
@@ -100,10 +96,10 @@ describe('payment-validator.dto.ts', () => {
   });
 
   it('should get empty array if pass a valid object (update)', () => {
-    const data = {
+    const data: UpdatePayment = {
       id: Uuid.v4(),
       amount: 100,
-      type: PaymentTypeList.BACK,
+      type: 'back',
       description: 'hello world',
     };
 

@@ -1,7 +1,7 @@
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 import { PaymentEntity } from '@domain/entities';
-import { PaymentPagination, PaymentTypeList } from '@domain/interfaces';
+import { PaymentPagination } from '@domain/interfaces';
 import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
 import { PaymentController } from '.';
 
@@ -10,7 +10,7 @@ describe('payment.controller.ts', () => {
     id: Uuid.v4(),
     amount: 10,
     paidAt: Generator.randomDate(),
-    type: PaymentTypeList.CREDIT_CART,
+    type: 'credit_cart',
     registerId: Uuid.v4(),
   };
 
@@ -56,7 +56,7 @@ describe('payment.controller.ts', () => {
   });
 
   it('should return all payment (getByParams)', async () => {
-    const body = { type: PaymentTypeList.BACK };
+    const body = { type: 'back' };
     const res = { json: jest.fn() } as any;
     const req = { query: { page: 1, limit: 10 }, body } as any;
 

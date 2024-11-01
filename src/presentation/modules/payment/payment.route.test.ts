@@ -8,8 +8,8 @@ import { Generator } from '@src/utils/generator';
 import {
   UserRolesList,
   RoomTypesList,
-  PaymentTypeList,
   PaymentFilter,
+  CreatePayment,
 } from '@domain/interfaces';
 
 describe('payment.route.ts', () => {
@@ -25,9 +25,9 @@ describe('payment.route.ts', () => {
     isActive: true,
   };
 
-  const rawPayment = {
+  const rawPayment: Omit<CreatePayment, 'registerId'> = {
     amount: 100,
-    type: PaymentTypeList.QR,
+    type: 'qr',
   };
 
   const rawUser = {

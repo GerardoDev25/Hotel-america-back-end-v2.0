@@ -27,7 +27,7 @@ describe('auth.route.ts', () => {
     await prisma.user.create({ data: seedData.users[0] });
     const userToLogin = {
       username: seedData.users[0].username,
-      password: '123456',
+      password: seedData.users[0].username,
     };
 
     const { body } = await request(testServer.app)

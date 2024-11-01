@@ -1,4 +1,4 @@
-import { IPayment, PaymentType, PaymentTypeList } from '@domain/interfaces';
+import { IPayment, PaymentType } from '@domain/interfaces';
 import {
   StringValidator,
   NumberValidator,
@@ -7,6 +7,8 @@ import {
 import { CustomError } from '@domain/error';
 
 export class PaymentEntity implements IPayment {
+  static allowValues: PaymentType[] = ['back', 'cash', 'credit_cart', 'qr'];
+
   id: string;
   amount: number;
   description?: string | undefined;
@@ -37,12 +39,7 @@ export class PaymentEntity implements IPayment {
     // * type
     const typeValid = StringValidator.mostBe({
       value: type,
-      allowValues: [
-        PaymentTypeList.BACK,
-        PaymentTypeList.CASH,
-        PaymentTypeList.CREDIT_CART,
-        PaymentTypeList.QR,
-      ],
+      allowValues: PaymentEntity.allowValues,
     });
     if (typeValid !== true) throw CustomError.badRequest('type ' + typeValid);
 

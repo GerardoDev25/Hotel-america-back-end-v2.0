@@ -1,7 +1,7 @@
 import {
+  PaymentType,
   CreatePayment,
   PaymentFilter,
-  PaymentTypeList,
   UpdatePayment,
 } from '@domain/interfaces';
 import {
@@ -11,6 +11,7 @@ import {
 } from '@domain/type-validators';
 
 export class PaymentValidator {
+  static allowValues: PaymentType[] = ['back', 'cash', 'credit_cart', 'qr'];
   static create(object: CreatePayment) {
     const errors: string[] = [];
     const { amount, type, registerId, description } = object;
@@ -18,12 +19,7 @@ export class PaymentValidator {
     // * type
     const typeValid = StringValidator.mostBe({
       value: type,
-      allowValues: [
-        PaymentTypeList.BACK,
-        PaymentTypeList.CASH,
-        PaymentTypeList.CREDIT_CART,
-        PaymentTypeList.QR,
-      ],
+      allowValues: PaymentValidator.allowValues,
     });
     if (typeValid !== true) errors.push('type ' + typeValid);
 
@@ -69,12 +65,7 @@ export class PaymentValidator {
     if (type !== undefined) {
       const typeValid = StringValidator.mostBe({
         value: type,
-        allowValues: [
-          PaymentTypeList.BACK,
-          PaymentTypeList.CASH,
-          PaymentTypeList.CREDIT_CART,
-          PaymentTypeList.QR,
-        ],
+        allowValues: PaymentValidator.allowValues,
       });
       if (typeValid !== true) errors.push('type ' + typeValid);
     }
@@ -108,12 +99,7 @@ export class PaymentValidator {
     if (type !== undefined) {
       const typeValid = StringValidator.mostBe({
         value: type,
-        allowValues: [
-          PaymentTypeList.BACK,
-          PaymentTypeList.CASH,
-          PaymentTypeList.CREDIT_CART,
-          PaymentTypeList.QR,
-        ],
+        allowValues: PaymentValidator.allowValues,
       });
       if (typeValid !== true) errors.push('type ' + typeValid);
     }

@@ -1,5 +1,5 @@
 import { Generator } from '@src/utils/generator';
-import { IPayment, PaymentTypeList } from '@domain/interfaces';
+import { IPayment } from '@domain/interfaces';
 import { PaymentEntity } from './payment.entity';
 import { Uuid } from '@src/adapters';
 
@@ -8,7 +8,7 @@ describe('payment.entity.ts', () => {
     id: Uuid.v4(),
     amount: 100,
     paidAt: Generator.randomDate(),
-    type: PaymentTypeList.BACK,
+    type: 'back',
     registerId: Uuid.v4(),
   };
 
@@ -21,7 +21,7 @@ describe('payment.entity.ts', () => {
     const invalidId = 'Uuid.v4()';
     const invalidAmount = -12;
     const invalidPaidAt = 'Generator.randomDate()';
-    const invalidType = 'PaymentTypeList.BACK';
+    const invalidType = 'BACKaa';
     const invalidDescription = false;
     const invalidRegisterId = 'Uuid.v4()';
 
