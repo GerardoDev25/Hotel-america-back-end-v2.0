@@ -1,10 +1,6 @@
 import { Uuid } from '@src/adapters';
 import { ChargeValidator, CreateChargeDto } from '.';
-import {
-  ChargeFilter,
-  ChargeTypeList,
-  UpdateCharge,
-} from '@src/domain/interfaces';
+import { ChargeFilter, UpdateCharge } from '@src/domain/interfaces';
 import { Generator } from '@src/utils/generator';
 
 describe('charge-validator.dto.ts', () => {
@@ -65,7 +61,7 @@ describe('charge-validator.dto.ts', () => {
       createdAt: Generator.randomDate(),
       registerId: Uuid.v4(),
       amount: 100,
-      type: ChargeTypeList.CAFETERIA,
+      type: 'cafeteria',
       description: 'hello world',
     };
 
@@ -85,7 +81,7 @@ describe('charge-validator.dto.ts', () => {
       createdAt: 'Generator.randomDate()',
       registerId: 'Uuid.v4()',
       amount: -100,
-      type: 'ChargeTypeList.CAFETERIA',
+      type: 'no valid',
       description: 12,
     } as unknown as ChargeFilter;
 
@@ -101,10 +97,10 @@ describe('charge-validator.dto.ts', () => {
   });
 
   it('should get empty array if pass a valid object (update)', () => {
-    const data = {
+    const data: UpdateCharge = {
       id: Uuid.v4(),
       amount: 100,
-      type: ChargeTypeList.CAFETERIA,
+      type: 'cafeteria',
       description: 'hello world',
     };
 

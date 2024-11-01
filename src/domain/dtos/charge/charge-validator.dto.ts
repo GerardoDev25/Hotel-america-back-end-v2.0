@@ -1,9 +1,4 @@
-import {
-  ChargeFilter,
-  ChargeTypeList,
-  CreateCharge,
-  UpdateCharge,
-} from '@domain/interfaces';
+import { ChargeFilter, CreateCharge, UpdateCharge } from '@domain/interfaces';
 import {
   DateValidator,
   NumberValidator,
@@ -18,13 +13,7 @@ export class ChargeValidator {
     // * type
     const typeValid = StringValidator.mostBe({
       value: type,
-      allowValues: [
-        ChargeTypeList.CAFETERIA,
-        ChargeTypeList.LAUNDRY,
-        ChargeTypeList.LODGING,
-        ChargeTypeList.OTHER,
-        ChargeTypeList.NEW_GUEST,
-      ],
+      allowValues: ['cafeteria', 'laundry', 'lodging', 'other', 'new_guest'],
     });
     if (typeValid !== true) errors.push('type ' + typeValid);
 
@@ -70,13 +59,7 @@ export class ChargeValidator {
     if (type !== undefined) {
       const typeValid = StringValidator.mostBe({
         value: type,
-        allowValues: [
-          ChargeTypeList.CAFETERIA,
-          ChargeTypeList.LAUNDRY,
-          ChargeTypeList.LODGING,
-          ChargeTypeList.OTHER,
-          ChargeTypeList.NEW_GUEST,
-        ],
+        allowValues: ['cafeteria', 'laundry', 'lodging', 'other', 'new_guest'],
       });
       if (typeValid !== true) errors.push('type ' + typeValid);
     }
@@ -109,13 +92,7 @@ export class ChargeValidator {
     if (type !== undefined) {
       const typeValid = StringValidator.mostBe({
         value: type,
-        allowValues: [
-          ChargeTypeList.CAFETERIA,
-          ChargeTypeList.LAUNDRY,
-          ChargeTypeList.LODGING,
-          ChargeTypeList.OTHER,
-          ChargeTypeList.NEW_GUEST,
-        ],
+        allowValues: ['cafeteria', 'laundry', 'lodging', 'other', 'new_guest'],
       });
       if (typeValid !== true) errors.push('type ' + typeValid);
     }

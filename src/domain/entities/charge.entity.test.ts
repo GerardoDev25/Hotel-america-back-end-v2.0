@@ -1,5 +1,5 @@
 import { Generator } from '@src/utils/generator';
-import { ICharge, ChargeTypeList } from '@domain/interfaces';
+import { ICharge } from '@domain/interfaces';
 import { Uuid } from '@src/adapters';
 import { ChargeEntity } from '.';
 
@@ -8,7 +8,7 @@ describe('charge.entity.ts', () => {
     id: Uuid.v4(),
     amount: 100,
     createdAt: Generator.randomDate(),
-    type: ChargeTypeList.CAFETERIA,
+    type: 'cafeteria',
     registerId: Uuid.v4(),
   };
 
@@ -21,7 +21,7 @@ describe('charge.entity.ts', () => {
     const invalidId = 'Uuid.v4()';
     const invalidAmount = -12;
     const invalidCreatedAt = 'Generator.randomDate()';
-    const invalidType = 'chargeTypeList.BACK';
+    const invalidType = 'BACKds';
     const invalidDescription = false;
     const invalidRegisterId = 'Uuid.v4()';
 

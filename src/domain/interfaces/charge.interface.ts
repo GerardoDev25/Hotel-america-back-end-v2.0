@@ -14,14 +14,6 @@ export type ChargeType =
   | 'other'
   | 'new_guest';
 
-export enum ChargeTypeList {
-  LODGING = 'lodging',
-  LAUNDRY = 'laundry',
-  CAFETERIA = 'cafeteria',
-  OTHER = 'other',
-  NEW_GUEST = 'new_guest',
-}
-
 export interface ChargePagination {
   charges: ICharge[];
   total: number;

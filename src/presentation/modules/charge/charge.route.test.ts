@@ -6,8 +6,8 @@ import { CreateRoomDto } from '@domain/dtos/room';
 import {
   UserRolesList,
   RoomTypesList,
-  ChargeTypeList,
   ChargeFilter,
+  CreateCharge,
 } from '@domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
@@ -25,7 +25,10 @@ describe('charge.route.ts', () => {
     isActive: true,
   };
 
-  const rawCharge = { amount: 100, type: ChargeTypeList.LODGING };
+  const rawCharge: Omit<CreateCharge, 'registerId'> = {
+    amount: 100,
+    type: 'lodging',
+  };
 
   const rawUser = {
     role: UserRolesList.RECEPTION,

@@ -2,7 +2,7 @@
 import { ChargeEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
-import { ChargePagination, ChargeTypeList } from '@domain/interfaces';
+import { ChargePagination } from '@domain/interfaces';
 import {
   CreateChargeDto,
   UpdateChargeDto,
@@ -18,7 +18,7 @@ describe('charge.datasource.ts', () => {
     id: Uuid.v4(),
     amount: 100,
     createdAt: Generator.randomDate(),
-    type: ChargeTypeList.CAFETERIA,
+    type: 'cafeteria',
     registerId: Uuid.v4(),
   });
 

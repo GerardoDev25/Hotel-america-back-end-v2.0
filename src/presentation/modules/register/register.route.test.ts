@@ -1,6 +1,6 @@
 import request from 'supertest';
 import {
-  ChargeTypeList,
+  CreateCharge,
   PaymentTypeList,
   RegisterFilter,
   RoomTypesList,
@@ -86,7 +86,10 @@ describe('register.route.ts', () => {
     dateOfBirth: new Date().toISOString().split('T')[0],
   };
 
-  const rawCharge = { amount: 100, type: ChargeTypeList.LODGING };
+  const rawCharge: Omit<CreateCharge, 'registerId'> = {
+    amount: 100,
+    type: 'lodging',
+  };
   const rawPayment = { amount: 100, type: PaymentTypeList.QR };
 
   it('should get all register (getAll)', async () => {

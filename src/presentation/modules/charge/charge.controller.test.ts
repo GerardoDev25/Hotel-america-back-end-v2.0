@@ -1,7 +1,7 @@
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 import { ChargeEntity } from '@domain/entities';
-import { ChargePagination, ChargeTypeList } from '@domain/interfaces';
+import { ChargePagination } from '@domain/interfaces';
 import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
 import { ChargeController } from '.';
 
@@ -10,7 +10,7 @@ describe('charge.controller.ts', () => {
     id: Uuid.v4(),
     amount: 10,
     createdAt: Generator.randomDate(),
-    type: ChargeTypeList.LAUNDRY,
+    type: 'laundry',
     registerId: Uuid.v4(),
   };
 
@@ -56,7 +56,7 @@ describe('charge.controller.ts', () => {
   });
 
   it('should return all charges (getByParams)', async () => {
-    const body = { type: ChargeTypeList.LAUNDRY };
+    const body = { type: 'laundry' };
     const res = { json: jest.fn() } as any;
     const req = { query: { page: 1, limit: 10 }, body } as any;
 

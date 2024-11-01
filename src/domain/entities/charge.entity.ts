@@ -1,4 +1,4 @@
-import { ICharge, ChargeType, ChargeTypeList } from '@domain/interfaces';
+import { ICharge, ChargeType } from '@domain/interfaces';
 import {
   StringValidator,
   NumberValidator,
@@ -37,13 +37,7 @@ export class ChargeEntity implements ICharge {
     // * type
     const typeValid = StringValidator.mostBe({
       value: type,
-      allowValues: [
-        ChargeTypeList.CAFETERIA,
-        ChargeTypeList.LAUNDRY,
-        ChargeTypeList.LODGING,
-        ChargeTypeList.OTHER,
-        ChargeTypeList.NEW_GUEST,
-      ],
+      allowValues: ['cafeteria', 'laundry', 'lodging', 'other', 'new_guest'],
     });
     if (typeValid !== true) throw CustomError.badRequest('type ' + typeValid);
 

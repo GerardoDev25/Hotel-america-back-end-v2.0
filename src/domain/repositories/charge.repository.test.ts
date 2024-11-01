@@ -3,12 +3,7 @@ import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
 import { ChargeEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
-import {
-  ChargePagination,
-  ChargeTypeList,
-  ChargeFilter,
-  IChargeFilterDto,
-} from '@domain/interfaces';
+import { ChargePagination, IChargeFilterDto } from '@domain/interfaces';
 import { ChargeRepository } from '.';
 
 describe('charge.repository.ts', () => {
@@ -19,7 +14,7 @@ describe('charge.repository.ts', () => {
     id: Uuid.v4(),
     amount: 100,
     createdAt: Generator.randomDate(),
-    type: ChargeTypeList.LAUNDRY,
+    type: 'laundry',
     registerId: Uuid.v4(),
   });
 
