@@ -1,12 +1,6 @@
 import { variables } from '@domain/variables';
 import { CustomError } from '@domain/error/';
-import {
-  IRoom,
-  RoomState,
-  RoomStateList,
-  RoomType,
-  RoomTypesList,
-} from '@domain/interfaces/';
+import { IRoom, RoomState, RoomType } from '@domain/interfaces/';
 import {
   BooleanValidator,
   NumberValidator,
@@ -14,6 +8,14 @@ import {
 } from '@domain/type-validators';
 
 export class RoomEntity implements IRoom {
+  static readonly allowValuesState: RoomState[] = [
+    'free',
+    'occupied',
+    'pending_cleaning',
+    'under_maintenance',
+  ];
+  static readonly allowValuesType: RoomType[] = ['normal', 'suit'];
+
   id: string;
   roomType: RoomType;
   roomNumber: number;
@@ -43,12 +45,7 @@ export class RoomEntity implements IRoom {
     // * state
     const stateValid = StringValidator.mostBe({
       value: state,
-      allowValues: [
-        RoomStateList.FREE,
-        RoomStateList.OCCUPIED,
-        RoomStateList.PENDING_CLEANING,
-        RoomStateList.UNDER_MAINTENANCE,
-      ],
+      allowValues: RoomEntity.allowValuesState,
     });
     if (stateValid !== true)
       throw CustomError.badRequest('state ' + stateValid);
@@ -56,7 +53,7 @@ export class RoomEntity implements IRoom {
     // * roomType
     const roomTypeValid = StringValidator.mostBe({
       value: roomType,
-      allowValues: [RoomTypesList.SUIT, RoomTypesList.NORMAL],
+      allowValues: RoomEntity.allowValuesType,
     });
     if (roomTypeValid !== true)
       throw CustomError.badRequest('roomType ' + roomTypeValid);

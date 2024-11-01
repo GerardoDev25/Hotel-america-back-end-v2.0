@@ -2,9 +2,9 @@ import { variables } from '@domain/variables';
 import {
   UpdateRoom,
   CreateRoom,
-  RoomTypesList,
-  RoomStateList,
   RoomFilter,
+  RoomState,
+  RoomType,
 } from '@domain/interfaces';
 import {
   BooleanValidator,
@@ -13,6 +13,14 @@ import {
 } from '@domain/type-validators';
 
 export class RoomValidator {
+  static readonly allowValuesState: RoomState[] = [
+    'free',
+    'occupied',
+    'pending_cleaning',
+    'under_maintenance',
+  ];
+  static readonly allowValuesType: RoomType[] = ['normal', 'suit'];
+
   static create(object: CreateRoom): string[] {
     const errors: string[] = [];
     const {
@@ -49,19 +57,14 @@ export class RoomValidator {
     // * state
     const stateValid = StringValidator.mostBe({
       value: state,
-      allowValues: [
-        RoomStateList.FREE,
-        RoomStateList.OCCUPIED,
-        RoomStateList.PENDING_CLEANING,
-        RoomStateList.UNDER_MAINTENANCE,
-      ],
+      allowValues: RoomValidator.allowValuesState,
     });
     if (stateValid !== true) errors.push('state ' + stateValid);
 
     // * roomType
     const roomTypeValid = StringValidator.mostBe({
       value: roomType,
-      allowValues: [RoomTypesList.SUIT, RoomTypesList.NORMAL],
+      allowValues: RoomValidator.allowValuesType,
     });
     if (roomTypeValid !== true) errors.push('roomType ' + roomTypeValid);
 
@@ -77,12 +80,7 @@ export class RoomValidator {
     if (state !== undefined) {
       const stateValid = StringValidator.mostBe({
         value: state,
-        allowValues: [
-          RoomStateList.FREE,
-          RoomStateList.OCCUPIED,
-          RoomStateList.PENDING_CLEANING,
-          RoomStateList.UNDER_MAINTENANCE,
-        ],
+        allowValues: RoomValidator.allowValuesState,
       });
       if (stateValid !== true) errors.push('state ' + stateValid);
     }
@@ -91,7 +89,7 @@ export class RoomValidator {
     if (roomType !== undefined) {
       const roomTypeValid = StringValidator.mostBe({
         value: roomType,
-        allowValues: [RoomTypesList.SUIT, RoomTypesList.NORMAL],
+        allowValues: RoomValidator.allowValuesType,
       });
       if (roomTypeValid !== true) errors.push('roomType ' + roomTypeValid);
     }

@@ -1,21 +1,21 @@
 import { Uuid } from '@src/adapters';
-import { RoomStateList, RoomTypesList } from '@domain/interfaces';
 import { RoomEntity } from './room.entity';
+import { IRoom } from '../interfaces';
 
 describe('room.entity.ts', () => {
-  const validObject = {
+  const validObject: IRoom = {
     id: Uuid.v4(),
-    roomType: RoomTypesList.SUIT,
-    state: RoomStateList.FREE,
-    roomNumber: '101',
-    betsNumber: '2',
-    isAvailable: 'true',
+    roomType: 'suit',
+    state: 'free',
+    roomNumber: 101,
+    betsNumber: 2,
+    isAvailable: true,
   };
   test('should return RoomEntity instance when given valid object properties', () => {
     // Arrange
     const expectedRoomEntity = new RoomEntity({
       id: validObject.id,
-      roomType: RoomTypesList.SUIT,
+      roomType: 'suit',
       state: validObject.state,
       roomNumber: 101,
       betsNumber: 2,

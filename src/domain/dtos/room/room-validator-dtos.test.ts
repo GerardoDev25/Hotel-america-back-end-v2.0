@@ -33,7 +33,7 @@ describe('RoomValidator', () => {
       'roomNumber property most be greater than or equal to 1',
       'isAvailable property most be a boolean',
       'state most be: free, occupied, pending_cleaning, under_maintenance',
-      'roomType most be: suit, normal',
+      'roomType most be: normal, suit',
     ]);
   });
 
@@ -62,7 +62,7 @@ describe('RoomValidator', () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors).toEqual([
-      'roomType most be: suit, normal',
+      'roomType most be: normal, suit',
       'roomNumber property most be greater than or equal to 1',
       'betsNumber property most be greater than or equal to 1',
       'isAvailable property most be a boolean',
@@ -96,7 +96,7 @@ describe('RoomValidator', () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors).toEqual([
-      'roomType most be: suit, normal',
+      'roomType most be: normal, suit',
       'roomNumber property most be greater than or equal to 1',
       'betsNumber property most be greater than or equal to 1',
       'isAvailable property most be a boolean',

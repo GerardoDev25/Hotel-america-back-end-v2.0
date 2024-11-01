@@ -40,7 +40,7 @@ describe('filter-room.dto.ts', () => {
     expect(errors).toBeInstanceOf(Array);
     expect(errors?.length).toBeGreaterThan(0);
     expect(errors).toEqual([
-      'roomType most be: suit, normal',
+      'roomType most be: normal, suit',
       'roomNumber property most be greater than or equal to 1',
       'betsNumber property most be greater than or equal to 1',
       'isAvailable property most be a boolean',

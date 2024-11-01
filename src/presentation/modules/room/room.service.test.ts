@@ -2,7 +2,7 @@ import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { PaginationDto } from '@domain/dtos/share';
 import { RoomRepository } from '@domain/repositories';
 import { RoomService } from './room.service';
-import { RoomFilter, RoomStateList } from '@src/domain/interfaces';
+import { RoomFilter } from '@src/domain/interfaces';
 
 describe('room.service.ts', () => {
   const mockRoomRepository = {
@@ -60,7 +60,7 @@ describe('room.service.ts', () => {
       roomNumber: 129,
       betsNumber: 3,
       isAvailable: true,
-      state: RoomStateList.FREE,
+      state: 'free',
     });
     const service = new RoomService(mockRoomRepository);
 

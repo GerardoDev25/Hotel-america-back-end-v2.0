@@ -1,6 +1,6 @@
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomDatasource } from '@domain/datasources';
-import { RoomFilter, RoomTypesList } from '@domain/interfaces';
+import { RoomFilter } from '@domain/interfaces';
 
 import { Uuid } from '@src/adapters';
 
@@ -69,7 +69,7 @@ describe('room.repository.impl.ts', () => {
 
   test('should call create with parameter', async () => {
     const createRoom: CreateRoomDto = {
-      roomType: RoomTypesList.SUIT,
+      roomType: 'suit',
       state: 'under_maintenance',
       roomNumber: 1,
       betsNumber: 1,
@@ -85,7 +85,7 @@ describe('room.repository.impl.ts', () => {
   test('should call update with parameter', async () => {
     const updateRoom: UpdateRoomDto = {
       id: 'abv',
-      roomType: RoomTypesList.NORMAL,
+      roomType: 'normal',
       roomNumber: 2,
       betsNumber: 2,
       isAvailable: true,

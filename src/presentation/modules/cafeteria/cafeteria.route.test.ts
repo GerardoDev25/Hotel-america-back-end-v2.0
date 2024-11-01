@@ -4,7 +4,7 @@ import { prisma } from '@src/data/postgres';
 import { citiesList } from '@src/data/seed';
 import { CreateRegisterDto } from '@domain/dtos/register';
 import { CreateRoomDto } from '@domain/dtos/room';
-import { RoomTypesList, UserRolesList } from '@domain/interfaces';
+import { UserRolesList } from '@domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
 import { HandleDate } from '@src/utils';
@@ -36,7 +36,7 @@ describe('cafeteria.route.ts', () => {
   };
 
   const rawRoom: CreateRoomDto = {
-    roomType: RoomTypesList.SUIT,
+    roomType: 'suit',
     state: 'free',
     roomNumber: 100,
     betsNumber: 2,

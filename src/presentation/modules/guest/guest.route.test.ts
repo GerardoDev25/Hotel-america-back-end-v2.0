@@ -3,11 +3,7 @@ import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
 import { prisma } from '@src/data/postgres';
 import { CreateRegisterDto } from '@src/domain/dtos/register';
 import { CreateRoomDto } from '@src/domain/dtos/room';
-import {
-  GuestFilter,
-  RoomTypesList,
-  UserRolesList,
-} from '@src/domain/interfaces';
+import { GuestFilter, UserRolesList } from '@src/domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
 import { CreateGuestDto } from '@src/domain/dtos/guest';
@@ -44,7 +40,7 @@ describe('guest.route.ts', () => {
   };
 
   const rawRoom: CreateRoomDto = {
-    roomType: RoomTypesList.SUIT,
+    roomType: 'suit',
     state: 'free',
     roomNumber: 100,
     betsNumber: 2,

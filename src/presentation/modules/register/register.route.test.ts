@@ -3,7 +3,6 @@ import {
   CreateCharge,
   CreatePayment,
   RegisterFilter,
-  RoomTypesList,
   UserRolesList,
 } from '@domain/interfaces';
 import { CreateRoomDto } from '@domain/dtos/room';
@@ -57,7 +56,7 @@ describe('register.route.ts', () => {
   };
 
   const rawRoom: CreateRoomDto = {
-    roomType: RoomTypesList.SUIT,
+    roomType: 'suit',
     roomNumber: 100,
     state: 'free',
     betsNumber: 2,

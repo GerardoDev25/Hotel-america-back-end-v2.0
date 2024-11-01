@@ -7,7 +7,6 @@ import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
 import {
   UserRolesList,
-  RoomTypesList,
   PaymentFilter,
   CreatePayment,
 } from '@domain/interfaces';
@@ -41,7 +40,7 @@ describe('payment.route.ts', () => {
   };
 
   const rawRoom: CreateRoomDto = {
-    roomType: RoomTypesList.SUIT,
+    roomType: 'suit',
     state: 'free',
     roomNumber: 100,
     betsNumber: 2,

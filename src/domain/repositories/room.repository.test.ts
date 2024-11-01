@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomEntity } from '@domain/entities';
-import { RoomFilter, RoomPagination, RoomTypesList } from '@domain/interfaces';
+import { RoomFilter, RoomPagination } from '@domain/interfaces';
 import { Uuid } from '@src/adapters';
 import { RoomRepository } from './room.repository';
 describe('room.repository.ts', () => {
@@ -11,7 +11,7 @@ describe('room.repository.ts', () => {
 
   const mockRoom: RoomEntity = new RoomEntity({
     id: 'abc',
-    roomType: RoomTypesList.NORMAL,
+    roomType: 'normal',
     state: 'free',
     roomNumber: 12,
     betsNumber: 12,
@@ -19,7 +19,7 @@ describe('room.repository.ts', () => {
   });
   const mockRoom2: RoomEntity = new RoomEntity({
     id: 'abc',
-    roomType: RoomTypesList.NORMAL,
+    roomType: 'normal',
     state: 'free',
     roomNumber: 12,
     betsNumber: 12,

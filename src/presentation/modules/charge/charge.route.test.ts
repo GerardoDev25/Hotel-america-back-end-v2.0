@@ -3,12 +3,7 @@ import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
 import { prisma } from '@src/data/postgres';
 import { CreateRegisterDto } from '@domain/dtos/register';
 import { CreateRoomDto } from '@domain/dtos/room';
-import {
-  UserRolesList,
-  RoomTypesList,
-  ChargeFilter,
-  CreateCharge,
-} from '@domain/interfaces';
+import { UserRolesList, ChargeFilter, CreateCharge } from '@domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
 
@@ -41,7 +36,7 @@ describe('charge.route.ts', () => {
   };
 
   const rawRoom: CreateRoomDto = {
-    roomType: RoomTypesList.SUIT,
+    roomType: 'suit',
     state: 'free',
     roomNumber: 100,
     betsNumber: 2,
