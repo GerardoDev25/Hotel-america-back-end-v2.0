@@ -3,7 +3,7 @@ import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
 import { prisma } from '@src/data/postgres';
 import { CreateRegisterDto } from '@src/domain/dtos/register';
 import { CreateRoomDto } from '@src/domain/dtos/room';
-import { GuestFilter, UserRolesList } from '@src/domain/interfaces';
+import { GuestFilter } from '@src/domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
 import { CreateGuestDto } from '@src/domain/dtos/guest';
@@ -15,7 +15,7 @@ describe('guest.route.ts', () => {
   const fullName = Generator.randomName();
 
   const tokenUser = {
-    role: UserRolesList.RECEPTION,
+    role: 'reception',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'John Doe'.trim(),
     phone: '+1234567890'.trim(),
@@ -30,7 +30,7 @@ describe('guest.route.ts', () => {
   };
 
   const rawUser = {
-    role: UserRolesList.RECEPTION,
+    role: 'reception',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'John Doe'.trim(),
     phone: '+1234567890'.trim(),
@@ -85,7 +85,7 @@ describe('guest.route.ts', () => {
     await prisma.user.deleteMany();
 
     // * create auth token
-    const user = await prisma.user.create({ data: tokenUser });
+    const user = await prisma.user.create({ data: tokenUser as any });
     token = await JwtAdapter.generateToken({ payload: { id: user.id } });
   });
 
@@ -94,7 +94,7 @@ describe('guest.route.ts', () => {
     const limit = 10;
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -151,7 +151,7 @@ describe('guest.route.ts', () => {
     const limit = 10;
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -216,7 +216,7 @@ describe('guest.route.ts', () => {
   it('should get a guest by id (getById)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -264,7 +264,7 @@ describe('guest.route.ts', () => {
   it('should create a user (create)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -341,7 +341,7 @@ describe('guest.route.ts', () => {
   it('should update a guest (update)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -393,7 +393,7 @@ describe('guest.route.ts', () => {
   it('should delete a guest by id (delete)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -432,7 +432,7 @@ describe('guest.route.ts', () => {
   it('should not delete a guest if there is only one (delete)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({

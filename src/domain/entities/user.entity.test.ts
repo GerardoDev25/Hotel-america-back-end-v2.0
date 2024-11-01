@@ -1,12 +1,12 @@
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
-import { IUser, UserRolesList } from '@domain/interfaces';
+import { IUser } from '@domain/interfaces';
 import { UserEntity } from './user.entity';
 
 describe('user.entity.ts', () => {
   const validUser: IUser = {
     id: Uuid.v4(),
-    role: UserRolesList.ADMIN,
+    role: 'admin',
     birdDate: Generator.randomDate(),
     name: Generator.randomName(),
     phone: Generator.randomPhone(),

@@ -1,6 +1,6 @@
 import { BcryptAdapter } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
-import { IUser, UserRolesList } from '@domain/interfaces';
+import { IUser } from '@domain/interfaces';
 
 export interface IUserSeed extends Omit<IUser, 'id' | 'birdDate'> {
   birdDate: Date;
@@ -8,7 +8,7 @@ export interface IUserSeed extends Omit<IUser, 'id' | 'birdDate'> {
 
 export const users: IUserSeed[] = [
   {
-    role: UserRolesList.ADMIN,
+    role: 'admin',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'John Doe'.trim().toLowerCase(),
     phone: '+1234567890'.trim(),
@@ -17,7 +17,7 @@ export const users: IUserSeed[] = [
     isActive: true,
   },
   {
-    role: UserRolesList.LAUNDRY,
+    role: 'laundry',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'Jane Smith'.trim().toLowerCase(),
     phone: '+0987654321'.trim(),
@@ -26,7 +26,7 @@ export const users: IUserSeed[] = [
     isActive: true,
   },
   {
-    role: UserRolesList.RECEPTION,
+    role: 'reception',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'Alice Johnson'.trim().toLowerCase(),
     phone: '+1122334455'.trim(),
@@ -35,7 +35,7 @@ export const users: IUserSeed[] = [
     isActive: true,
   },
   {
-    role: UserRolesList.CAFE,
+    role: 'cafe',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'Bob Brown'.trim().toLowerCase(),
     phone: '+5566778899'.trim(),
@@ -54,7 +54,7 @@ export const users: IUserSeed[] = [
   },
 
   {
-    role: UserRolesList.LAUNDRY,
+    role: 'laundry',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'Maria Smith'.trim().toLowerCase(),
     phone: '+098765434'.trim(),

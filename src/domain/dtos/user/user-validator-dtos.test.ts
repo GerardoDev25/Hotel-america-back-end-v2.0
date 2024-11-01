@@ -1,12 +1,12 @@
-import { UserFilter, UserRolesList } from '@domain/interfaces';
+import { CreateUser, UpdateUser, UserFilter } from '@domain/interfaces';
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 import { UserValidator } from './user-validator-dtos';
 
 describe('user-validator-dtos.ts', () => {
   it('should get and empty array if pass valid object (create)', () => {
-    const data = {
-      role: UserRolesList.ADMIN,
+    const data: CreateUser = {
+      role: 'admin',
       birdDate: Generator.randomDate(),
       name: Generator.randomName(),
       phone: Generator.randomPhone(),
@@ -47,7 +47,7 @@ describe('user-validator-dtos.ts', () => {
 
   it('should get empty array if pass a valid object (filter)', () => {
     const data: UserFilter = {
-      role: UserRolesList.ADMIN,
+      role: 'admin',
       birdDate: Generator.randomDate(),
       name: Generator.randomName(),
       phone: Generator.randomPhone(),
@@ -63,7 +63,7 @@ describe('user-validator-dtos.ts', () => {
 
   it('should get error if properties are wrong (filter)', () => {
     const data = {
-      role: 'UserRolesList.ADMIN',
+      role: 'admins',
       birdDate: false,
       name: 12,
       phone: 12,
@@ -87,9 +87,9 @@ describe('user-validator-dtos.ts', () => {
   });
 
   it('should get empty array if pass a valid object (update)', () => {
-    const data = {
+    const data: UpdateUser = {
       id: Uuid.v4(),
-      role: UserRolesList.ADMIN,
+      role: 'admin',
       birdDate: Generator.randomDate(),
       name: Generator.randomName(),
       phone: Generator.randomPhone(),
@@ -106,7 +106,7 @@ describe('user-validator-dtos.ts', () => {
   it('should get error if properties are wrong (update)', () => {
     const data = {
       id: 'Uuid.v4()',
-      role: 'UserRolesList.ADMIN',
+      role: 'admins',
       birdDate: false,
       name: 12,
       phone: 12,

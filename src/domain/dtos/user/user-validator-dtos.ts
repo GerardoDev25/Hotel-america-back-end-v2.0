@@ -2,7 +2,7 @@ import {
   CreateUser,
   UpdateUser,
   UserFilter,
-  UserRolesList,
+  UserRole,
 } from '@domain/interfaces';
 import {
   StringValidator,
@@ -11,6 +11,13 @@ import {
 } from '@domain/type-validators';
 
 export class UserValidator {
+  static readonly allowValues: UserRole[] = [
+    'admin',
+    'cafe',
+    'laundry',
+    'reception',
+  ];
+
   static create(object: CreateUser): string[] {
     const errors: string[] = [];
 
@@ -27,12 +34,7 @@ export class UserValidator {
     // * role
     const roleValid = StringValidator.mostBe({
       value: role,
-      allowValues: [
-        UserRolesList.ADMIN,
-        UserRolesList.CAFE,
-        UserRolesList.LAUNDRY,
-        UserRolesList.RECEPTION,
-      ],
+      allowValues: UserValidator.allowValues,
     });
     if (roleValid !== true) errors.push('role ' + roleValid);
 
@@ -73,12 +75,7 @@ export class UserValidator {
     if (role !== undefined) {
       const roleValid = StringValidator.mostBe({
         value: role,
-        allowValues: [
-          UserRolesList.ADMIN,
-          UserRolesList.CAFE,
-          UserRolesList.LAUNDRY,
-          UserRolesList.RECEPTION,
-        ],
+        allowValues: UserValidator.allowValues,
       });
       if (roleValid !== true) errors.push('role ' + roleValid);
     }

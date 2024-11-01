@@ -1,6 +1,5 @@
 import { Router } from 'express';
 
-import { UserRolesList } from '@domain/interfaces';
 import { UserRepositoryImpl } from '@infrastructure/repositories';
 import { UserDatasourceImpl } from '@infrastructure/datasource';
 import { Auth, Commons } from '@presentation/middlewares';
@@ -24,18 +23,12 @@ export class UserRoute {
 
     const middleware = {
       getById: [Commons.isValidUUID],
-      create: [
-        authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.ADMIN]),
-      ],
-      update: [
-        authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.ADMIN]),
-      ],
+      create: [authMiddleware.validateJwt, Auth.verifyRole(['admin'])],
+      update: [authMiddleware.validateJwt, Auth.verifyRole(['admin'])],
       delete: [
         Commons.isValidUUID,
         authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.ADMIN]),
+        Auth.verifyRole(['admin']),
       ],
     };
 

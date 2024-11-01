@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { UserRolesList } from '@domain/interfaces';
 import { LoggerService } from '@presentation/services';
 import { Auth, Commons } from '@presentation/middlewares';
 import { GuestRepositoryImpl } from '@infrastructure/repositories';
@@ -30,18 +29,12 @@ export class GuestRoute {
 
     const middleware = {
       getById: [Commons.isValidUUID],
-      create: [
-        authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.RECEPTION]),
-      ],
-      update: [
-        authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.RECEPTION]),
-      ],
+      create: [authMiddleware.validateJwt, Auth.verifyRole(['reception'])],
+      update: [authMiddleware.validateJwt, Auth.verifyRole(['reception'])],
       delete: [
         Commons.isValidUUID,
         authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.RECEPTION]),
+        Auth.verifyRole(['reception']),
       ],
     };
 

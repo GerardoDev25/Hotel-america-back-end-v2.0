@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import { UserFilter, UserRolesList } from '@domain/interfaces';
+import { UserFilter } from '@domain/interfaces';
 import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 import { prisma } from '@src/data/postgres';
@@ -9,7 +9,7 @@ import { testServer } from '@src/test-server';
 
 describe('user.route.ts', () => {
   const rawUser = {
-    role: UserRolesList.ADMIN,
+    role: 'admin',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'John Doe'.trim(),
     phone: '+1234567890'.trim(),
@@ -38,7 +38,7 @@ describe('user.route.ts', () => {
     await prisma.user.deleteMany();
 
     // * create auth token
-    const user = await prisma.user.create({ data: rawUser });
+    const user = await prisma.user.create({ data: rawUser as any });
     token = await JwtAdapter.generateToken({ payload: { id: user.id } });
   });
 

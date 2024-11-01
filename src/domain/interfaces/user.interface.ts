@@ -11,13 +11,6 @@ export interface IUser {
 
 export type UserRole = 'admin' | 'laundry' | 'reception' | 'cafe';
 
-export enum UserRolesList {
-  ADMIN = 'admin',
-  LAUNDRY = 'laundry',
-  RECEPTION = 'reception',
-  CAFE = 'cafe',
-}
-
 export interface UserPagination {
   users: IUser[];
   total: number;

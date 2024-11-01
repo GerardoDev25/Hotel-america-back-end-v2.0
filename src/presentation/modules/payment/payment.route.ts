@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { UserRolesList } from '@domain/interfaces';
 import { LoggerService } from '@presentation/services';
 import { Auth, Commons } from '@presentation/middlewares';
 import { PaymentRepositoryImpl } from '@infrastructure/repositories';
@@ -31,28 +30,16 @@ export class PaymentRoute {
       getById: [authMiddleware.validateJwt, Commons.isValidUUID],
       create: [
         authMiddleware.validateJwt,
-        Auth.verifyRole([
-          UserRolesList.RECEPTION,
-          UserRolesList.CAFE,
-          UserRolesList.LAUNDRY,
-        ]),
+        Auth.verifyRole(['reception', 'cafe', 'laundry']),
       ],
       update: [
         authMiddleware.validateJwt,
-        Auth.verifyRole([
-          UserRolesList.RECEPTION,
-          UserRolesList.CAFE,
-          UserRolesList.LAUNDRY,
-        ]),
+        Auth.verifyRole(['reception', 'cafe', 'laundry']),
       ],
       delete: [
         Commons.isValidUUID,
         authMiddleware.validateJwt,
-        Auth.verifyRole([
-          UserRolesList.RECEPTION,
-          UserRolesList.CAFE,
-          UserRolesList.LAUNDRY,
-        ]),
+        Auth.verifyRole(['reception', 'cafe', 'laundry']),
       ],
     };
 

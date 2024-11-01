@@ -3,7 +3,6 @@ import {
   CreateCharge,
   CreatePayment,
   RegisterFilter,
-  UserRolesList,
 } from '@domain/interfaces';
 import { CreateRoomDto } from '@domain/dtos/room';
 import { CreateRegisterDto } from '@domain/dtos/register';
@@ -46,7 +45,7 @@ describe('register.route.ts', () => {
   });
 
   const rawUser: CreateUserDto = {
-    role: UserRolesList.RECEPTION,
+    role: 'reception',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'Alice Johnson'.trim(),
     phone: '+1122334455'.trim(),

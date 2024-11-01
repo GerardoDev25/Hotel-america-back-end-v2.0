@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { UserRolesList } from '@domain/interfaces';
 import { Auth } from '@presentation/middlewares';
 import { CafeteriaRepositoryImpl } from '@infrastructure/repositories';
 import {
@@ -29,10 +28,7 @@ export class CafeteriaRoute {
     const cafeteriaController = new CafeteriaController(cafeteriaService);
 
     const middleware = {
-      update: [
-        authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.CAFE]),
-      ],
+      update: [authMiddleware.validateJwt, Auth.verifyRole(['cafe'])],
     };
 
     route.get('/', cafeteriaController.getAll);

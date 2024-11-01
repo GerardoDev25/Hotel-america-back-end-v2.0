@@ -1,6 +1,5 @@
 import { Router } from 'express';
 
-import { UserRolesList } from '@domain/interfaces';
 import { RoomRepositoryImpl } from '@infrastructure/repositories';
 import {
   RoomDatasourceImpl,
@@ -32,20 +31,16 @@ export class RoomRoute {
       getById: [Commons.isValidUUID],
       create: [
         authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.ADMIN, UserRolesList.RECEPTION]),
+        Auth.verifyRole(['admin', 'reception']),
       ],
       update: [
         authMiddleware.validateJwt,
-        Auth.verifyRole([
-          UserRolesList.ADMIN,
-          UserRolesList.RECEPTION,
-          UserRolesList.LAUNDRY,
-        ]),
+        Auth.verifyRole(['admin', 'reception', 'laundry']),
       ],
       delete: [
         Commons.isValidUUID,
         authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.ADMIN, UserRolesList.RECEPTION]),
+        Auth.verifyRole(['admin', 'reception']),
       ],
     };
 

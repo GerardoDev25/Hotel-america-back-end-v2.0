@@ -4,7 +4,6 @@ import { prisma } from '@src/data/postgres';
 import { citiesList } from '@src/data/seed';
 import { CreateRegisterDto } from '@domain/dtos/register';
 import { CreateRoomDto } from '@domain/dtos/room';
-import { UserRolesList } from '@domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
 import { HandleDate } from '@src/utils';
@@ -16,7 +15,7 @@ describe('cafeteria.route.ts', () => {
   const fullName = Generator.randomName();
 
   const tokenUser = {
-    role: UserRolesList.CAFE,
+    role: 'cafe',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'John Doe'.trim(),
     phone: '+1234567890'.trim(),
@@ -26,7 +25,7 @@ describe('cafeteria.route.ts', () => {
   };
 
   const rawUser = {
-    role: UserRolesList.CAFE,
+    role: 'cafe',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'John Doe'.trim(),
     phone: '+1234567890'.trim(),
@@ -85,14 +84,14 @@ describe('cafeteria.route.ts', () => {
     await prisma.user.deleteMany();
 
     // * create auth token
-    const user = await prisma.user.create({ data: tokenUser });
+    const user = await prisma.user.create({ data: tokenUser as any });
     token = await JwtAdapter.generateToken({ payload: { id: user.id } });
   });
 
   it('should get all cafeteria records (getAll)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
 
@@ -145,7 +144,7 @@ describe('cafeteria.route.ts', () => {
   it('should update a record (update)', async () => {
     const [country, user, room] = await Promise.all([
       await prisma.country.create({ data: rawCountry }),
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
 

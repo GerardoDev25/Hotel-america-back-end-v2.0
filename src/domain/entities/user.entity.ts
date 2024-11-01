@@ -1,5 +1,5 @@
 import { CustomError } from '@domain/error';
-import { IUser, UserRolesList, UserRole } from '@domain/interfaces';
+import { IUser, UserRole } from '@domain/interfaces';
 import {
   BooleanValidator,
   DateValidator,
@@ -39,12 +39,7 @@ export class UserEntity implements IUser {
     // * roomType
     const userRoleValid = StringValidator.mostBe({
       value: role,
-      allowValues: [
-        UserRolesList.ADMIN,
-        UserRolesList.CAFE,
-        UserRolesList.LAUNDRY,
-        UserRolesList.RECEPTION,
-      ],
+      allowValues: ['admin', 'cafe', 'laundry', 'reception'],
     });
     if (userRoleValid !== true)
       throw CustomError.badRequest('roomType ' + userRoleValid);

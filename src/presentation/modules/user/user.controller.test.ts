@@ -5,20 +5,16 @@ import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 
 import { UserController, UserService } from '.';
-import {
-  UserFilter,
-  UserPagination,
-  UserRolesList,
-} from '@src/domain/interfaces';
+import { CreateUser, UserFilter, UserPagination } from '@src/domain/interfaces';
 
 describe('user.controller.ts', () => {
-  const user1 = {
+  const user1: CreateUser = {
     birdDate: Generator.randomDate(),
     name: Generator.randomName().toLowerCase(),
     password: Generator.randomPassword(),
     phone: Generator.randomPhone(),
     username: Generator.randomUsername().toLowerCase(),
-    role: UserRolesList.ADMIN,
+    role: 'admin',
     isActive: true,
   };
 

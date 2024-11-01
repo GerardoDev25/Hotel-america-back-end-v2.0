@@ -11,7 +11,6 @@ import {
 
 import { LoggerService } from '@presentation/services';
 import { Auth, Commons } from '@presentation/middlewares';
-import { UserRolesList } from '@domain/interfaces';
 import { RegisterController, RegisterService } from './';
 
 export class RegisterRoute {
@@ -43,27 +42,18 @@ export class RegisterRoute {
 
     const middleware = {
       getById: [Commons.isValidUUID],
-      create: [
-        authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.RECEPTION]),
-      ],
-      checkIn: [
-        authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.RECEPTION]),
-      ],
+      create: [authMiddleware.validateJwt, Auth.verifyRole(['reception'])],
+      checkIn: [authMiddleware.validateJwt, Auth.verifyRole(['reception'])],
       checkOut: [
         Commons.isValidUUID,
         authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.RECEPTION]),
+        Auth.verifyRole(['reception']),
       ],
-      update: [
-        authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.RECEPTION]),
-      ],
+      update: [authMiddleware.validateJwt, Auth.verifyRole(['reception'])],
       delete: [
         Commons.isValidUUID,
         authMiddleware.validateJwt,
-        Auth.verifyRole([UserRolesList.RECEPTION]),
+        Auth.verifyRole(['reception']),
       ],
     };
 

@@ -3,7 +3,7 @@ import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
 import { prisma } from '@src/data/postgres';
 import { CreateRegisterDto } from '@domain/dtos/register';
 import { CreateRoomDto } from '@domain/dtos/room';
-import { UserRolesList, ChargeFilter, CreateCharge } from '@domain/interfaces';
+import { ChargeFilter, CreateCharge } from '@domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
 
@@ -11,7 +11,7 @@ describe('charge.route.ts', () => {
   let token: string;
 
   const tokenUser = {
-    role: UserRolesList.RECEPTION,
+    role: 'reception',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'John Doe'.trim(),
     phone: '+1234567890'.trim(),
@@ -26,7 +26,7 @@ describe('charge.route.ts', () => {
   };
 
   const rawUser = {
-    role: UserRolesList.RECEPTION,
+    role: 'reception',
     birdDate: new Date(Generator.randomDateBetween('1970-01-01', '2000-01-01')),
     name: 'John Doe'.trim(),
     phone: '+1234567890'.trim(),
@@ -69,7 +69,7 @@ describe('charge.route.ts', () => {
     await prisma.user.deleteMany();
 
     // * create auth token
-    const user = await prisma.user.create({ data: tokenUser });
+    const user = await prisma.user.create({ data: tokenUser as any });
     token = await JwtAdapter.generateToken({ payload: { id: user.id } });
   });
 
@@ -77,7 +77,7 @@ describe('charge.route.ts', () => {
     const page = 1;
     const limit = 10;
     const [user, room] = await Promise.all([
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -138,7 +138,7 @@ describe('charge.route.ts', () => {
     const page = 1;
     const limit = 10;
     const [user, room] = await Promise.all([
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -215,7 +215,7 @@ describe('charge.route.ts', () => {
 
   it('should get a charge by id (getById)', async () => {
     const [user, room] = await Promise.all([
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -257,7 +257,7 @@ describe('charge.route.ts', () => {
 
   it('should create a charge (create)', async () => {
     const [user, room] = await Promise.all([
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -330,7 +330,7 @@ describe('charge.route.ts', () => {
 
   it('should update a charge (update)', async () => {
     const [user, room] = await Promise.all([
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
@@ -410,7 +410,7 @@ describe('charge.route.ts', () => {
 
   it('should delete a charge by id (delete)', async () => {
     const [user, room] = await Promise.all([
-      await prisma.user.create({ data: rawUser }),
+      await prisma.user.create({ data: rawUser as any }),
       await prisma.room.create({ data: rawRoom }),
     ]);
     const register = await prisma.register.create({
