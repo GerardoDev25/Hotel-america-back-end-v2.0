@@ -18,7 +18,7 @@ describe('payment.datasource.ts', () => {
     id: Uuid.v4(),
     amount: 100,
     paidAt: Generator.randomDate(),
-    type: 'back',
+    type: 'bank',
     registerId: Uuid.v4(),
   });
 

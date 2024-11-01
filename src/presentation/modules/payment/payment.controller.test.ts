@@ -56,7 +56,7 @@ describe('payment.controller.ts', () => {
   });
 
   it('should return all payment (getByParams)', async () => {
-    const body = { type: 'back' };
+    const body = { type: 'bank' };
     const res = { json: jest.fn() } as any;
     const req = { query: { page: 1, limit: 10 }, body } as any;
 

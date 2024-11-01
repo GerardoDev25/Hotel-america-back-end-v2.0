@@ -7,7 +7,7 @@ export interface IPayment {
   registerId: string;
 }
 
-export type PaymentType = 'cash' | 'credit_cart' | 'qr' | 'back';
+export type PaymentType = 'cash' | 'credit_cart' | 'qr' | 'bank';
 
 export interface PaymentPagination {
   payments: IPayment[];

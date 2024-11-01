@@ -48,7 +48,7 @@ describe('payment-validator.dto.ts', () => {
 
     const errors = PaymentValidator.create(data);
     expect(errors).toEqual([
-      'type most be: back, cash, credit_cart, qr',
+      'type most be: bank, cash, credit_cart, qr',
       'amount property most be a positive',
       'registerId is not a valid uuid',
       'description property most be a string',
@@ -60,7 +60,7 @@ describe('payment-validator.dto.ts', () => {
       paidAt: new Date().toISOString(),
       registerId: Uuid.v4(),
       amount: 100,
-      type: 'back',
+      type: 'bank',
       description: 'hello world',
     };
 
@@ -80,7 +80,7 @@ describe('payment-validator.dto.ts', () => {
       paidAt: 'new Date().toISOString()',
       registerId: 'Uuid.v4()',
       amount: false,
-      type: 'BACKss',
+      type: 'bankss',
       description: 12,
     } as unknown as PaymentFilter;
 
@@ -89,7 +89,7 @@ describe('payment-validator.dto.ts', () => {
     expect(errors).toEqual([
       'registerId is not a valid uuid',
       'paidAt property most have YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ format',
-      'type most be: back, cash, credit_cart, qr',
+      'type most be: bank, cash, credit_cart, qr',
       'amount property most be a number',
       'description property most be a string',
     ]);
@@ -99,7 +99,7 @@ describe('payment-validator.dto.ts', () => {
     const data: UpdatePayment = {
       id: Uuid.v4(),
       amount: 100,
-      type: 'back',
+      type: 'bank',
       description: 'hello world',
     };
 

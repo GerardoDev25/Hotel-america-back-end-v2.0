@@ -8,7 +8,7 @@ describe('payment.entity.ts', () => {
     id: Uuid.v4(),
     amount: 100,
     paidAt: Generator.randomDate(),
-    type: 'back',
+    type: 'bank',
     registerId: Uuid.v4(),
   };
 
@@ -21,7 +21,7 @@ describe('payment.entity.ts', () => {
     const invalidId = 'Uuid.v4()';
     const invalidAmount = -12;
     const invalidPaidAt = 'Generator.randomDate()';
-    const invalidType = 'BACKaa';
+    const invalidType = 'bankaa';
     const invalidDescription = false;
     const invalidRegisterId = 'Uuid.v4()';
 

@@ -11,7 +11,7 @@ import {
 } from '@domain/type-validators';
 
 export class PaymentValidator {
-  static allowValues: PaymentType[] = ['back', 'cash', 'credit_cart', 'qr'];
+  static allowValues: PaymentType[] = ['bank', 'cash', 'credit_cart', 'qr'];
   static create(object: CreatePayment) {
     const errors: string[] = [];
     const { amount, type, registerId, description } = object;

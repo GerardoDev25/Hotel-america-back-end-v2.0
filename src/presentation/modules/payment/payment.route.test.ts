@@ -213,7 +213,7 @@ describe('payment.route.ts', () => {
 
     expect(body.ok).toBeFalsy();
     expect(body.errors).toMatchObject([
-      'type most be: back, cash, credit_cart, qr',
+      'type most be: bank, cash, credit_cart, qr',
       'amount property most be a number',
     ]);
   });
@@ -406,7 +406,7 @@ describe('payment.route.ts', () => {
     expect(body).toEqual({
       ok: false,
       errors: [
-        'type most be: back, cash, credit_cart, qr',
+        'type most be: bank, cash, credit_cart, qr',
         'amount property most be a number',
         'description property most be a string',
       ],

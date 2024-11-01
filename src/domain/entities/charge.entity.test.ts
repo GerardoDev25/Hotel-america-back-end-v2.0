@@ -21,7 +21,7 @@ describe('charge.entity.ts', () => {
     const invalidId = 'Uuid.v4()';
     const invalidAmount = -12;
     const invalidCreatedAt = 'Generator.randomDate()';
-    const invalidType = 'BACKds';
+    const invalidType = 'bankds';
     const invalidDescription = false;
     const invalidRegisterId = 'Uuid.v4()';
 

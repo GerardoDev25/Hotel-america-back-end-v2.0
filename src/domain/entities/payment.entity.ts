@@ -7,7 +7,7 @@ import {
 import { CustomError } from '@domain/error';
 
 export class PaymentEntity implements IPayment {
-  static allowValues: PaymentType[] = ['back', 'cash', 'credit_cart', 'qr'];
+  static allowValues: PaymentType[] = ['bank', 'cash', 'credit_cart', 'qr'];
 
   id: string;
   amount: number;

@@ -28,7 +28,7 @@ describe('create-payment.dto.ts', () => {
 
     expect(paymentDto).toBeUndefined();
     expect(errors).toEqual([
-      'type most be: back, cash, credit_cart, qr',
+      'type most be: bank, cash, credit_cart, qr',
       'amount property most be a positive',
       'registerId is not a valid uuid',
       'description property most be a string',
