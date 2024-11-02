@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { Auth } from '@presentation/middlewares';
-import { CafeteriaRepositoryImpl } from '@infrastructure/repositories';
 import {
   CafeteriaDatasourceImpl,
   UserDatasourceImpl,
@@ -21,10 +20,7 @@ export class CafeteriaRoute {
     // * cafeteria
     const logger = new LoggerService('cafeteria.datasource.impl.ts');
     const cafeteriaDatasource = new CafeteriaDatasourceImpl(logger);
-    const cafeteriaRepository = new CafeteriaRepositoryImpl(
-      cafeteriaDatasource
-    );
-    const cafeteriaService = new CafeteriaService(cafeteriaRepository);
+    const cafeteriaService = new CafeteriaService(cafeteriaDatasource);
     const cafeteriaController = new CafeteriaController(cafeteriaService);
 
     const middleware = {

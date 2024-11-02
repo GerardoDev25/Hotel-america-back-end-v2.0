@@ -1,13 +1,13 @@
-import { CafeteriaRepository } from '@domain/repositories';
+import { CafeteriaDatasource } from '@domain/datasources';
 import { UpdateCafeteriaDto } from '@domain/dtos/cafeteria';
 export class CafeteriaService {
-  constructor(private readonly cafeteriaRepository: CafeteriaRepository) {}
+  constructor(private readonly cafeteriaDatasource: CafeteriaDatasource) {}
 
   getAll() {
-    return this.cafeteriaRepository.getAll();
+    return this.cafeteriaDatasource.getAll();
   }
 
   update(updateCafeteriaDto: UpdateCafeteriaDto) {
-    return this.cafeteriaRepository.update(updateCafeteriaDto);
+    return this.cafeteriaDatasource.update(updateCafeteriaDto);
   }
 }
