@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { LoggerService } from '@presentation/services';
 import { Auth, Commons } from '@presentation/middlewares';
-import { ChargeRepositoryImpl } from '@infrastructure/repositories';
 import {
   ChargeDatasourceImpl,
   UserDatasourceImpl,
@@ -20,8 +19,7 @@ export class ChargeRoute {
     // * charge
     const logger = new LoggerService('charge.datasource.impl.ts');
     const chargeDatasource = new ChargeDatasourceImpl(logger);
-    const chargeRepository = new ChargeRepositoryImpl(chargeDatasource);
-    const chargeService = new ChargeService(chargeRepository);
+    const chargeService = new ChargeService(chargeDatasource);
     const chargeController = new ChargeController(chargeService);
 
     const middleware = {

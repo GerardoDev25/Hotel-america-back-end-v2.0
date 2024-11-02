@@ -1,17 +1,17 @@
-import { ChargeRepository } from '@domain/repositories';
 import { PaginationDto } from '@domain/dtos/share';
 import {
   CreateChargeDto,
   FilterChargeDto,
   UpdateChargeDto,
 } from '@domain/dtos/charge';
+import { ChargeDatasource } from '@src/domain/datasources';
 
 export class ChargeService {
-  constructor(private readonly chargeRepository: ChargeRepository) {}
+  constructor(private readonly chargeDatasource: ChargeDatasource) {}
 
   async getAll(paginationDto: PaginationDto) {
     const { page, limit } = paginationDto;
-    return this.chargeRepository.getAll(page, limit);
+    return this.chargeDatasource.getAll(page, limit);
   }
 
   async getByParams(
@@ -19,22 +19,22 @@ export class ChargeService {
     filterChargeDto: FilterChargeDto
   ) {
     const { page, limit } = paginationDto;
-    return this.chargeRepository.getByParams(page, limit, filterChargeDto);
+    return this.chargeDatasource.getByParams(page, limit, filterChargeDto);
   }
 
   async getById(id: string) {
-    return this.chargeRepository.getById(id);
+    return this.chargeDatasource.getById(id);
   }
 
   async create(createChargeDto: CreateChargeDto) {
-    return this.chargeRepository.create(createChargeDto);
+    return this.chargeDatasource.create(createChargeDto);
   }
 
   async update(updateChargeDto: UpdateChargeDto) {
-    return this.chargeRepository.update(updateChargeDto);
+    return this.chargeDatasource.update(updateChargeDto);
   }
 
   async delete(id: string) {
-    return this.chargeRepository.delete(id);
+    return this.chargeDatasource.delete(id);
   }
 }
