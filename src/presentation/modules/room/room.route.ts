@@ -1,6 +1,5 @@
 import { Router } from 'express';
 
-import { RoomRepositoryImpl } from '@infrastructure/repositories';
 import {
   RoomDatasourceImpl,
   UserDatasourceImpl,
@@ -23,8 +22,7 @@ export class RoomRoute {
     // * room
     const datasourceLogger = new LoggerService('room.datasource.impl.ts');
     const datasource = new RoomDatasourceImpl(datasourceLogger);
-    const repository = new RoomRepositoryImpl(datasource);
-    const service = new RoomService(repository);
+    const service = new RoomService(datasource);
     const controller = new RoomController(service);
 
     const middleware = {

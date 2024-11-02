@@ -1,13 +1,15 @@
 import { CreateRoomDto, FilterRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { PaginationDto } from '@domain/dtos/share';
-import { RoomRepository } from '@domain/repositories';
+import { RoomDatasource } from '@domain/datasources';
 
 export class RoomService {
-  constructor(private readonly roomRepository: RoomRepository) {}
+  constructor(private readonly roomDatasource: RoomDatasource) {}
 
   async getAll(paginationDto: PaginationDto, isAvailable?: boolean) {
     const { page, limit } = paginationDto;
-    return this.roomRepository.getAll(page, limit, isAvailable);
+    return isAvailable === undefined
+      ? this.roomDatasource.getAll(page, limit)
+      : this.roomDatasource.getAllAvailable(page, limit, isAvailable);
   }
 
   async getByParams(
@@ -15,22 +17,22 @@ export class RoomService {
     filterRoomDto: FilterRoomDto
   ) {
     const { page, limit } = paginationDto;
-    return this.roomRepository.getByParams(page, limit, filterRoomDto);
+    return this.roomDatasource.getByParams(page, limit, filterRoomDto);
   }
 
   async getById(id: string) {
-    return this.roomRepository.getById(id);
+    return this.roomDatasource.getById(id);
   }
 
   async create(createRoomDto: CreateRoomDto) {
-    return this.roomRepository.create(createRoomDto);
+    return this.roomDatasource.create(createRoomDto);
   }
 
   async update(updateRoomDto: UpdateRoomDto) {
-    return this.roomRepository.update(updateRoomDto);
+    return this.roomDatasource.update(updateRoomDto);
   }
 
   async delete(id: string) {
-    return this.roomRepository.delete(id);
+    return this.roomDatasource.delete(id);
   }
 }

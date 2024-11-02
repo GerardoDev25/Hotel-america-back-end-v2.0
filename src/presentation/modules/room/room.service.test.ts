@@ -1,21 +1,22 @@
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { PaginationDto } from '@domain/dtos/share';
-import { RoomRepository } from '@domain/repositories';
 import { RoomService } from './room.service';
 import { RoomFilter } from '@src/domain/interfaces';
+import { RoomDatasource } from '@src/domain/datasources';
 
 describe('room.service.ts', () => {
   const mockRoomRepository = {
     getAll: jest.fn(),
+    getAllAvailable: jest.fn(),
     getByParams: jest.fn(),
     getById: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
-  } as unknown as RoomRepository;
+  } as unknown as RoomDatasource;
 
   it('should to have been called with parameter (getAll)', async () => {
-    const isAvailable = true;
+    const isAvailable = undefined;
     const paginationDto = { page: 1, limit: 10 } as PaginationDto;
     const service = new RoomService(mockRoomRepository);
 
@@ -23,6 +24,20 @@ describe('room.service.ts', () => {
 
     expect(mockRoomRepository.getAll).toHaveBeenCalledTimes(1);
     expect(mockRoomRepository.getAll).toHaveBeenCalledWith(
+      paginationDto.page,
+      paginationDto.limit
+    );
+  });
+
+  it('should to have been called with parameter (getAllAvailable)', async () => {
+    const isAvailable = true;
+    const paginationDto = { page: 1, limit: 10 } as PaginationDto;
+    const service = new RoomService(mockRoomRepository);
+
+    await service.getAll(paginationDto, isAvailable);
+
+    expect(mockRoomRepository.getAllAvailable).toHaveBeenCalledTimes(1);
+    expect(mockRoomRepository.getAllAvailable).toHaveBeenCalledWith(
       paginationDto.page,
       paginationDto.limit,
       isAvailable
