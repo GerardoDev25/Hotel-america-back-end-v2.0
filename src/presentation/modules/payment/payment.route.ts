@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { LoggerService } from '@presentation/services';
 import { Auth, Commons } from '@presentation/middlewares';
-import { PaymentRepositoryImpl } from '@infrastructure/repositories';
 import {
   PaymentDatasourceImpl,
   UserDatasourceImpl,
@@ -20,8 +19,7 @@ export class PaymentRoute {
     // * payment
     const logger = new LoggerService('payment.datasource.impl.ts');
     const paymentDatasource = new PaymentDatasourceImpl(logger);
-    const paymentRepository = new PaymentRepositoryImpl(paymentDatasource);
-    const paymentService = new PaymentService(paymentRepository);
+    const paymentService = new PaymentService(paymentDatasource);
     const paymentController = new PaymentController(paymentService);
 
     const middleware = {
