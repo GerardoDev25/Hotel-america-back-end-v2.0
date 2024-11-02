@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { LoggerService } from '@presentation/services';
 import { Auth, Commons } from '@presentation/middlewares';
-import { GuestRepositoryImpl } from '@infrastructure/repositories';
 import { GuestController, GuestService } from '.';
 import {
   GuestDatasourceImpl,
@@ -22,9 +21,8 @@ export class GuestRoute {
     // * guest
     const guestLogger = new LoggerService('guest.datasource.impl.ts');
     const guestDatasource = new GuestDatasourceImpl(guestLogger);
-    const guestRepository = new GuestRepositoryImpl(guestDatasource);
 
-    const guestService = new GuestService(guestRepository);
+    const guestService = new GuestService(guestDatasource);
     const guestController = new GuestController(guestService);
 
     const middleware = {

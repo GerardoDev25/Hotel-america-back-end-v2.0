@@ -1,4 +1,4 @@
-import { GuestRepository } from '@domain/repositories';
+import { GuestDatasource } from '@domain/datasources';
 import { PaginationDto } from '@domain/dtos/share';
 import {
   CreateGuestDto,
@@ -7,11 +7,11 @@ import {
 } from '@domain/dtos/guest';
 
 export class GuestService {
-  constructor(private readonly guestRepository: GuestRepository) {}
+  constructor(private readonly guestDatasource: GuestDatasource) {}
 
   async getAll(paginationDto: PaginationDto) {
     const { page, limit } = paginationDto;
-    return this.guestRepository.getAll(page, limit);
+    return this.guestDatasource.getAll(page, limit);
   }
 
   async getByParams(
@@ -19,22 +19,22 @@ export class GuestService {
     filterGuestDto: FilterGuestDto
   ) {
     const { page, limit } = paginationDto;
-    return this.guestRepository.getByParams(page, limit, filterGuestDto);
+    return this.guestDatasource.getByParams(page, limit, filterGuestDto);
   }
 
   async getById(id: string) {
-    return this.guestRepository.getById(id);
+    return this.guestDatasource.getById(id);
   }
 
   async create(createGuestDto: CreateGuestDto) {
-    return this.guestRepository.create(createGuestDto);
+    return this.guestDatasource.create(createGuestDto);
   }
 
   async update(updateGuestDto: UpdateGuestDto) {
-    return this.guestRepository.update(updateGuestDto);
+    return this.guestDatasource.update(updateGuestDto);
   }
 
   async delete(id: string) {
-    return this.guestRepository.delete(id);
+    return this.guestDatasource.delete(id);
   }
 }
