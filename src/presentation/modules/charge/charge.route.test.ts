@@ -1,8 +1,8 @@
 import request from 'supertest';
+
 import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';
 import { prisma } from '@src/data/postgres';
-import { CreateRegisterDto } from '@domain/dtos/register';
-import { CreateRoomDto } from '@domain/dtos/room';
+import { CreateRegisterDto, CreateRoomDto } from '@domain/dtos';
 import { ChargeFilter, CreateCharge } from '@domain/interfaces';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';

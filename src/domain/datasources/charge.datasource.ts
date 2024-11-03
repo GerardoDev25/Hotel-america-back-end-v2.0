@@ -4,7 +4,7 @@ import {
   CreateChargeDto,
   UpdateChargeDto,
   FilterChargeDto,
-} from '@domain/dtos/charge';
+} from '@domain/dtos';
 
 export abstract class ChargeDatasource {
   abstract getById(id: string): Promise<{ ok: boolean; charge: ChargeEntity }>;

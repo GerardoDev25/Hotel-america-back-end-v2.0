@@ -1,11 +1,7 @@
 import { GuestDatasource } from '@src/domain/datasources';
 import { Uuid } from '@src/adapters';
+import { CreateGuestDto, FilterGuestDto, UpdateGuestDto } from '@domain/dtos';
 import { GuestRepositoryImpl } from '.';
-import {
-  CreateGuestDto,
-  FilterGuestDto,
-  UpdateGuestDto,
-} from '@domain/dtos/guest';
 
 describe('guest.repository.impl.ts', () => {
   const page = 2;

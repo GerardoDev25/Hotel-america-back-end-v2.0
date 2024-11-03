@@ -4,7 +4,7 @@ import {
   CreateChargeDto,
   FilterChargeDto,
   UpdateChargeDto,
-} from '@domain/dtos/charge';
+} from '@domain/dtos';
 import { ChargeService } from '.';
 
 describe('charge.service.ts', () => {

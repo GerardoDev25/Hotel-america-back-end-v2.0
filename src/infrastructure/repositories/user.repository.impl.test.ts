@@ -1,10 +1,8 @@
-import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { CreateUserDto, UpdateUserDto } from '@domain/dtos';
 import { UserDatasource } from '@domain/datasources';
-
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
-
-import { UserRepositoryImpl } from './user.repository.impl';
+import { UserRepositoryImpl } from '.';
 
 describe('user.repository.impl.ts', () => {
   const page = 2;

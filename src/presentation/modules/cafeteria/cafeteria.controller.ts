@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { CustomError } from '@src/domain/error';
-import { UpdateCafeteriaDto } from '@domain/dtos/cafeteria';
+import { CustomError } from '@domain/error';
+import { UpdateCafeteriaDto } from '@domain/dtos';
 import { CafeteriaService } from '.';
 
 export class CafeteriaController {

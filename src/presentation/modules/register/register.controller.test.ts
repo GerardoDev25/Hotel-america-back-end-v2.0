@@ -1,4 +1,4 @@
-import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
+import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
 import {
   RegisterCheckOut,

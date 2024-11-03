@@ -1,8 +1,7 @@
-import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
-import { PaginationDto } from '@domain/dtos/share';
-import { RoomService } from './room.service';
-import { RoomFilter } from '@src/domain/interfaces';
-import { RoomDatasource } from '@src/domain/datasources';
+import { CreateRoomDto, UpdateRoomDto, PaginationDto } from '@domain/dtos';
+import { RoomFilter } from '@domain/interfaces';
+import { RoomDatasource } from '@domain/datasources';
+import { RoomService } from '.';
 
 describe('room.service.ts', () => {
   const mockRoomRepository = {

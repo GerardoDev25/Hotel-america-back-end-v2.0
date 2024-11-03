@@ -2,13 +2,15 @@ import request from 'supertest';
 import { BcryptAdapter, JwtAdapter } from '@src/adapters';
 import { prisma } from '@src/data/postgres';
 import { citiesList } from '@src/data/seed';
-import { CreateRegisterDto } from '@domain/dtos/register';
-import { CreateRoomDto } from '@domain/dtos/room';
+import { CreateRegisterDto, CreateRoomDto } from '@domain/dtos';
 import { testServer } from '@src/test-server';
 import { Generator } from '@src/utils/generator';
 import { HandleDate } from '@src/utils';
-import { StringValidator } from '@domain/type-validators';
-import { BooleanValidator, NumberValidator } from '@domain/type-validators/';
+import {
+  StringValidator,
+  BooleanValidator,
+  NumberValidator,
+} from '@domain/type-validators';
 
 describe('cafeteria.route.ts', () => {
   let token: string;

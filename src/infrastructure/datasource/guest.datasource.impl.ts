@@ -1,8 +1,4 @@
-import {
-  CreateGuestDto,
-  FilterGuestDto,
-  UpdateGuestDto,
-} from '@domain/dtos/guest';
+import { CreateGuestDto, FilterGuestDto, UpdateGuestDto } from '@domain/dtos';
 import { CustomError } from '@domain/error';
 import { GuestDatasource } from '@domain/datasources';
 import { GuestEntity } from '@domain/entities';

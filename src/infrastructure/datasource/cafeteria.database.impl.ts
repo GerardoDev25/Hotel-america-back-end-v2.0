@@ -1,6 +1,6 @@
 import { CustomError } from '@domain/error';
 import { CafeteriaDatasource } from '@domain/datasources';
-import { UpdateCafeteriaDto } from '@domain/dtos/cafeteria';
+import { UpdateCafeteriaDto } from '@domain/dtos';
 import { CafeteriaItem, CafeteriaList } from '@domain/interfaces';
 
 import { HandleDate } from '@src/utils';

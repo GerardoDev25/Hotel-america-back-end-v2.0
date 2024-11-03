@@ -6,7 +6,7 @@ import {
   CreatePaymentDto,
   FilterPaymentDto,
   UpdatePaymentDto,
-} from '@domain/dtos/payment';
+} from '@domain/dtos';
 
 export class PaymentRepositoryImpl extends PaymentRepository {
   constructor(private readonly paymentDatasource: PaymentDatasource) {

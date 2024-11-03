@@ -1,10 +1,10 @@
-import { PaginationDto } from '@domain/dtos/share';
 import {
+  PaginationDto,
   CreateChargeDto,
   FilterChargeDto,
   UpdateChargeDto,
-} from '@domain/dtos/charge';
-import { ChargeDatasource } from '@src/domain/datasources';
+} from '@domain/dtos';
+import { ChargeDatasource } from '@domain/datasources';
 
 export class ChargeService {
   constructor(private readonly chargeDatasource: ChargeDatasource) {}

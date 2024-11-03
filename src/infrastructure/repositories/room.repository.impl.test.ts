@@ -1,10 +1,10 @@
-import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
+import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos';
 import { RoomDatasource } from '@domain/datasources';
 import { RoomFilter } from '@domain/interfaces';
 
 import { Uuid } from '@src/adapters';
 
-import { RoomRepositoryImpl } from './room.repository.impl';
+import { RoomRepositoryImpl } from '.';
 
 describe('room.repository.impl.ts', () => {
   const page = 2;

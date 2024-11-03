@@ -1,11 +1,15 @@
 import { Request, Response } from 'express';
 
-import { ActiveDto, PaginationDto } from '@domain/dtos/share';
-import { CreateUserDto, FilterUserDto, UpdateUserDto } from '@domain/dtos/user';
 import { CustomError } from '@domain/error';
 import { variables } from '@domain/variables';
-
-import { UserService } from './user.service';
+import {
+  ActiveDto,
+  PaginationDto,
+  CreateUserDto,
+  FilterUserDto,
+  UpdateUserDto,
+} from '@domain/dtos';
+import { UserService } from '.';
 
 export class UserController {
   constructor(private readonly userService: UserService) {}

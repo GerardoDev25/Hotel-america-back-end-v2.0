@@ -10,7 +10,7 @@ import {
   CreatePaymentDto,
   FilterPaymentDto,
   UpdatePaymentDto,
-} from '@domain/dtos/payment';
+} from '@domain/dtos';
 
 export class PaymentDatasourceImpl extends PaymentDatasource {
   constructor(private readonly logger: LoggerService) {

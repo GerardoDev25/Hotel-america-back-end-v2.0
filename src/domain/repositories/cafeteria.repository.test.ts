@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Uuid } from '@src/adapters';
-import { UpdateCafeteriaDto } from '../dtos/cafeteria';
-import { CafeteriaItem, CafeteriaList } from '../interfaces';
-import { CafeteriaRepository } from '.';
+import { UpdateCafeteriaDto } from '@domain/dtos';
+import { CafeteriaItem, CafeteriaList } from '@domain/interfaces';
 import { Generator } from '@src/utils/generator';
+import { CafeteriaRepository } from '.';
 
 describe('cafeteria.repository.ts', () => {
   const cafe: CafeteriaItem = {

@@ -7,7 +7,7 @@ import {
   CreateChargeDto,
   UpdateChargeDto,
   FilterChargeDto,
-} from '@domain/dtos/charge';
+} from '@domain/dtos';
 
 import { prisma } from '@src/data/postgres';
 import { LoggerService } from '@presentation/services';

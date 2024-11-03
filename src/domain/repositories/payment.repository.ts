@@ -4,7 +4,7 @@ import {
   CreatePaymentDto,
   FilterPaymentDto,
   UpdatePaymentDto,
-} from '@domain/dtos/payment';
+} from '@domain/dtos';
 
 export abstract class PaymentRepository {
   abstract getById(

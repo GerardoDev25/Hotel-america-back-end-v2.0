@@ -1,8 +1,4 @@
-import {
-  CreateGuestDto,
-  FilterGuestDto,
-  UpdateGuestDto,
-} from '@domain/dtos/guest';
+import { CreateGuestDto, FilterGuestDto, UpdateGuestDto } from '@domain/dtos';
 import { GuestDatasource } from '@domain/datasources/guest.datasource';
 import { GuestEntity } from '@domain/entities';
 import { GuestRepository } from '@domain/repositories';

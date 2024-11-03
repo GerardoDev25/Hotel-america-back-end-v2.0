@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
-import { IUser, IUserFilterDto, UserPagination } from '@domain/interfaces';
+import { CreateUserDto, UpdateUserDto } from '@domain/dtos';
+import { IUserFilterDto, UserPagination } from '@domain/interfaces';
 import { UserEntity } from '@domain/entities';
 
 import { Generator } from '@src/utils/generator';

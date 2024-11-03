@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
+import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos';
 import { ChargeEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';

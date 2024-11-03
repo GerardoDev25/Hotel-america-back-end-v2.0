@@ -4,7 +4,7 @@ import {
   CreateChargeDto,
   UpdateChargeDto,
   FilterChargeDto,
-} from '@domain/dtos/charge';
+} from '@domain/dtos';
 import { ChargeRepositoryImpl } from '.';
 
 describe('charge.repository.impl.ts', () => {

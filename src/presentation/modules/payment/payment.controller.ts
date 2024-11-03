@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
+
+import { CustomError } from '@domain/error';
 import {
+  PaginationDto,
   CreatePaymentDto,
   FilterPaymentDto,
   UpdatePaymentDto,
-} from '@domain/dtos/payment';
-import { CustomError } from '@domain/error';
-import { PaginationDto } from '@domain/dtos/share';
+} from '@domain/dtos';
 import { variables } from '@domain/variables';
 import { PaymentService } from '.';
 

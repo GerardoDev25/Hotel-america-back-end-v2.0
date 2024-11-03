@@ -1,12 +1,12 @@
 import { Response, Request } from 'express';
 
 import {
+  PaginationDto,
   CreateGuestDto,
   FilterGuestDto,
   UpdateGuestDto,
-} from '@domain/dtos/guest';
+} from '@domain/dtos';
 import { CustomError } from '@domain/error';
-import { PaginationDto } from '@domain/dtos/share';
 import { variables } from '@domain/variables';
 import { GuestService } from '.';
 export class GuestController {

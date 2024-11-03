@@ -1,4 +1,4 @@
-import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { CreateUserDto, UpdateUserDto } from '@domain/dtos';
 import { IUserFilterDto, UserPagination } from '@domain/interfaces';
 import { UserEntity } from '@domain/entities';
 

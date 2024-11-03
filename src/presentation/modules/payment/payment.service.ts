@@ -1,10 +1,10 @@
-import { PaginationDto } from '@domain/dtos/share';
 import {
+  PaginationDto,
   CreatePaymentDto,
   FilterPaymentDto,
   UpdatePaymentDto,
-} from '@domain/dtos/payment';
-import { PaymentDatasource } from '@src/domain/datasources';
+} from '@domain/dtos';
+import { PaymentDatasource } from '@domain/datasources';
 
 export class PaymentService {
   constructor(private readonly paymentDatasource: PaymentDatasource) {}

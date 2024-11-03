@@ -1,10 +1,6 @@
 import { GuestEntity } from '@domain/entities';
 import { GuestPagination } from '@domain/interfaces';
-import {
-  CreateGuestDto,
-  FilterGuestDto,
-  UpdateGuestDto,
-} from '@domain/dtos/guest';
+import { CreateGuestDto, FilterGuestDto, UpdateGuestDto } from '@domain/dtos';
 
 export abstract class GuestRepository {
   abstract getById(id: string): Promise<{ ok: boolean; guest: GuestEntity }>;

@@ -1,4 +1,4 @@
-import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
+import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos';
 import { ChargePagination, IChargeFilterDto } from '@domain/interfaces';
 import { ChargeEntity } from '@domain/entities';
 

@@ -1,6 +1,6 @@
-import { CafeteriaDatasource } from '@domain/datasources';
 import { Uuid } from '@src/adapters';
-import { UpdateCafeteriaDto } from '@domain/dtos/cafeteria';
+import { CafeteriaDatasource } from '@domain/datasources';
+import { UpdateCafeteriaDto } from '@domain/dtos';
 import { CafeteriaRepositoryImpl } from '.';
 
 describe('cafeteria.repository.impl.ts', () => {

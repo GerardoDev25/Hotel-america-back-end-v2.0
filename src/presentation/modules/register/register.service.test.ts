@@ -1,15 +1,13 @@
-import { CreateRegisterDto } from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
-import { PaginationDto } from '@domain/dtos/share';
+import { CreateGuestDto, CreateRegisterDto, PaginationDto } from '@domain/dtos';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
 import { RegisterDatasource } from '@domain/datasources';
 import { Uuid } from '@src/adapters';
-import { RegisterService } from '.';
 import { Generator } from '@src/utils/generator';
 import { citiesList } from '@src/data/seed';
 import { variables } from '@src/domain/variables';
-import { CreateGuestDto } from '@src/domain/dtos/guest';
+import { RegisterService } from '.';
 
 describe('register.service.ts', () => {
   const page = 1;

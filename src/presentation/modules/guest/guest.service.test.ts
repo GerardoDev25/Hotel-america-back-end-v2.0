@@ -1,12 +1,11 @@
 import { Uuid } from '@src/adapters';
 import { citiesList } from '@src/data/seed';
-import { PaginationDto } from '@domain/dtos/share';
 import { GuestEntity } from '@domain/entities';
 import { GuestPagination } from '@domain/interfaces';
 import { GuestRepository } from '@domain/repositories';
 import { variables } from '@domain/variables';
 import { Generator } from '@src/utils/generator';
-import { CreateGuestDto, FilterGuestDto } from '@domain/dtos/guest';
+import { PaginationDto, CreateGuestDto, FilterGuestDto } from '@domain/dtos';
 import { GuestService } from '.';
 
 describe('guest.service.ts', () => {

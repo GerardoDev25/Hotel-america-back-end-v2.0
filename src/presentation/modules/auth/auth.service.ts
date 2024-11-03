@@ -1,4 +1,4 @@
-import { AuthLoginDto, AuthRefreshTokenDto } from '@domain/dtos/auth';
+import { AuthLoginDto, AuthRefreshTokenDto } from '@domain/dtos';
 import { CustomError } from '@domain/error';
 import { UserDatasource } from '@domain/datasources';
 

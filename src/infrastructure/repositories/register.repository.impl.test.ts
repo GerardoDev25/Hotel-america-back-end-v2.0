@@ -1,5 +1,8 @@
-import { CreateGuestDto } from '@domain/dtos/guest';
-import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos/register';
+import {
+  CreateGuestDto,
+  CreateRegisterDto,
+  UpdateRegisterDto,
+} from '@domain/dtos';
 import { RegisterDatasource } from '@domain/datasources';
 import { variables } from '@domain/variables';
 

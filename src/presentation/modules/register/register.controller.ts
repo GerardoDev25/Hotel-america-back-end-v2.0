@@ -1,13 +1,13 @@
 import { Response, Request } from 'express';
+import { CustomError } from '@domain/error';
+import { variables } from '@domain/variables';
 import {
+  PaginationDto,
+  CreateGuestDto,
   CreateRegisterDto,
   FilterRegisterDto,
   UpdateRegisterDto,
-} from '@domain/dtos/register';
-import { CustomError } from '@domain/error';
-import { PaginationDto } from '@domain/dtos/share';
-import { variables } from '@domain/variables';
-import { CreateGuestDto } from '@domain/dtos/guest';
+} from '@domain/dtos';
 import { RegisterService } from '.';
 
 export class RegisterController {

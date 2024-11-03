@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 
-import { CreateUserDto, FilterUserDto, UpdateUserDto } from '@domain/dtos/user';
+import { CreateUserDto, FilterUserDto, UpdateUserDto } from '@domain/dtos';
 import { CustomError } from '@domain/error';
 import { IUserFilterDto, UserPagination } from '@domain/interfaces';
 import { UserDatasource } from '@domain/datasources';

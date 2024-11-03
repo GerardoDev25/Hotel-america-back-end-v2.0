@@ -3,12 +3,12 @@ import {
   CreatePaymentDto,
   FilterPaymentDto,
   UpdatePaymentDto,
-} from '@domain/dtos/payment';
+} from '@domain/dtos';
 import { PaymentEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
-import { PaymentDatasource } from '.';
 import { PaymentPagination } from '@domain/interfaces';
+import { PaymentDatasource } from '.';
 
 describe('payment.datasource.ts', () => {
   const page = 2;

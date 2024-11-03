@@ -1,10 +1,10 @@
 import { GuestDatasource } from '@domain/datasources';
-import { PaginationDto } from '@domain/dtos/share';
 import {
+  PaginationDto,
   CreateGuestDto,
   UpdateGuestDto,
   FilterGuestDto,
-} from '@domain/dtos/guest';
+} from '@domain/dtos';
 
 export class GuestService {
   constructor(private readonly guestDatasource: GuestDatasource) {}

@@ -1,5 +1,6 @@
 import { CafeteriaDatasource } from '@domain/datasources';
-import { UpdateCafeteriaDto } from '@domain/dtos/cafeteria';
+import { UpdateCafeteriaDto } from '@domain/dtos';
+
 export class CafeteriaService {
   constructor(private readonly cafeteriaDatasource: CafeteriaDatasource) {}
 

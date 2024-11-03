@@ -1,4 +1,4 @@
-import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
+import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos';
 import { CustomError } from '@domain/error';
 import { RoomDatasource } from '@domain/datasources';
 import { RoomEntity } from '@domain/entities';

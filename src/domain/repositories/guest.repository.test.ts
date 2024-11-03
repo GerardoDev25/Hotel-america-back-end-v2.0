@@ -1,16 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  CreateGuestDto,
-  FilterGuestDto,
-  UpdateGuestDto,
-} from '@domain/dtos/guest';
-import { GuestRepository } from '.';
+import { CreateGuestDto, FilterGuestDto, UpdateGuestDto } from '@domain/dtos';
 import { GuestEntity } from '@domain/entities';
-import { GuestFilter, GuestPagination } from '@domain/interfaces';
+import { GuestPagination } from '@domain/interfaces';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 import { citiesList } from '@src/data/seed';
-import { variables } from '../variables';
+import { variables } from '@domain/variables';
+import { GuestRepository } from '.';
 
 describe('guest.repository.ts', () => {
   const page = 2;

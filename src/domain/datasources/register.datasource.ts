@@ -1,11 +1,11 @@
 import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
 import {
+  CreateGuestDto,
   CreateRegisterDto,
   FilterRegisterDto,
   UpdateRegisterDto,
-} from '@domain/dtos/register';
-import { CreateGuestDto } from '@domain/dtos/guest';
+} from '@domain/dtos';
 
 export abstract class RegisterDatasource {
   abstract getAll(page: number, limit: number): Promise<RegisterPagination>;

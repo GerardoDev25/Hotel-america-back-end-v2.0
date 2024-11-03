@@ -1,11 +1,11 @@
-import { AuthLoginDto } from '@domain/dtos/auth';
+import { AuthLoginDto } from '@domain/dtos';
 import { UserDatasource } from '@domain/datasources';
 import { CustomError } from '@domain/error';
-import { AuthService } from './auth.service';
 import { Generator } from '@src/utils/generator';
 import { JwtAdapter, Uuid, BcryptAdapter } from '@src/adapters';
 import { StringValidator } from '@domain/type-validators';
 import { IUser, UserPagination } from '@domain/interfaces';
+import { AuthService } from '.';
 
 describe('auth.service.ts', () => {
   const user: AuthLoginDto = {

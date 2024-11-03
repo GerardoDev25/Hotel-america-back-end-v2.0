@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import {
+  PaginationDto,
   CreateChargeDto,
   FilterChargeDto,
   UpdateChargeDto,
-} from '@domain/dtos/charge';
+} from '@domain/dtos';
 import { CustomError } from '@domain/error';
-import { PaginationDto } from '@domain/dtos/share';
 import { variables } from '@domain/variables';
 import { ChargeService } from '.';
 

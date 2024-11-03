@@ -6,7 +6,7 @@ import {
   CreateChargeDto,
   FilterChargeDto,
   UpdateChargeDto,
-} from '@domain/dtos/charge';
+} from '@domain/dtos';
 
 export class ChargeRepositoryImpl extends ChargeRepository {
   constructor(private readonly chargeDatasource: ChargeDatasource) {

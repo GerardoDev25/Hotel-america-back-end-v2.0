@@ -2,7 +2,7 @@ import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 import { PaymentEntity } from '@domain/entities';
 import { PaymentPagination } from '@domain/interfaces';
-import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos/payment';
+import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos';
 import { PaymentController } from '.';
 
 describe('payment.controller.ts', () => {

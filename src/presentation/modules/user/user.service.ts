@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreateUserDto, FilterUserDto, UpdateUserDto } from '@domain/dtos/user';
 import { CustomError } from '@domain/error';
-import { PaginationDto } from '@domain/dtos/share';
+import {
+  CreateUserDto,
+  FilterUserDto,
+  UpdateUserDto,
+  PaginationDto,
+} from '@domain/dtos';
 import { UserDatasource } from '@domain/datasources';
-import { UserPagination } from '@src/domain/interfaces';
+import { UserPagination } from '@domain/interfaces';
 
 export class UserService {
   constructor(private readonly UserDatasource: UserDatasource) {}

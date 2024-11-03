@@ -7,7 +7,7 @@ import {
   CreateChargeDto,
   UpdateChargeDto,
   FilterChargeDto,
-} from '@domain/dtos/charge';
+} from '@domain/dtos';
 import { ChargeDatasource } from '.';
 
 describe('charge.datasource.ts', () => {

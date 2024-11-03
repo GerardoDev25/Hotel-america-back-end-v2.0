@@ -1,4 +1,4 @@
-import { UpdateCafeteriaDto } from '@domain/dtos/cafeteria';
+import { UpdateCafeteriaDto } from '@domain/dtos';
 import { CafeteriaList } from '@domain/interfaces';
 
 export abstract class CafeteriaRepository {

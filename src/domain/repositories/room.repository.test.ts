@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos/room';
+import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos';
 import { RoomEntity } from '@domain/entities';
 import { RoomFilter, RoomPagination } from '@domain/interfaces';
 import { Uuid } from '@src/adapters';
 import { RoomRepository } from './room.repository';
+
 describe('room.repository.ts', () => {
   const page = 2;
   const limit = 10;

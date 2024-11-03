@@ -1,9 +1,13 @@
 import { Uuid } from '@src/adapters';
 import { CustomError } from '@domain/error';
-import { PaginationDto } from '@domain/dtos/share';
-import { CreateRoomDto, FilterRoomDto, UpdateRoomDto } from '@domain/dtos/room';
 import { RoomFilter, RoomPagination } from '@domain/interfaces';
 import { RoomEntity } from '@domain/entities';
+import {
+  PaginationDto,
+  CreateRoomDto,
+  FilterRoomDto,
+  UpdateRoomDto,
+} from '@domain/dtos';
 import { RoomController } from './';
 
 describe('room.controller.ts', () => {

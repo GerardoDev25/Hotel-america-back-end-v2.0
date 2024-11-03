@@ -9,16 +9,16 @@ import {
   IRegisterFilterDto,
 } from '@domain/interfaces';
 import {
+  CreateGuestDto,
   CreateRegisterDto,
   FilterRegisterDto,
   UpdateRegisterDto,
-} from '@domain/dtos/register';
+} from '@domain/dtos';
 
 import { LoggerService } from '@presentation/services';
 
 import { cleanObject, HandleDate, pagination } from '@src/utils';
 import { prisma } from '@src/data/postgres';
-import { CreateGuestDto } from '@src/domain/dtos/guest';
 
 export class RegisterDatasourceImpl extends RegisterDatasource {
   constructor(private readonly logger: LoggerService) {

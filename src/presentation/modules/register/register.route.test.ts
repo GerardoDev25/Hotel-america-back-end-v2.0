@@ -4,11 +4,9 @@ import {
   CreatePayment,
   RegisterFilter,
 } from '@domain/interfaces';
-import { CreateRoomDto } from '@domain/dtos/room';
-import { CreateRegisterDto } from '@domain/dtos/register';
 import { variables } from '@domain/variables';
 import { DateValidator } from '@domain/type-validators';
-import { CreateUserDto } from '@domain/dtos/user';
+import { CreateRoomDto, CreateRegisterDto, CreateUserDto } from '@domain/dtos';
 import { prisma } from '@src/data/postgres';
 import { testServer } from '@src/test-server';
 import { BcryptAdapter, JwtAdapter, Uuid } from '@src/adapters';

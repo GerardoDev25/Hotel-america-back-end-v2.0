@@ -2,7 +2,7 @@ import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 import { ChargeEntity } from '@domain/entities';
 import { ChargePagination } from '@domain/interfaces';
-import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos/charge';
+import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos';
 import { ChargeController } from '.';
 
 describe('charge.controller.ts', () => {

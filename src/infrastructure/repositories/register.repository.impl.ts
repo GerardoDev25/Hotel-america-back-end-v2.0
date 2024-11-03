@@ -1,13 +1,13 @@
 import { RegisterDatasource } from '@domain/datasources';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { RegisterRepository } from '@domain/repositories';
-import { CreateGuestDto } from '@domain/dtos/guest';
 import { RegisterPagination, RegisterCheckOut } from '@domain/interfaces';
 import {
+  CreateGuestDto,
   CreateRegisterDto,
   FilterRegisterDto,
   UpdateRegisterDto,
-} from '@domain/dtos/register';
+} from '@domain/dtos';
 
 export class RegisterRepositoryImpl extends RegisterRepository {
   constructor(private readonly registerDataSource: RegisterDatasource) {

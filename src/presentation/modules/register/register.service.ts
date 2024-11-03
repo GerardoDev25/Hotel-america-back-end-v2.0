@@ -1,12 +1,12 @@
+import { CustomError } from '@domain/error';
 import {
+  PaginationDto,
+  CreateGuestDto,
   CreateRegisterDto,
   FilterRegisterDto,
   UpdateRegisterDto,
-} from '@domain/dtos/register';
-import { CustomError } from '@domain/error';
-import { PaginationDto } from '@domain/dtos/share';
+} from '@domain/dtos';
 import { RegisterDatasource, RoomDatasource } from '@domain/datasources';
-import { CreateGuestDto } from '@src/domain/dtos/guest';
 
 export class RegisterService {
   constructor(

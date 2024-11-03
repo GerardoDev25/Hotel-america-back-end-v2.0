@@ -1,4 +1,4 @@
-import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos/guest';
+import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos';
 import { GuestEntity } from '@domain/entities';
 import { GuestFilter, GuestPagination } from '@domain/interfaces';
 import { variables } from '@domain/variables';

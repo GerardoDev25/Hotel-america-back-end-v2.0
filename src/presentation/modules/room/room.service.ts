@@ -1,5 +1,9 @@
-import { CreateRoomDto, FilterRoomDto, UpdateRoomDto } from '@domain/dtos/room';
-import { PaginationDto } from '@domain/dtos/share';
+import {
+  CreateRoomDto,
+  FilterRoomDto,
+  UpdateRoomDto,
+  PaginationDto,
+} from '@domain/dtos';
 import { RoomDatasource } from '@domain/datasources';
 
 export class RoomService {

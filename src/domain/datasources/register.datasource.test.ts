@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { variables } from '@domain/variables';
-import { CreateGuestDto } from '@domain/dtos/guest';
 import { GuestEntity, RegisterEntity } from '@domain/entities/';
 import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
 import {
+  CreateGuestDto,
   CreateRegisterDto,
   FilterRegisterDto,
   UpdateRegisterDto,
-} from '@domain/dtos/register';
+} from '@domain/dtos';
 
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';

@@ -1,11 +1,8 @@
-import { PaginationDto } from '@domain/dtos/share';
-import { UpdateUserDto } from '@domain/dtos/user';
-
+import { PaginationDto, UpdateUserDto } from '@domain/dtos';
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
-
+import { CreateUser, UserFilter, UserPagination } from '@domain/interfaces';
 import { UserController, UserService } from '.';
-import { CreateUser, UserFilter, UserPagination } from '@src/domain/interfaces';
 
 describe('user.controller.ts', () => {
   const user1: CreateUser = {
