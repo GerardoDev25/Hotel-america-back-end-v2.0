@@ -1,5 +1,5 @@
 import { AuthLoginDto } from '@domain/dtos/auth';
-import { UserRepository } from '@domain/repositories';
+import { UserDatasource } from '@domain/datasources';
 import { CustomError } from '@domain/error';
 import { AuthService } from './auth.service';
 import { Generator } from '@src/utils/generator';
@@ -27,12 +27,12 @@ describe('auth.service.ts', () => {
   };
 
   it('should to have been called with parameter (login)', async () => {
-    const userRepository = {
+    const userDatasource = {
       getById: jest.fn(),
       getByParams: jest.fn().mockResolvedValue(pagination),
-    } as unknown as UserRepository;
+    } as unknown as UserDatasource;
 
-    const authService = new AuthService(userRepository);
+    const authService = new AuthService(userDatasource);
 
     const bcryptSpy = jest.spyOn(BcryptAdapter, 'compare');
     const customErrorSpy = jest.spyOn(CustomError, 'badRequest');
@@ -43,18 +43,18 @@ describe('auth.service.ts', () => {
     expect(bcryptSpy).toHaveBeenCalledWith(user.password, passwordCrypt);
     expect(customErrorSpy).not.toHaveBeenCalled();
     expect(jwtAdapterSpy).toHaveBeenCalledWith({ payload: { id: userId } });
-    expect(userRepository.getByParams).toHaveBeenCalledWith(1, 1, {
+    expect(userDatasource.getByParams).toHaveBeenCalledWith(1, 1, {
       username: user.username,
     });
   });
 
   it('should to throw error if user is null (login)', async () => {
-    const userRepository = {
+    const userDatasource = {
       getById: jest.fn(),
       getByParams: jest.fn().mockResolvedValue({ ...pagination, users: [] }),
-    } as unknown as UserRepository;
+    } as unknown as UserDatasource;
 
-    const authService = new AuthService(userRepository);
+    const authService = new AuthService(userDatasource);
 
     const bcryptSpy = jest.spyOn(BcryptAdapter, 'compare');
     const customErrorSpy = jest.spyOn(CustomError, 'badRequest');
@@ -72,15 +72,15 @@ describe('auth.service.ts', () => {
   });
 
   it('should to throw error if user is not active (login)', async () => {
-    const userRepository = {
+    const userDatasource = {
       getById: jest.fn(),
       getByParams: jest.fn().mockResolvedValue({
         ...pagination,
         users: [{ ...user, isActive: false, id: userId }] as IUser[],
       }),
-    } as unknown as UserRepository;
+    } as unknown as UserDatasource;
 
-    const authService = new AuthService(userRepository);
+    const authService = new AuthService(userDatasource);
 
     const bcryptSpy = jest.spyOn(BcryptAdapter, 'compare');
     const customErrorSpy = jest.spyOn(CustomError, 'badRequest');
@@ -98,15 +98,15 @@ describe('auth.service.ts', () => {
   });
 
   it('should to throw error if password not match (login)', async () => {
-    const userRepository = {
+    const userDatasource = {
       getById: jest.fn(),
       getByParams: jest.fn().mockResolvedValue({
         ...pagination,
         users: [{ ...user, isActive: true }],
       }),
-    } as unknown as UserRepository;
+    } as unknown as UserDatasource;
 
-    const authService = new AuthService(userRepository);
+    const authService = new AuthService(userDatasource);
 
     const bcryptSpy = jest.spyOn(BcryptAdapter, 'compare');
     const customErrorSpy = jest.spyOn(CustomError, 'badRequest');
@@ -125,12 +125,12 @@ describe('auth.service.ts', () => {
   });
 
   it('should get a new jwt if pass a valid jwt (refreshToken)', async () => {
-    const userRepository = {
+    const userDatasource = {
       getById: jest.fn().mockResolvedValue({
         ok: true,
         user: { ...user, isActive: true },
       }),
-    } as unknown as UserRepository;
+    } as unknown as UserDatasource;
 
     const userId = Uuid.v4();
 
@@ -138,7 +138,7 @@ describe('auth.service.ts', () => {
       payload: { id: userId },
     });
 
-    const authService = new AuthService(userRepository);
+    const authService = new AuthService(userDatasource);
 
     const newToken = await authService.refreshToken({ token });
 
@@ -146,9 +146,9 @@ describe('auth.service.ts', () => {
   });
 
   it('should get an error if user is null (refreshToken)', async () => {
-    const userRepository = {
+    const userDatasource = {
       getById: jest.fn().mockResolvedValue({ ok: false, user: null }),
-    } as unknown as UserRepository;
+    } as unknown as UserDatasource;
 
     const userId = Uuid.v4();
 
@@ -156,7 +156,7 @@ describe('auth.service.ts', () => {
       payload: { id: userId },
     });
 
-    const authService = new AuthService(userRepository);
+    const authService = new AuthService(userDatasource);
     const customErrorSpy = jest.spyOn(CustomError, 'badRequest');
 
     try {
@@ -168,11 +168,11 @@ describe('auth.service.ts', () => {
   });
 
   it('should get error if is not valid jwt (refreshToken)', async () => {
-    const userRepository = {} as unknown as UserRepository;
+    const userDatasource = {} as unknown as UserDatasource;
     const token =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
 
-    const authService = new AuthService(userRepository);
+    const authService = new AuthService(userDatasource);
 
     const jwtAdapterSpy = jest.spyOn(JwtAdapter, 'verifyToken');
     const customErrorSpy = jest.spyOn(CustomError, 'unauthorized');

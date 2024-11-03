@@ -1,11 +1,11 @@
 import { AuthLoginDto, AuthRefreshTokenDto } from '@domain/dtos/auth';
 import { CustomError } from '@domain/error';
-import { UserRepository } from '@domain/repositories';
+import { UserDatasource } from '@domain/datasources';
 
 import { BcryptAdapter, JwtAdapter } from '@src/adapters';
 
 export class AuthService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userDatasource: UserDatasource) {}
 
   private handleError(error: unknown) {
     if (error instanceof CustomError) throw error;
@@ -14,9 +14,11 @@ export class AuthService {
 
   login = async (userLoginDto: AuthLoginDto) => {
     const { username, password } = userLoginDto;
+    const page = 1;
+    const limit = 1;
 
     try {
-      const { users } = await this.userRepository.getByParams(1, 1, {
+      const { users } = await this.userDatasource.getByParams(page, limit, {
         username,
       });
 
@@ -55,7 +57,7 @@ export class AuthService {
     }
 
     try {
-      const { ok, user } = await this.userRepository.getById(payload.id);
+      const { ok, user } = await this.userDatasource.getById(payload.id);
 
       if (!user || !user.isActive) {
         throw CustomError.badRequest('user not allow');
