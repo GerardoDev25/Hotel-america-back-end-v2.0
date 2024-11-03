@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateUserDto, FilterUserDto, UpdateUserDto } from '@domain/dtos/user';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
-import { UserRepository } from '@domain/repositories';
+import { UserDatasource } from '@domain/datasources';
+import { UserPagination } from '@src/domain/interfaces';
 
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly UserDatasource: UserDatasource) {}
 
   private handleError(error: unknown) {
     if (error instanceof CustomError) throw error;
@@ -13,16 +15,16 @@ export class UserService {
 
   async getAll(paginationDto: PaginationDto, isActive?: boolean) {
     const { page, limit } = paginationDto;
+    let data: UserPagination;
 
     try {
-      const { users, ...rest } = await this.userRepository.getAll(
-        page,
-        limit,
-        isActive
-      );
+      if (isActive !== undefined)
+        data = await this.UserDatasource.getAllActive(page, limit, isActive);
+      else data = await this.UserDatasource.getAll(page, limit);
+
+      const { users, ...rest } = data;
 
       const usersMapped = users.map((user) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...restUser } = user;
         return restUser;
       });
@@ -39,14 +41,13 @@ export class UserService {
   ) {
     const { page, limit } = paginationDto;
     try {
-      const { users, ...rest } = await this.userRepository.getByParams(
+      const { users, ...rest } = await this.UserDatasource.getByParams(
         page,
         limit,
         filterRoomDto
       );
 
       const usersMapped = users.map((user) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...restUser } = user;
         return restUser;
       });
@@ -59,8 +60,7 @@ export class UserService {
 
   async getById(id: string) {
     try {
-      const { ok, user } = await this.userRepository.getById(id);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { ok, user } = await this.UserDatasource.getById(id);
       const { password, ...rest } = user;
 
       return { ok, user: { ...rest } };
@@ -70,19 +70,8 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    // const { users } = await this.userRepository.getByParams(1, 1, {
-    //   username: createUserDto.username,
-    // });
-
-    // if (users.length > 1) {
-    //   throw CustomError.conflict(
-    //     `username ${createUserDto.username} duplicated`
-    //   );
-    // }
-
     try {
-      const { ok, user } = await this.userRepository.create(createUserDto);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { ok, user } = await this.UserDatasource.create(createUserDto);
       const { password, ...rest } = user;
 
       return { ok, user: { ...rest } };
@@ -92,10 +81,10 @@ export class UserService {
   }
 
   async update(updateUserDto: UpdateUserDto) {
-    return this.userRepository.update(updateUserDto);
+    return this.UserDatasource.update(updateUserDto);
   }
 
   async delete(id: string) {
-    return this.userRepository.delete(id);
+    return this.UserDatasource.delete(id);
   }
 }

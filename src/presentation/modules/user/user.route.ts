@@ -1,6 +1,5 @@
 import { Router } from 'express';
 
-import { UserRepositoryImpl } from '@infrastructure/repositories';
 import { UserDatasourceImpl } from '@infrastructure/datasource';
 import { Auth, Commons } from '@presentation/middlewares';
 import { LoggerService } from '@presentation/services';
@@ -17,8 +16,7 @@ export class UserRoute {
 
     // * user
     const datasource = new UserDatasourceImpl(userLogger);
-    const repository = new UserRepositoryImpl(datasource);
-    const service = new UserService(repository);
+    const service = new UserService(datasource);
     const controller = new UserController(service);
 
     const middleware = {

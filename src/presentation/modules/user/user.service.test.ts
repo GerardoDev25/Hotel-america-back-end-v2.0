@@ -1,35 +1,50 @@
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos/user';
 import { PaginationDto } from '@domain/dtos/share';
-import { UserRepository } from '@domain/repositories';
 
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 
 import { UserService } from './user.service';
+import { UserDatasource } from '@src/domain/datasources';
 
 describe('user.service.ts', () => {
-  const mockUserRepository = {
+  const mockUserDatasource = {
     update: jest.fn(),
     delete: jest.fn(),
     getByParams: jest.fn().mockResolvedValue({ ok: true, users: [] }),
     getAll: jest.fn().mockResolvedValue({ ok: true, users: [] }),
+    getAllActive: jest.fn().mockResolvedValue({ ok: true, users: [] }),
     getById: jest
       .fn()
       .mockResolvedValue({ ok: true, user: { password: '123' } }),
     create: jest
       .fn()
       .mockResolvedValue({ ok: true, user: { password: '123' } }),
-  } as unknown as UserRepository;
+  } as unknown as UserDatasource;
 
   it('should to have been called with parameter (getAll)', async () => {
-    const isActive = true;
+    const isActive = undefined;
     const paginationDto = { page: 1, limit: 10 } as PaginationDto;
-    const service = new UserService(mockUserRepository);
+    const service = new UserService(mockUserDatasource);
 
     await service.getAll(paginationDto, isActive);
 
-    expect(mockUserRepository.getAll).toHaveBeenCalledTimes(1);
-    expect(mockUserRepository.getAll).toHaveBeenCalledWith(
+    expect(mockUserDatasource.getAll).toHaveBeenCalledTimes(1);
+    expect(mockUserDatasource.getAll).toHaveBeenCalledWith(
+      paginationDto.page,
+      paginationDto.limit
+    );
+  });
+
+  it('should to have been called with parameter (getAllActive)', async () => {
+    const isActive = true;
+    const paginationDto = { page: 1, limit: 10 } as PaginationDto;
+    const service = new UserService(mockUserDatasource);
+
+    await service.getAll(paginationDto, isActive);
+
+    expect(mockUserDatasource.getAllActive).toHaveBeenCalledTimes(1);
+    expect(mockUserDatasource.getAllActive).toHaveBeenCalledWith(
       paginationDto.page,
       paginationDto.limit,
       isActive
@@ -39,12 +54,12 @@ describe('user.service.ts', () => {
   it('should to have been called with parameter (getByParams)', async () => {
     const paginationDto = { page: 1, limit: 10 } as PaginationDto;
     const params = { isActive: true, name: 'test', birdDate: new Date() };
-    const service = new UserService(mockUserRepository);
+    const service = new UserService(mockUserDatasource);
 
     await service.getByParams(paginationDto, params);
 
-    expect(mockUserRepository.getByParams).toHaveBeenCalledTimes(1);
-    expect(mockUserRepository.getByParams).toHaveBeenCalledWith(
+    expect(mockUserDatasource.getByParams).toHaveBeenCalledTimes(1);
+    expect(mockUserDatasource.getByParams).toHaveBeenCalledWith(
       paginationDto.page,
       paginationDto.limit,
       params
@@ -53,12 +68,12 @@ describe('user.service.ts', () => {
 
   it('should to have been called with parameter (getById)', async () => {
     const id = Uuid.v4();
-    const service = new UserService(mockUserRepository);
+    const service = new UserService(mockUserDatasource);
 
     await service.getById(id);
 
-    expect(mockUserRepository.getById).toHaveBeenCalledTimes(1);
-    expect(mockUserRepository.getById).toHaveBeenCalledWith(id);
+    expect(mockUserDatasource.getById).toHaveBeenCalledTimes(1);
+    expect(mockUserDatasource.getById).toHaveBeenCalledWith(id);
   });
 
   it('should to have been called with parameter (create)', async () => {
@@ -71,13 +86,13 @@ describe('user.service.ts', () => {
       role: 'admin',
       isActive: true,
     });
-    const service = new UserService(mockUserRepository);
+    const service = new UserService(mockUserDatasource);
 
     await service.create(user!);
 
     expect(errors).toBeUndefined();
-    expect(mockUserRepository.create).toHaveBeenCalledTimes(1);
-    expect(mockUserRepository.create).toHaveBeenCalledWith(user);
+    expect(mockUserDatasource.create).toHaveBeenCalledTimes(1);
+    expect(mockUserDatasource.create).toHaveBeenCalledWith(user);
   });
 
   it('should to have been called with parameter (update)', async () => {
@@ -91,20 +106,20 @@ describe('user.service.ts', () => {
       role: 'admin',
       isActive: true,
     });
-    const service = new UserService(mockUserRepository);
+    const service = new UserService(mockUserDatasource);
     await service.update(user!);
 
     expect(errors).toBeUndefined();
-    expect(mockUserRepository.update).toHaveBeenCalledTimes(1);
-    expect(mockUserRepository.update).toHaveBeenCalledWith(user);
+    expect(mockUserDatasource.update).toHaveBeenCalledTimes(1);
+    expect(mockUserDatasource.update).toHaveBeenCalledWith(user);
   });
 
   it('should to have been called with parameter (delete)', async () => {
     const id = Uuid.v4();
-    const service = new UserService(mockUserRepository);
+    const service = new UserService(mockUserDatasource);
     await service.delete(id);
 
-    expect(mockUserRepository.delete).toHaveBeenCalledTimes(1);
-    expect(mockUserRepository.delete).toHaveBeenCalledWith(id);
+    expect(mockUserDatasource.delete).toHaveBeenCalledTimes(1);
+    expect(mockUserDatasource.delete).toHaveBeenCalledWith(id);
   });
 });
