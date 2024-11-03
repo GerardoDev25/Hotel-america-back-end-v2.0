@@ -5,13 +5,13 @@ import {
 } from '@domain/dtos/register';
 import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
-import { RegisterRepository, RoomRepository } from '@domain/repositories';
+import { RegisterDatasource, RoomDatasource } from '@domain/datasources';
 import { CreateGuestDto } from '@src/domain/dtos/guest';
 
 export class RegisterService {
   constructor(
-    private readonly registerRepository: RegisterRepository,
-    private readonly roomRepository: RoomRepository
+    private readonly registerDatasource: RegisterDatasource,
+    private readonly roomDatasource: RoomDatasource
   ) {}
 
   private handleError(error: unknown) {
@@ -21,7 +21,7 @@ export class RegisterService {
 
   async getAll(paginationDto: PaginationDto) {
     const { page, limit } = paginationDto;
-    return this.registerRepository.getAll(page, limit);
+    return this.registerDatasource.getAll(page, limit);
   }
 
   async getByParams(
@@ -29,11 +29,11 @@ export class RegisterService {
     filterRegisterDto: FilterRegisterDto
   ) {
     const { page, limit } = paginationDto;
-    return this.registerRepository.getByParams(page, limit, filterRegisterDto);
+    return this.registerDatasource.getByParams(page, limit, filterRegisterDto);
   }
 
   async getById(id: string) {
-    return this.registerRepository.getById(id);
+    return this.registerDatasource.getById(id);
   }
 
   create = async (createRegisterDto: CreateRegisterDto) => {
@@ -41,11 +41,11 @@ export class RegisterService {
     const limit = 1;
 
     try {
-      const [{ registers }, { room }] = await Promise.all([
-        this.registerRepository.getByParams(page, limit, {
+      const [{ room }, { registers }] = await Promise.all([
+        this.roomDatasource.getById(createRegisterDto.roomId),
+        this.registerDatasource.getByParams(page, limit, {
           roomId: createRegisterDto.roomId,
         }),
-        this.roomRepository.getById(createRegisterDto.roomId),
       ]);
 
       if (!room.isAvailable || registers[0]) {
@@ -57,7 +57,7 @@ export class RegisterService {
       throw this.handleError(error);
     }
 
-    return this.registerRepository.create(createRegisterDto);
+    return this.registerDatasource.create(createRegisterDto);
   };
   async checkIn(data: {
     registerDto: CreateRegisterDto;
@@ -67,11 +67,11 @@ export class RegisterService {
     const page = 1;
     const limit = 1;
     try {
-      const [{ registers }, { room }] = await Promise.all([
-        this.registerRepository.getByParams(page, limit, {
+      const [{ room }, { registers }] = await Promise.all([
+        this.roomDatasource.getById(registerDto.roomId),
+        this.registerDatasource.getByParams(page, limit, {
           roomId: registerDto.roomId,
         }),
-        this.roomRepository.getById(registerDto.roomId),
       ]);
 
       if (!room.isAvailable || registers[0]) {
@@ -83,18 +83,18 @@ export class RegisterService {
       throw this.handleError(error);
     }
 
-    return this.registerRepository.checkIn(data);
+    return this.registerDatasource.checkIn(data);
   }
 
   async checkOut(id: string) {
-    return this.registerRepository.checkOut(id);
+    return this.registerDatasource.checkOut(id);
   }
 
   async update(updateRegisterDto: UpdateRegisterDto) {
-    return this.registerRepository.update(updateRegisterDto);
+    return this.registerDatasource.update(updateRegisterDto);
   }
 
   async delete(id: string) {
-    return this.registerRepository.delete(id);
+    return this.registerDatasource.delete(id);
   }
 }

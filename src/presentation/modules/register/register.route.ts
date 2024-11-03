@@ -1,9 +1,5 @@
 import { Router } from 'express';
 import {
-  RegisterRepositoryImpl,
-  RoomRepositoryImpl,
-} from '@infrastructure/repositories';
-import {
   RegisterDatasourceImpl,
   RoomDatasourceImpl,
   UserDatasourceImpl,
@@ -27,16 +23,14 @@ export class RegisterRoute {
     // * room
     const roomLogger = new LoggerService('room.datasource.impl.ts');
     const roomDatasource = new RoomDatasourceImpl(roomLogger);
-    const roomRepository = new RoomRepositoryImpl(roomDatasource);
 
     // * register
     const registerLogger = new LoggerService('register.datasource.impl.ts');
     const registerDatasource = new RegisterDatasourceImpl(registerLogger);
-    const registerRepository = new RegisterRepositoryImpl(registerDatasource);
 
     const registerService = new RegisterService(
-      registerRepository,
-      roomRepository
+      registerDatasource,
+      roomDatasource
     );
     const registerController = new RegisterController(registerService);
 

@@ -3,7 +3,7 @@ import { CustomError } from '@domain/error';
 import { PaginationDto } from '@domain/dtos/share';
 import { GuestEntity, RegisterEntity } from '@domain/entities';
 import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
-import { RegisterRepository } from '@domain/repositories';
+import { RegisterDatasource } from '@domain/datasources';
 import { Uuid } from '@src/adapters';
 import { RegisterService } from '.';
 import { Generator } from '@src/utils/generator';
@@ -67,7 +67,7 @@ describe('register.service.ts', () => {
 
   const resolveData = { ok: true, message: '' };
 
-  const mockRegisterRepository: RegisterRepository = {
+  const mockRegisterDatasource: RegisterDatasource = {
     getAll: jest.fn().mockResolvedValue(pagination),
     getById: jest.fn().mockResolvedValue({ ok: true, register }),
     getByParams: jest.fn().mockResolvedValue(pagination),
@@ -81,7 +81,7 @@ describe('register.service.ts', () => {
   };
 
   const room = { isAvailable: true };
-  const mockRoomRepository = {
+  const mockRoomDatasource = {
     getById: jest.fn().mockResolvedValue({ room }),
   } as any;
 
@@ -89,13 +89,13 @@ describe('register.service.ts', () => {
     const paginationDto: PaginationDto = { page: 1, limit: 10 };
 
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     await registerService.getAll(paginationDto);
 
-    expect(mockRegisterRepository.getAll).toHaveBeenCalledWith(
+    expect(mockRegisterDatasource.getAll).toHaveBeenCalledWith(
       paginationDto.page,
       paginationDto.limit
     );
@@ -105,19 +105,19 @@ describe('register.service.ts', () => {
     const id = Uuid.v4();
 
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     await registerService.getById(id);
 
-    expect(mockRegisterRepository.getById).toHaveBeenCalledWith(id);
+    expect(mockRegisterDatasource.getById).toHaveBeenCalledWith(id);
   });
 
   it('should have been call with parameters (create)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
 
-    const mockRegisterRepository = {
+    const mockRegisterDatasource = {
       getByParams: jest
         .fn()
         .mockResolvedValue({ ...pagination, registers: [] }),
@@ -125,15 +125,15 @@ describe('register.service.ts', () => {
     } as any;
 
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     await registerService.create(registerDto);
 
-    expect(mockRegisterRepository.create).toHaveBeenCalledWith(registerDto);
-    expect(mockRoomRepository.getById).toHaveBeenCalledWith(registerDto.roomId);
-    expect(mockRegisterRepository.getByParams).toHaveBeenCalledWith(
+    expect(mockRegisterDatasource.create).toHaveBeenCalledWith(registerDto);
+    expect(mockRoomDatasource.getById).toHaveBeenCalledWith(registerDto.roomId);
+    expect(mockRegisterDatasource.getByParams).toHaveBeenCalledWith(
       page,
       limit,
       {
@@ -145,20 +145,20 @@ describe('register.service.ts', () => {
   it('should throw error if room is not available (create)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
 
-    const mockRegisterRepository = {
+    const mockRegisterDatasource = {
       getByParams: jest
         .fn()
         .mockResolvedValue({ ...pagination, registers: [] }),
       create: jest.fn(),
     } as any;
 
-    const mockRoomRepository = {
+    const mockRoomDatasource = {
       getById: jest.fn().mockResolvedValue({ room: { isAvailable: false } }),
     } as any;
 
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     try {
@@ -168,14 +168,14 @@ describe('register.service.ts', () => {
       expect(error.message).toBe(
         `room with id ${registerDto.roomId} is not available`
       );
-      expect(mockRegisterRepository.create).not.toHaveBeenCalled();
+      expect(mockRegisterDatasource.create).not.toHaveBeenCalled();
     }
   });
 
   it('should throw error if register with roomId exist (create)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
 
-    const mockRegisterRepository = {
+    const mockRegisterDatasource = {
       getByParams: jest
         .fn()
         .mockResolvedValue({ ...pagination, registers: [] }),
@@ -183,8 +183,8 @@ describe('register.service.ts', () => {
     } as any;
 
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     try {
@@ -194,7 +194,7 @@ describe('register.service.ts', () => {
       expect(error.message).toBe(
         `room with id ${registerDto.roomId} is not available`
       );
-      expect(mockRegisterRepository.create).not.toHaveBeenCalled();
+      expect(mockRegisterDatasource.create).not.toHaveBeenCalled();
     }
   });
 
@@ -202,28 +202,28 @@ describe('register.service.ts', () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
     const guestDtos = [] as CreateGuestDto[];
 
-    const mockRegisterRepository = {
+    const mockRegisterDatasource = {
       getByParams: jest
         .fn()
         .mockResolvedValue({ ...pagination, registers: [] }),
       checkIn: jest
         .fn()
         .mockResolvedValue({ ok: true, register, guests: [guest] }),
-    } as unknown as RegisterRepository;
+    } as unknown as RegisterDatasource;
 
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     await registerService.checkIn({ guestDtos, registerDto });
 
-    expect(mockRegisterRepository.checkIn).toHaveBeenCalledWith({
+    expect(mockRegisterDatasource.checkIn).toHaveBeenCalledWith({
       registerDto,
       guestDtos,
     });
-    expect(mockRoomRepository.getById).toHaveBeenCalledWith(registerDto.roomId);
-    expect(mockRegisterRepository.getByParams).toHaveBeenCalledWith(
+    expect(mockRoomDatasource.getById).toHaveBeenCalledWith(registerDto.roomId);
+    expect(mockRegisterDatasource.getByParams).toHaveBeenCalledWith(
       page,
       limit,
       { roomId: registerDto.roomId }
@@ -234,20 +234,20 @@ describe('register.service.ts', () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
     const guestDtos = [] as CreateGuestDto[];
 
-    const mockRegisterRepository = {
+    const mockRegisterDatasource = {
       getByParams: jest
         .fn()
         .mockResolvedValue({ ...pagination, registers: [] }),
       checkIn: jest.fn(),
-    } as unknown as RegisterRepository;
+    } as unknown as RegisterDatasource;
 
-    const mockRoomRepository = {
+    const mockRoomDatasource = {
       getById: jest.fn().mockResolvedValue({ room: { isAvailable: false } }),
     } as any;
 
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     try {
@@ -257,7 +257,7 @@ describe('register.service.ts', () => {
       expect(error.message).toBe(
         `room with id ${registerDto.roomId} is not available`
       );
-      expect(mockRegisterRepository.checkIn).not.toHaveBeenCalled();
+      expect(mockRegisterDatasource.checkIn).not.toHaveBeenCalled();
     }
   });
 
@@ -265,27 +265,27 @@ describe('register.service.ts', () => {
     const id = Uuid.v4();
 
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     await registerService.checkOut(id);
 
-    expect(mockRegisterRepository.checkOut).toHaveBeenCalledWith(id);
+    expect(mockRegisterDatasource.checkOut).toHaveBeenCalledWith(id);
   });
 
   it('should throw error if register with roomId exist (checkIn)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
     const guestDtos = [] as CreateGuestDto[];
 
-    const mockRegisterRepository = {
+    const mockRegisterDatasource = {
       getByParams: jest.fn().mockResolvedValue(pagination),
       checkIn: jest.fn(),
-    } as unknown as RegisterRepository;
+    } as unknown as RegisterDatasource;
 
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     try {
@@ -295,19 +295,19 @@ describe('register.service.ts', () => {
       expect(error.message).toBe(
         `room with id ${registerDto.roomId} is not available`
       );
-      expect(mockRegisterRepository.checkIn).not.toHaveBeenCalled();
+      expect(mockRegisterDatasource.checkIn).not.toHaveBeenCalled();
     }
   });
 
   it('should have been call with parameters (update)', async () => {
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     await registerService.update({ id: register.id });
 
-    expect(mockRegisterRepository.update).toHaveBeenCalledWith({
+    expect(mockRegisterDatasource.update).toHaveBeenCalledWith({
       id: register.id,
     });
   });
@@ -316,12 +316,12 @@ describe('register.service.ts', () => {
     const id = Uuid.v4();
 
     const registerService = new RegisterService(
-      mockRegisterRepository,
-      mockRoomRepository
+      mockRegisterDatasource,
+      mockRoomDatasource
     );
 
     await registerService.delete(id);
 
-    expect(mockRegisterRepository.delete).toHaveBeenCalledWith(id);
+    expect(mockRegisterDatasource.delete).toHaveBeenCalledWith(id);
   });
 });
