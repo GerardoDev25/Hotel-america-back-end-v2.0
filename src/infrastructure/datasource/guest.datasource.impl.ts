@@ -1,8 +1,7 @@
 import { CreateGuestDto, FilterGuestDto, UpdateGuestDto } from '@domain/dtos';
 import { CustomError } from '@domain/error';
 import { GuestDatasource } from '@domain/datasources';
-import { GuestEntity } from '@domain/entities';
-import { GuestPagination, IGuestFilterDto } from '@domain/interfaces';
+import { GuestPagination, IGuest, IGuestFilterDto } from '@domain/interfaces';
 import { LoggerService } from '@presentation/services';
 import { Guest } from '@prisma/client';
 import { prisma } from '@src/data/postgres';
@@ -22,16 +21,16 @@ export class GuestDatasourceImpl extends GuestDatasource {
     }
   }
 
-  private transformObject(entity: Guest): GuestEntity {
-    return GuestEntity.fromObject({
+  private transformObject(entity: Guest): IGuest {
+    return {
       ...entity,
       checkIn: entity.checkIn.toISOString(),
       dateOfBirth: entity.dateOfBirth.toISOString(),
-      checkOut: entity.checkOut?.toISOString() ?? null,
-    });
+      checkOut: entity.checkOut?.toISOString() ?? undefined,
+    };
   }
 
-  async getById(id: string): Promise<{ ok: boolean; guest: GuestEntity }> {
+  async getById(id: string): Promise<{ ok: boolean; guest: IGuest }> {
     try {
       const guest = await prisma.guest.findUnique({ where: { id } });
 
@@ -112,7 +111,7 @@ export class GuestDatasourceImpl extends GuestDatasource {
 
   async create(
     createGuestDto: CreateGuestDto
-  ): Promise<{ ok: boolean; guest: GuestEntity }> {
+  ): Promise<{ ok: boolean; guest: IGuest }> {
     const { registerId, ...rest } = createGuestDto;
 
     if (!registerId) {

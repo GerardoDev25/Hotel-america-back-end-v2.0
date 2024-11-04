@@ -1,6 +1,5 @@
 import { CreateGuestDto, UpdateGuestDto } from '@domain/dtos';
-import { GuestEntity } from '@domain/entities';
-import { GuestFilter, GuestPagination } from '@domain/interfaces';
+import { GuestFilter, GuestPagination, IGuest } from '@domain/interfaces';
 import { variables } from '@domain/variables';
 import { Uuid } from '@src/adapters';
 import { citiesList } from '@src/data/seed';
@@ -10,7 +9,7 @@ import { GuestController } from '.';
 describe('guest.controller.ts', () => {
   const fullName = Generator.randomName();
 
-  const guestEntity: GuestEntity = {
+  const guestEntity: IGuest = {
     id: Uuid.v4(),
     di: Generator.randomIdentityNumber(),
     checkIn: Generator.randomDate(),

@@ -1,9 +1,8 @@
-import { GuestEntity } from '@domain/entities';
-import { GuestPagination } from '@domain/interfaces';
+import { GuestPagination, IGuest } from '@domain/interfaces';
 import { CreateGuestDto, FilterGuestDto, UpdateGuestDto } from '@domain/dtos';
 
 export abstract class GuestDatasource {
-  abstract getById(id: string): Promise<{ ok: boolean; guest: GuestEntity }>;
+  abstract getById(id: string): Promise<{ ok: boolean; guest: IGuest }>;
 
   abstract getByParams(
     page: number,
@@ -15,7 +14,7 @@ export abstract class GuestDatasource {
 
   abstract create(
     createGuestDto: CreateGuestDto
-  ): Promise<{ ok: boolean; guest: GuestEntity }>;
+  ): Promise<{ ok: boolean; guest: IGuest }>;
 
   abstract update(
     updateGuestDto: UpdateGuestDto
