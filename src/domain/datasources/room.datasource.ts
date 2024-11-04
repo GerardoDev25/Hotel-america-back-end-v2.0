@@ -1,6 +1,5 @@
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos';
-import { RoomEntity } from '@domain/entities';
-import { RoomFilter, RoomPagination } from '@domain/interfaces';
+import { RoomFilter, RoomPagination, IRoom } from '@domain/interfaces';
 
 export abstract class RoomDatasource {
   abstract getAll(page: number, limit: number): Promise<RoomPagination>;
@@ -17,11 +16,11 @@ export abstract class RoomDatasource {
     isAvailable: boolean
   ): Promise<RoomPagination>;
 
-  abstract getById(id: string): Promise<{ ok: boolean; room: RoomEntity }>;
+  abstract getById(id: string): Promise<{ ok: boolean; room: IRoom }>;
 
   abstract create(
     createRoomDto: CreateRoomDto
-  ): Promise<{ ok: boolean; room: RoomEntity }>;
+  ): Promise<{ ok: boolean; room: IRoom }>;
 
   abstract update(
     updateRoomDto: UpdateRoomDto

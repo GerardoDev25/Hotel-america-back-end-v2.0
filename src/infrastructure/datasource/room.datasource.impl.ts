@@ -1,8 +1,7 @@
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos';
 import { CustomError } from '@domain/error';
 import { RoomDatasource } from '@domain/datasources';
-import { RoomEntity } from '@domain/entities';
-import { RoomFilter, RoomPagination } from '@domain/interfaces';
+import { RoomFilter, RoomPagination, IRoom } from '@domain/interfaces';
 
 import { LoggerService } from '@presentation/services';
 
@@ -39,7 +38,11 @@ export class RoomDatasourceImpl extends RoomDatasource {
         }),
       ]);
 
-      const rooms = roomsDb.map((room) => RoomEntity.fromObject(room));
+      const rooms = roomsDb.map((room) => ({
+        ...room,
+        isAvailable: room.isAvailable ?? false,
+      }));
+
       const { next, prev } = pagination({ page, limit, total, path: 'room' });
 
       return { page, limit, total, next, prev, rooms };
@@ -59,7 +62,10 @@ export class RoomDatasourceImpl extends RoomDatasource {
         }),
       ]);
 
-      const rooms = roomsDb.map((room) => RoomEntity.fromObject(room));
+      const rooms = roomsDb.map((room) => ({
+        ...room,
+        isAvailable: room.isAvailable ?? false,
+      }));
       const { next, prev } = pagination({ page, limit, total, path: 'room' });
 
       return { page, limit, total, next, prev, rooms };
@@ -86,7 +92,10 @@ export class RoomDatasourceImpl extends RoomDatasource {
         }),
       ]);
 
-      const rooms = roomsDb.map((room) => RoomEntity.fromObject(room));
+      const rooms = roomsDb.map((room) => ({
+        ...room,
+        isAvailable: room.isAvailable ?? false,
+      }));
       const total = roomsDb.length === 0 ? 0 : totalDB;
       const { next, prev } = pagination({
         page,
@@ -102,26 +111,32 @@ export class RoomDatasourceImpl extends RoomDatasource {
   }
 
   async create(
-    createRoomDto: CreateRoomDto
-  ): Promise<{ ok: boolean; room: RoomEntity }> {
+    createDto: CreateRoomDto
+  ): Promise<{ ok: boolean; room: IRoom }> {
     try {
-      const newRoom = await prisma.room.create({ data: createRoomDto });
+      const newRoom = await prisma.room.create({ data: createDto });
 
-      return { ok: true, room: RoomEntity.fromObject(newRoom) };
+      return {
+        ok: true,
+        room: { ...newRoom, isAvailable: newRoom.isAvailable ?? false },
+      };
     } catch (error: any) {
       throw this.handleError(error);
     }
   }
 
-  async getById(id: string): Promise<{ ok: boolean; room: RoomEntity }> {
+  async getById(id: string): Promise<{ ok: boolean; room: IRoom }> {
     try {
-      const room = await prisma.room.findUnique({ where: { id } });
+      const dbRoom = await prisma.room.findUnique({ where: { id } });
 
-      if (!room) {
+      if (!dbRoom) {
         throw CustomError.notFound(`room with id: ${id} not found`);
       }
 
-      return { ok: true, room: RoomEntity.fromObject(room) };
+      return {
+        ok: true,
+        room: { ...dbRoom, isAvailable: dbRoom.isAvailable ?? false },
+      };
     } catch (error) {
       if (error instanceof CustomError) {
         throw error;
@@ -131,9 +146,9 @@ export class RoomDatasourceImpl extends RoomDatasource {
   }
 
   async update(
-    updateRoomDto: UpdateRoomDto
+    updateDto: UpdateRoomDto
   ): Promise<{ ok: boolean; message: string }> {
-    const { id, ...rest } = updateRoomDto;
+    const { id, ...rest } = updateDto;
 
     await this.getById(id);
     const data = cleanObject(rest);

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateRoomDto, UpdateRoomDto } from '@domain/dtos';
-import { RoomEntity } from '@domain/entities';
-import { RoomFilter, RoomPagination } from '@domain/interfaces';
+import { RoomFilter, RoomPagination, IRoom } from '@domain/interfaces';
 
 import { RoomDatasource } from './room.datasource';
 import { Uuid } from '@src/adapters';
@@ -11,22 +10,22 @@ describe('room.database.ts', () => {
   const limit = 10;
   const isAvailable = true;
 
-  const mockRoom = new RoomEntity({
+  const mockRoom: IRoom = {
     id: 'abc',
     roomType: 'normal',
     roomNumber: 12,
     betsNumber: 12,
     isAvailable: true,
     state: 'free',
-  });
-  const mockRoom2 = new RoomEntity({
+  };
+  const mockRoom2: IRoom = {
     id: 'abc',
     roomType: 'normal',
     roomNumber: 12,
     betsNumber: 12,
     isAvailable: true,
     state: 'free',
-  });
+  };
 
   const roomPagination = {
     rooms: [mockRoom, mockRoom2],
@@ -60,11 +59,11 @@ describe('room.database.ts', () => {
 
     async create(
       createRoomDto: CreateRoomDto
-    ): Promise<{ ok: boolean; room: RoomEntity }> {
+    ): Promise<{ ok: boolean; room: IRoom }> {
       return { ok: true, room: mockRoom2 };
     }
 
-    async getById(id: string): Promise<{ ok: boolean; room: RoomEntity }> {
+    async getById(id: string): Promise<{ ok: boolean; room: IRoom }> {
       return { ok: true, room: mockRoom };
     }
 
@@ -90,7 +89,14 @@ describe('room.database.ts', () => {
     expect(rooms).toBeInstanceOf(Array);
     expect(rooms).toHaveLength(2);
     rooms.forEach((room) => {
-      expect(room).toBeInstanceOf(RoomEntity);
+      expect(room).toMatchObject({
+        id: expect.any(String),
+        roomType: expect.any(String),
+        roomNumber: expect.any(Number),
+        betsNumber: expect.any(Number),
+        isAvailable: expect.any(Boolean),
+        state: expect.any(String),
+      });
     });
   });
 
@@ -106,7 +112,14 @@ describe('room.database.ts', () => {
     expect(rooms).toBeInstanceOf(Array);
     expect(rooms).toHaveLength(2);
     rooms.forEach((room) => {
-      expect(room).toBeInstanceOf(RoomEntity);
+      expect(room).toMatchObject({
+        id: expect.any(String),
+        roomType: expect.any(String),
+        roomNumber: expect.any(Number),
+        betsNumber: expect.any(Number),
+        isAvailable: expect.any(Boolean),
+        state: expect.any(String),
+      });
     });
   });
 
@@ -125,7 +138,14 @@ describe('room.database.ts', () => {
     expect(rooms).toBeInstanceOf(Array);
     expect(rooms).toHaveLength(2);
     rooms.forEach((room) => {
-      expect(room).toBeInstanceOf(RoomEntity);
+      expect(room).toMatchObject({
+        id: expect.any(String),
+        roomType: expect.any(String),
+        roomNumber: expect.any(Number),
+        betsNumber: expect.any(Number),
+        isAvailable: expect.any(Boolean),
+        state: expect.any(String),
+      });
     });
   });
 
@@ -134,11 +154,18 @@ describe('room.database.ts', () => {
     const { ok, room } = await mockRoomDataSource.getById(id);
 
     expect(ok).toBeTruthy();
-    expect(room).toBeInstanceOf(RoomEntity);
+    expect(room).toMatchObject({
+      id: expect.any(String),
+      roomType: expect.any(String),
+      roomNumber: expect.any(Number),
+      betsNumber: expect.any(Number),
+      isAvailable: expect.any(Boolean),
+      state: expect.any(String),
+    });
     expect(typeof mockRoomDataSource.getById).toBe('function');
     expect(mockRoomDataSource.getById(id)).resolves.toEqual({
       ok: true,
-      room: expect.any(RoomEntity),
+      room: expect.any(Object),
     });
   });
 
@@ -148,7 +175,14 @@ describe('room.database.ts', () => {
     const { ok, room } = await mockRoomDataSource.create(rest);
 
     expect(ok).toBeTruthy();
-    expect(room).toBeInstanceOf(RoomEntity);
+    expect(room).toMatchObject({
+      id: expect.any(String),
+      roomType: expect.any(String),
+      roomNumber: expect.any(Number),
+      betsNumber: expect.any(Number),
+      isAvailable: expect.any(Boolean),
+      state: expect.any(String),
+    });
     expect(typeof mockRoomDataSource.create).toBe('function');
     expect(mockRoomDataSource.create(rest)).resolves.toEqual({
       ok: true,

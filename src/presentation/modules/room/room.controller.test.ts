@@ -1,7 +1,6 @@
 import { Uuid } from '@src/adapters';
 import { CustomError } from '@domain/error';
-import { RoomFilter, RoomPagination } from '@domain/interfaces';
-import { RoomEntity } from '@domain/entities';
+import { RoomFilter, RoomPagination, IRoom } from '@domain/interfaces';
 import {
   PaginationDto,
   CreateRoomDto,
@@ -11,7 +10,7 @@ import {
 import { RoomController } from './';
 
 describe('room.controller.ts', () => {
-  const room1: RoomEntity = {
+  const room1: IRoom = {
     id: Uuid.v4(),
     roomType: 'normal',
     state: 'free',
