@@ -1,9 +1,8 @@
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos';
-import { IUserFilterDto, UserPagination } from '@domain/interfaces';
-import { UserEntity } from '@domain/entities';
+import { IUserFilterDto, UserPagination, IUser } from '@domain/interfaces';
 
 export abstract class UserDatasource {
-  abstract getById(id: string): Promise<{ ok: boolean; user: UserEntity }>;
+  abstract getById(id: string): Promise<{ ok: boolean; user: IUser }>;
 
   abstract getByParams(
     page: number,
@@ -21,7 +20,7 @@ export abstract class UserDatasource {
 
   abstract create(
     createUserDto: CreateUserDto
-  ): Promise<{ ok: boolean; user: UserEntity }>;
+  ): Promise<{ ok: boolean; user: IUser }>;
 
   abstract update(
     updateUserDto: UpdateUserDto

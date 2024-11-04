@@ -2,9 +2,8 @@ import { User } from '@prisma/client';
 
 import { CreateUserDto, FilterUserDto, UpdateUserDto } from '@domain/dtos';
 import { CustomError } from '@domain/error';
-import { IUserFilterDto, UserPagination } from '@domain/interfaces';
+import { IUserFilterDto, UserPagination, IUser } from '@domain/interfaces';
 import { UserDatasource } from '@domain/datasources';
-import { UserEntity } from '@domain/entities';
 
 import { LoggerService } from '@presentation/services';
 
@@ -25,14 +24,14 @@ export class UserDatasourceImpl extends UserDatasource {
     }
   }
 
-  private transformObject(entity: User): UserEntity {
-    return UserEntity.fromObject({
+  private transformObject(entity: User): IUser {
+    return {
       ...entity,
-      birdDate: entity.birdDate.toISOString(),
-    });
+      birdDate: entity.birdDate.toISOString().split('T').at(0) ?? '',
+    };
   }
 
-  async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
+  async getById(id: string): Promise<{ ok: boolean; user: IUser }> {
     try {
       const user = await prisma.user.findUnique({ where: { id } });
 
@@ -129,7 +128,7 @@ export class UserDatasourceImpl extends UserDatasource {
 
   async create(
     createUserDto: CreateUserDto
-  ): Promise<{ ok: boolean; user: UserEntity }> {
+  ): Promise<{ ok: boolean; user: IUser }> {
     try {
       const user = await prisma.user.findUnique({
         where: { username: createUserDto.username },
