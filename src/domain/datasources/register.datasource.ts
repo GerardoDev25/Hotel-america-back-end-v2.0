@@ -1,5 +1,9 @@
-import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
-import { GuestEntity, RegisterEntity } from '@domain/entities';
+import {
+  IGuest,
+  IRegister,
+  RegisterCheckOut,
+  RegisterPagination,
+} from '@domain/interfaces';
 import {
   CreateGuestDto,
   CreateRegisterDto,
@@ -10,9 +14,7 @@ import {
 export abstract class RegisterDatasource {
   abstract getAll(page: number, limit: number): Promise<RegisterPagination>;
 
-  abstract getById(
-    id: string
-  ): Promise<{ ok: boolean; register: RegisterEntity }>;
+  abstract getById(id: string): Promise<{ ok: boolean; register: IRegister }>;
 
   abstract getByParams(
     page: number,
@@ -22,12 +24,12 @@ export abstract class RegisterDatasource {
 
   abstract create(
     createRegisterDto: CreateRegisterDto
-  ): Promise<{ ok: boolean; register: RegisterEntity }>;
+  ): Promise<{ ok: boolean; register: IRegister }>;
 
   abstract checkIn(data: {
     registerDto: CreateRegisterDto;
     guestDtos: CreateGuestDto[];
-  }): Promise<{ ok: boolean; register: RegisterEntity; guests: GuestEntity[] }>;
+  }): Promise<{ ok: boolean; register: IRegister; guests: IGuest[] }>;
 
   abstract checkOut(
     id: string

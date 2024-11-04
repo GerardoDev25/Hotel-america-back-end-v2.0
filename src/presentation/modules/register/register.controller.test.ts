@@ -1,6 +1,7 @@
 import { CreateRegisterDto, UpdateRegisterDto } from '@domain/dtos';
-import { GuestEntity, RegisterEntity } from '@domain/entities';
 import {
+  IGuest,
+  IRegister,
   RegisterCheckOut,
   RegisterFilter,
   RegisterPagination,
@@ -12,7 +13,7 @@ import { citiesList } from '@src/data/seed';
 import { RegisterController } from './';
 
 describe('register.controller.ts', () => {
-  const registerEntity: RegisterEntity = {
+  const mockRegister: IRegister = {
     id: Uuid.v4(),
     checkIn: Generator.randomDate(),
     guestsNumber: 1,
@@ -35,7 +36,7 @@ describe('register.controller.ts', () => {
     dateOfBirth: new Date().toISOString().split('T')[0],
   };
 
-  const guestEntity = new GuestEntity({
+  const mockGuest: IGuest = {
     id: guestDto.di,
     di: guestDto.di,
     checkIn: new Date().toISOString(),
@@ -47,11 +48,11 @@ describe('register.controller.ts', () => {
     phone: guestDto.phone,
     roomNumber: guestDto.roomNumber,
     countryId: guestDto.countryId,
-    registerId: registerEntity.id,
-  });
+    registerId: mockRegister.id,
+  };
 
   const pagination: RegisterPagination = {
-    registers: [registerEntity],
+    registers: [mockRegister],
     total: 0,
     page: 0,
     limit: 0,
@@ -152,36 +153,36 @@ describe('register.controller.ts', () => {
   });
 
   it('should return a register by id (getById)', async () => {
-    const id = registerEntity.id;
+    const id = mockRegister.id;
     const req = { params: { id } } as any;
     const res = { json: jest.fn() } as any;
 
     const mockService = {
-      getById: jest.fn().mockResolvedValue(registerEntity),
+      getById: jest.fn().mockResolvedValue(mockRegister),
     } as any;
     const registerController = new RegisterController(mockService);
 
     await registerController.getById(req, res);
 
     expect(mockService.getById).toHaveBeenCalledWith(id);
-    expect(res.json).toHaveBeenCalledWith(registerEntity);
+    expect(res.json).toHaveBeenCalledWith(mockRegister);
   });
 
   it('should create a register (create)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...body } = registerEntity;
+    const { id, ...body } = mockRegister;
 
     const req = { body } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = {
-      create: jest.fn().mockResolvedValue(registerEntity),
+      create: jest.fn().mockResolvedValue(mockRegister),
     } as any;
     const registerController = new RegisterController(mockService);
 
     await registerController.create(req, res);
 
-    expect(res.json).toHaveBeenCalledWith(registerEntity);
+    expect(res.json).toHaveBeenCalledWith(mockRegister);
     expect(mockService.create).toHaveBeenCalledWith(
       expect.any(CreateRegisterDto)
     );
@@ -206,7 +207,7 @@ describe('register.controller.ts', () => {
 
   it('should make checkIn successfully (checkIn)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...register } = registerEntity;
+    const { id, ...register } = mockRegister;
     const body = { userId: register.userId, register, guests: [guestDto] };
 
     const req = { body } as any;
@@ -214,8 +215,8 @@ describe('register.controller.ts', () => {
 
     const returnData = {
       ok: true,
-      register: registerEntity,
-      guests: [guestEntity],
+      register: mockRegister,
+      guests: [mockGuest],
     };
     const mockService = {
       checkIn: jest.fn().mockResolvedValue(returnData),
@@ -252,7 +253,7 @@ describe('register.controller.ts', () => {
 
   it('should get error if register object is not valid (checkIn)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...register } = registerEntity;
+    const { id, ...register } = mockRegister;
     const body = {
       userId: register.userId,
       register: { ...register, discount: true },
@@ -264,8 +265,8 @@ describe('register.controller.ts', () => {
 
     const returnData = {
       ok: true,
-      register: registerEntity,
-      guests: [guestEntity],
+      register: mockRegister,
+      guests: [mockGuest],
     };
     const mockService = {
       checkIn: jest.fn().mockResolvedValue(returnData),
@@ -283,7 +284,7 @@ describe('register.controller.ts', () => {
 
   it('should get error if guests array is not valid (checkIn)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...register } = registerEntity;
+    const { id, ...register } = mockRegister;
     const body = {
       userId: register.userId,
       register,
@@ -295,8 +296,8 @@ describe('register.controller.ts', () => {
 
     const returnData = {
       ok: true,
-      register: registerEntity,
-      guests: [guestEntity],
+      register: mockRegister,
+      guests: [mockGuest],
     };
     const mockService = {
       checkIn: jest.fn().mockResolvedValue(returnData),
@@ -313,7 +314,7 @@ describe('register.controller.ts', () => {
   });
 
   it('should call checkOut function service (checkOut)', async () => {
-    const req = { params: { id: registerEntity.id } } as any;
+    const req = { params: { id: mockRegister.id } } as any;
     const res = { json: jest.fn() } as any;
 
     const registerCheckOutDetail: RegisterCheckOut = {
@@ -339,12 +340,12 @@ describe('register.controller.ts', () => {
 
     await registerController.checkOut(req, res);
 
-    expect(mockService.checkOut).toHaveBeenCalledWith(registerEntity.id);
+    expect(mockService.checkOut).toHaveBeenCalledWith(mockRegister.id);
     expect(res.json).toHaveBeenCalledWith({ ok: true, registerCheckOutDetail });
   });
 
   it('should update a register (update)', async () => {
-    const req = { body: { id: registerEntity.id } } as any;
+    const req = { body: { id: mockRegister.id } } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = {
@@ -378,7 +379,7 @@ describe('register.controller.ts', () => {
   });
 
   it('should call delete function service (delete)', async () => {
-    const req = { params: { id: registerEntity.id } } as any;
+    const req = { params: { id: mockRegister.id } } as any;
     const res = { json: jest.fn() } as any;
 
     const mockService = {
@@ -388,7 +389,7 @@ describe('register.controller.ts', () => {
 
     await registerController.delete(req, res);
 
-    expect(mockService.delete).toHaveBeenCalledWith(registerEntity.id);
+    expect(mockService.delete).toHaveBeenCalledWith(mockRegister.id);
     expect(res.json).toHaveBeenCalledWith({ ok: true, message: '' });
   });
 });

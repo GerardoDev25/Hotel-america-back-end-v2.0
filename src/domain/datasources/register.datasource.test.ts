@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { variables } from '@domain/variables';
-import { GuestEntity, RegisterEntity } from '@domain/entities/';
-import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
+import {
+  IGuest,
+  IRegister,
+  RegisterCheckOut,
+  RegisterPagination,
+} from '@domain/interfaces';
 import {
   CreateGuestDto,
   CreateRegisterDto,
@@ -19,7 +23,7 @@ describe('register.datasource.ts', () => {
   const page = 2;
   const limit = 10;
 
-  const mockRegister = new RegisterEntity({
+  const mockRegister: IRegister = {
     id: Uuid.v4(),
     checkIn: Generator.randomDate(),
     checkOut: Generator.randomDate(),
@@ -28,7 +32,7 @@ describe('register.datasource.ts', () => {
     price: 0,
     userId: Uuid.v4(),
     roomId: Uuid.v4(),
-  });
+  };
 
   const registerCheckOut: RegisterCheckOut = {
     id: Uuid.v4(),
@@ -44,7 +48,7 @@ describe('register.datasource.ts', () => {
     payments: [],
   };
 
-  const mockRegister2 = new RegisterEntity({
+  const mockRegister2: IRegister = {
     id: Uuid.v4(),
     checkIn: Generator.randomDate(),
     guestsNumber: 0,
@@ -52,11 +56,11 @@ describe('register.datasource.ts', () => {
     price: 0,
     userId: Uuid.v4(),
     roomId: Uuid.v4(),
-  });
+  };
 
   const fullName = Generator.randomName();
 
-  const mockGuest = new GuestEntity({
+  const mockGuest: IGuest = {
     id: Uuid.v4(),
     di: Generator.randomIdentityNumber(),
     checkIn: Generator.randomDate(),
@@ -68,7 +72,7 @@ describe('register.datasource.ts', () => {
     roomNumber: variables.ROOM_NUMBER_MIN_VALUE,
     countryId: 'BO',
     registerId: Uuid.v4(),
-  });
+  };
 
   const pagination: RegisterPagination = {
     registers: [mockRegister, mockRegister2],
@@ -92,15 +96,13 @@ describe('register.datasource.ts', () => {
       return pagination;
     }
 
-    async getById(
-      id: string
-    ): Promise<{ ok: boolean; register: RegisterEntity }> {
+    async getById(id: string): Promise<{ ok: boolean; register: IRegister }> {
       return { ok: true, register: mockRegister };
     }
 
     async create(
       createRegisterDto: CreateRegisterDto
-    ): Promise<{ ok: boolean; register: RegisterEntity }> {
+    ): Promise<{ ok: boolean; register: IRegister }> {
       return { ok: true, register: mockRegister };
     }
 
@@ -109,8 +111,8 @@ describe('register.datasource.ts', () => {
       guestDtos: CreateGuestDto[];
     }): Promise<{
       ok: boolean;
-      register: RegisterEntity;
-      guests: GuestEntity[];
+      register: IRegister;
+      guests: IGuest[];
     }> {
       return { ok: true, register: mockRegister, guests: [mockGuest] };
     }
@@ -141,7 +143,15 @@ describe('register.datasource.ts', () => {
     expect(registers).toBeInstanceOf(Array);
     expect(registers).toHaveLength(2);
     registers.forEach((register) => {
-      expect(register).toBeInstanceOf(RegisterEntity);
+      expect(register).toMatchObject({
+        id: expect.any(String),
+        checkIn: expect.any(String),
+        guestsNumber: expect.any(Number),
+        discount: expect.any(Number),
+        price: expect.any(Number),
+        userId: expect.any(String),
+        roomId: expect.any(String),
+      });
     });
   });
 
@@ -158,7 +168,15 @@ describe('register.datasource.ts', () => {
     expect(registers).toBeInstanceOf(Array);
     expect(registers).toHaveLength(2);
     registers.forEach((register) => {
-      expect(register).toBeInstanceOf(RegisterEntity);
+      expect(register).toMatchObject({
+        id: expect.any(String),
+        checkIn: expect.any(String),
+        guestsNumber: expect.any(Number),
+        discount: expect.any(Number),
+        price: expect.any(Number),
+        userId: expect.any(String),
+        roomId: expect.any(String),
+      });
     });
   });
 
@@ -168,7 +186,16 @@ describe('register.datasource.ts', () => {
 
     expect(typeof mockRegisterDataSource.getById).toBe('function');
     expect(ok).toBeTruthy();
-    expect(register).toBeInstanceOf(RegisterEntity);
+    expect(register).toMatchObject({
+      id: expect.any(String),
+      checkIn: expect.any(String),
+      checkOut: expect.any(String),
+      guestsNumber: expect.any(Number),
+      discount: expect.any(Number),
+      price: expect.any(Number),
+      userId: expect.any(String),
+      roomId: expect.any(String),
+    });
   });
 
   it('should get default behavior (create)', async () => {
@@ -180,7 +207,16 @@ describe('register.datasource.ts', () => {
 
     expect(typeof mockRegisterDataSource.create).toBe('function');
     expect(ok).toBeTruthy();
-    expect(register).toBeInstanceOf(RegisterEntity);
+    expect(register).toMatchObject({
+      id: expect.any(String),
+      checkIn: expect.any(String),
+      checkOut: expect.any(String),
+      guestsNumber: expect.any(Number),
+      discount: expect.any(Number),
+      price: expect.any(Number),
+      userId: expect.any(String),
+      roomId: expect.any(String),
+    });
     expect(mockRegisterDataSource.create(newRegister)).resolves.toEqual({
       ok: true,
       register: mockRegister,
@@ -213,8 +249,29 @@ describe('register.datasource.ts', () => {
 
     expect(typeof mockRegisterDataSource.checkIn).toBe('function');
     expect(ok).toBeTruthy();
-    expect(register).toBeInstanceOf(RegisterEntity);
-    expect(guests[0]).toBeInstanceOf(GuestEntity);
+    expect(register).toMatchObject({
+      id: expect.any(String),
+      checkIn: expect.any(String),
+      checkOut: expect.any(String),
+      guestsNumber: expect.any(Number),
+      discount: expect.any(Number),
+      price: expect.any(Number),
+      userId: expect.any(String),
+      roomId: expect.any(String),
+    });
+    expect(guests[0]).toMatchObject({
+      id: expect.any(String),
+      di: expect.any(String),
+      checkIn: expect.any(String),
+      dateOfBirth: expect.any(String),
+      city: expect.any(String),
+      name: expect.any(String),
+      lastName: expect.any(String),
+      phone: expect.any(String),
+      roomNumber: expect.any(Number),
+      countryId: expect.any(String),
+      registerId: expect.any(String),
+    });
     expect(
       mockRegisterDataSource.checkIn({
         registerDto,

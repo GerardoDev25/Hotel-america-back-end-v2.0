@@ -1,8 +1,10 @@
 import { Guest, Register } from '@prisma/client';
 import { CustomError } from '@domain/error';
 import { RegisterDatasource } from '@domain/datasources';
-import { GuestEntity, RegisterEntity } from '@domain/entities';
+// import { IGuest, IRegister } from '@domain/entities';
 import {
+  IGuest,
+  IRegister,
   RegisterPagination,
   RegisterCheckOut,
   RegisterCheckOutDB,
@@ -34,12 +36,12 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     }
   }
 
-  private transformObject(entity: Register): RegisterEntity {
-    return RegisterEntity.fromObject({
+  private transformObject(entity: Register): IRegister {
+    return {
       ...entity,
-      checkIn: entity.checkIn.toISOString(),
-      checkOut: entity.checkOut?.toISOString() ?? undefined,
-    });
+      checkIn: entity.checkIn.toISOString().split('T').at(0) ?? '',
+      checkOut: entity.checkOut?.toISOString().split('T').at(0) ?? undefined,
+    };
   }
 
   private checkOutObject(checkOutDB: RegisterCheckOutDB): RegisterCheckOut {
@@ -75,15 +77,13 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     return checkOutDetail;
   }
 
-  private transformGuestObject(entities: Guest[]): GuestEntity[] {
-    const guestEntities = entities.map((guest) =>
-      GuestEntity.fromObject({
-        ...guest,
-        checkIn: guest.checkIn.toISOString(),
-        dateOfBirth: guest.dateOfBirth.toISOString(),
-        checkOut: guest.checkOut?.toISOString() ?? undefined,
-      })
-    );
+  private transformGuestObject(entities: Guest[]): IGuest[] {
+    const guestEntities = entities.map((guest) => ({
+      ...guest,
+      dateOfBirth: guest.dateOfBirth.toISOString(),
+      checkIn: guest.checkIn.toISOString().split('T').at(0) ?? '',
+      checkOut: guest.checkOut?.toISOString().split('T').at(0) ?? undefined,
+    }));
 
     return guestEntities;
   }
@@ -280,9 +280,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     }
   }
 
-  async getById(
-    id: string
-  ): Promise<{ ok: boolean; register: RegisterEntity }> {
+  async getById(id: string): Promise<{ ok: boolean; register: IRegister }> {
     try {
       const register = await prisma.register.findUnique({ where: { id } });
 
@@ -298,7 +296,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
 
   async create(
     createRegisterDto: CreateRegisterDto
-  ): Promise<{ ok: boolean; register: RegisterEntity }> {
+  ): Promise<{ ok: boolean; register: IRegister }> {
     const { guestsNumber, ...rest } = createRegisterDto;
     if (!guestsNumber) {
       throw CustomError.badRequest('guestsNumber property is required');
@@ -320,8 +318,8 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     guestDtos: CreateGuestDto[];
   }): Promise<{
     ok: boolean;
-    register: RegisterEntity;
-    guests: GuestEntity[];
+    register: IRegister;
+    guests: IGuest[];
   }> {
     const registerDto = cleanObject(data.registerDto) as CreateRegisterDto;
     const guestDtos = data.guestDtos.map((guest) =>
