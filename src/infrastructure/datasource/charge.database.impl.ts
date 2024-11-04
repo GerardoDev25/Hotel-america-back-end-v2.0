@@ -1,8 +1,11 @@
 import { Charge } from '@prisma/client';
 import { ChargeDatasource } from '@domain/datasources';
 import { CustomError } from '@domain/error';
-import { ChargeEntity } from '@domain/entities';
-import { ChargePagination, IChargeFilterDto } from '@domain/interfaces';
+import {
+  ICharge,
+  ChargePagination,
+  IChargeFilterDto,
+} from '@domain/interfaces';
 import {
   CreateChargeDto,
   UpdateChargeDto,
@@ -27,14 +30,14 @@ export class ChargeDatasourceImpl extends ChargeDatasource {
     }
   }
 
-  private transformObject(entity: Charge): ChargeEntity {
-    return ChargeEntity.fromObject({
+  private transformObject(entity: Charge): ICharge {
+    return {
       ...entity,
       createdAt: entity.createdAt.toISOString(),
-    });
+    };
   }
 
-  async getById(id: string): Promise<{ ok: boolean; charge: ChargeEntity }> {
+  async getById(id: string): Promise<{ ok: boolean; charge: ICharge }> {
     try {
       const charge = await prisma.charge.findUnique({ where: { id } });
 
@@ -108,7 +111,7 @@ export class ChargeDatasourceImpl extends ChargeDatasource {
 
   async create(
     createChargeDto: CreateChargeDto
-  ): Promise<{ ok: boolean; charge: ChargeEntity }> {
+  ): Promise<{ ok: boolean; charge: ICharge }> {
     try {
       const register = await prisma.register.findUnique({
         where: { id: createChargeDto.registerId },

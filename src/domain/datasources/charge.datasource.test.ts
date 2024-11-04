@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ChargeEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
-import { ChargePagination } from '@domain/interfaces';
+import { ChargePagination, ICharge } from '@domain/interfaces';
 import {
   CreateChargeDto,
   UpdateChargeDto,
@@ -14,13 +13,13 @@ describe('charge.datasource.ts', () => {
   const page = 2;
   const limit = 10;
 
-  const mockCharge = new ChargeEntity({
+  const mockCharge: ICharge = {
     id: Uuid.v4(),
     amount: 100,
     createdAt: Generator.randomDate(),
     type: 'cafeteria',
     registerId: Uuid.v4(),
-  });
+  };
 
   const pagination: ChargePagination = {
     charges: [mockCharge],
@@ -32,7 +31,7 @@ describe('charge.datasource.ts', () => {
   };
 
   class MockChargeDatasource extends ChargeDatasource {
-    async getById(id: string): Promise<{ ok: boolean; charge: ChargeEntity }> {
+    async getById(id: string): Promise<{ ok: boolean; charge: ICharge }> {
       return { ok: true, charge: mockCharge };
     }
 
@@ -50,7 +49,7 @@ describe('charge.datasource.ts', () => {
 
     async create(
       createChargeDto: CreateChargeDto
-    ): Promise<{ ok: boolean; charge: ChargeEntity }> {
+    ): Promise<{ ok: boolean; charge: ICharge }> {
       return { ok: true, charge: mockCharge };
     }
 

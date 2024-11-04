@@ -1,5 +1,4 @@
-import { ChargePagination } from '@domain/interfaces';
-import { ChargeEntity } from '@domain/entities';
+import { ChargePagination, ICharge } from '@domain/interfaces';
 import {
   CreateChargeDto,
   UpdateChargeDto,
@@ -7,7 +6,7 @@ import {
 } from '@domain/dtos';
 
 export abstract class ChargeDatasource {
-  abstract getById(id: string): Promise<{ ok: boolean; charge: ChargeEntity }>;
+  abstract getById(id: string): Promise<{ ok: boolean; charge: ICharge }>;
 
   abstract getByParams(
     page: number,
@@ -19,7 +18,7 @@ export abstract class ChargeDatasource {
 
   abstract create(
     createChargeDto: CreateChargeDto
-  ): Promise<{ ok: boolean; charge: ChargeEntity }>;
+  ): Promise<{ ok: boolean; charge: ICharge }>;
 
   abstract update(
     updateChargeDto: UpdateChargeDto
