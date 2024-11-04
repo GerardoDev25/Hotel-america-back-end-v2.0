@@ -1,9 +1,12 @@
 import { Payment } from '@prisma/client';
 import { prisma } from '@src/data/postgres';
 import { CustomError } from '@domain/error';
-import { PaymentEntity } from '@domain/entities';
 import { cleanObject, HandleDate, pagination } from '@src/utils';
-import { IPaymentFilterDto, PaymentPagination } from '@domain/interfaces';
+import {
+  IPayment,
+  IPaymentFilterDto,
+  PaymentPagination,
+} from '@domain/interfaces';
 import { LoggerService } from '@presentation/services';
 import { PaymentDatasource } from '@domain/datasources';
 import {
@@ -26,14 +29,11 @@ export class PaymentDatasourceImpl extends PaymentDatasource {
     }
   }
 
-  private transformObject(entity: Payment): PaymentEntity {
-    return PaymentEntity.fromObject({
-      ...entity,
-      paidAt: entity.paidAt.toISOString(),
-    });
+  private transformObject(entity: Payment): IPayment {
+    return { ...entity, paidAt: entity.paidAt.toISOString() };
   }
 
-  async getById(id: string): Promise<{ ok: boolean; payment: PaymentEntity }> {
+  async getById(id: string): Promise<{ ok: boolean; payment: IPayment }> {
     try {
       const payment = await prisma.payment.findUnique({ where: { id } });
 
@@ -110,7 +110,7 @@ export class PaymentDatasourceImpl extends PaymentDatasource {
 
   async create(
     createPaymentDto: CreatePaymentDto
-  ): Promise<{ ok: boolean; payment: PaymentEntity }> {
+  ): Promise<{ ok: boolean; payment: IPayment }> {
     const { registerId, ...rest } = createPaymentDto;
 
     try {

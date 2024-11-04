@@ -4,23 +4,22 @@ import {
   FilterPaymentDto,
   UpdatePaymentDto,
 } from '@domain/dtos';
-import { PaymentEntity } from '@domain/entities';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
-import { PaymentPagination } from '@domain/interfaces';
+import { PaymentPagination, IPayment } from '@domain/interfaces';
 import { PaymentDatasource } from '.';
 
 describe('payment.datasource.ts', () => {
   const page = 2;
   const limit = 10;
 
-  const mockPayment = new PaymentEntity({
+  const mockPayment: IPayment = {
     id: Uuid.v4(),
     amount: 100,
     paidAt: Generator.randomDate(),
     type: 'bank',
     registerId: Uuid.v4(),
-  });
+  };
 
   const pagination: PaymentPagination = {
     payments: [mockPayment],
@@ -32,9 +31,7 @@ describe('payment.datasource.ts', () => {
   };
 
   class MockPaymentDatasource extends PaymentDatasource {
-    async getById(
-      id: string
-    ): Promise<{ ok: boolean; payment: PaymentEntity }> {
+    async getById(id: string): Promise<{ ok: boolean; payment: IPayment }> {
       return { ok: true, payment: mockPayment };
     }
 
@@ -52,7 +49,7 @@ describe('payment.datasource.ts', () => {
 
     async create(
       createPaymentDto: CreatePaymentDto
-    ): Promise<{ ok: boolean; payment: PaymentEntity }> {
+    ): Promise<{ ok: boolean; payment: IPayment }> {
       return { ok: true, payment: mockPayment };
     }
 

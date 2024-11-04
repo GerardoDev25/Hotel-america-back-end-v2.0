@@ -1,12 +1,11 @@
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
-import { ChargeEntity } from '@domain/entities';
-import { ChargePagination } from '@domain/interfaces';
+import { ChargePagination, ICharge } from '@domain/interfaces';
 import { CreateChargeDto, UpdateChargeDto } from '@domain/dtos';
 import { ChargeController } from '.';
 
 describe('charge.controller.ts', () => {
-  const chargeEntity: ChargeEntity = {
+  const mockCharge: ICharge = {
     id: Uuid.v4(),
     amount: 10,
     createdAt: Generator.randomDate(),
@@ -15,7 +14,7 @@ describe('charge.controller.ts', () => {
   };
 
   const pagination: ChargePagination = {
-    charges: [chargeEntity],
+    charges: [mockCharge],
     total: 0,
     page: 0,
     limit: 0,
@@ -89,36 +88,36 @@ describe('charge.controller.ts', () => {
   });
 
   it('should return a register by id (getById)', async () => {
-    const id = chargeEntity.id;
+    const id = mockCharge.id;
     const req = { params: { id } } as any;
     const res = { json: jest.fn() } as any;
 
     const mockService = {
-      getById: jest.fn().mockResolvedValue(chargeEntity),
+      getById: jest.fn().mockResolvedValue(mockCharge),
     } as any;
     const chargeController = new ChargeController(mockService);
 
     await chargeController.getById(req, res);
 
     expect(mockService.getById).toHaveBeenCalledWith(id);
-    expect(res.json).toHaveBeenCalledWith(chargeEntity);
+    expect(res.json).toHaveBeenCalledWith(mockCharge);
   });
 
   it('should create a charge (create)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...body } = chargeEntity;
+    const { id, ...body } = mockCharge;
 
     const req = { body } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = {
-      create: jest.fn().mockResolvedValue(chargeEntity),
+      create: jest.fn().mockResolvedValue(mockCharge),
     } as any;
     const chargeController = new ChargeController(mockService);
 
     await chargeController.create(req, res);
 
-    expect(res.json).toHaveBeenCalledWith(chargeEntity);
+    expect(res.json).toHaveBeenCalledWith(mockCharge);
     expect(mockService.create).toHaveBeenCalledWith(
       expect.any(CreateChargeDto)
     );
@@ -142,7 +141,7 @@ describe('charge.controller.ts', () => {
   });
 
   it('should update a charge (update)', async () => {
-    const req = { body: { id: chargeEntity.id } } as any;
+    const req = { body: { id: mockCharge.id } } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = {
@@ -176,7 +175,7 @@ describe('charge.controller.ts', () => {
   });
 
   it('should call delete function service (delete)', async () => {
-    const req = { params: { id: chargeEntity.id } } as any;
+    const req = { params: { id: mockCharge.id } } as any;
     const res = { json: jest.fn() } as any;
 
     const mockService = {
@@ -186,7 +185,7 @@ describe('charge.controller.ts', () => {
 
     await chargeController.delete(req, res);
 
-    expect(mockService.delete).toHaveBeenCalledWith(chargeEntity.id);
+    expect(mockService.delete).toHaveBeenCalledWith(mockCharge.id);
     expect(res.json).toHaveBeenCalledWith({ ok: true, message: '' });
   });
 });

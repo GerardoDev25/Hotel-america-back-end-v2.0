@@ -1,5 +1,4 @@
-import { PaymentEntity } from '@domain/entities';
-import { PaymentPagination } from '@domain/interfaces';
+import { PaymentPagination, IPayment } from '@domain/interfaces';
 import {
   CreatePaymentDto,
   FilterPaymentDto,
@@ -7,9 +6,7 @@ import {
 } from '@domain/dtos';
 
 export abstract class PaymentDatasource {
-  abstract getById(
-    id: string
-  ): Promise<{ ok: boolean; payment: PaymentEntity }>;
+  abstract getById(id: string): Promise<{ ok: boolean; payment: IPayment }>;
 
   abstract getByParams(
     page: number,
@@ -21,7 +18,7 @@ export abstract class PaymentDatasource {
 
   abstract create(
     createPaymentDto: CreatePaymentDto
-  ): Promise<{ ok: boolean; payment: PaymentEntity }>;
+  ): Promise<{ ok: boolean; payment: IPayment }>;
 
   abstract update(
     updatePaymentDto: UpdatePaymentDto

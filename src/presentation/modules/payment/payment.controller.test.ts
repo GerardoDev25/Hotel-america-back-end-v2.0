@@ -1,12 +1,11 @@
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
-import { PaymentEntity } from '@domain/entities';
-import { PaymentPagination } from '@domain/interfaces';
+import { PaymentPagination, IPayment } from '@domain/interfaces';
 import { CreatePaymentDto, UpdatePaymentDto } from '@domain/dtos';
 import { PaymentController } from '.';
 
 describe('payment.controller.ts', () => {
-  const paymentEntity: PaymentEntity = {
+  const mockPayment: IPayment = {
     id: Uuid.v4(),
     amount: 10,
     paidAt: Generator.randomDate(),
@@ -15,7 +14,7 @@ describe('payment.controller.ts', () => {
   };
 
   const pagination: PaymentPagination = {
-    payments: [paymentEntity],
+    payments: [mockPayment],
     total: 0,
     page: 0,
     limit: 0,
@@ -89,36 +88,36 @@ describe('payment.controller.ts', () => {
   });
 
   it('should return a register by id (getById)', async () => {
-    const id = paymentEntity.id;
+    const id = mockPayment.id;
     const req = { params: { id } } as any;
     const res = { json: jest.fn() } as any;
 
     const mockService = {
-      getById: jest.fn().mockResolvedValue(paymentEntity),
+      getById: jest.fn().mockResolvedValue(mockPayment),
     } as any;
     const paymentController = new PaymentController(mockService);
 
     await paymentController.getById(req, res);
 
     expect(mockService.getById).toHaveBeenCalledWith(id);
-    expect(res.json).toHaveBeenCalledWith(paymentEntity);
+    expect(res.json).toHaveBeenCalledWith(mockPayment);
   });
 
   it('should create a payment (create)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...body } = paymentEntity;
+    const { id, ...body } = mockPayment;
 
     const req = { body } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = {
-      create: jest.fn().mockResolvedValue(paymentEntity),
+      create: jest.fn().mockResolvedValue(mockPayment),
     } as any;
     const paymentController = new PaymentController(mockService);
 
     await paymentController.create(req, res);
 
-    expect(res.json).toHaveBeenCalledWith(paymentEntity);
+    expect(res.json).toHaveBeenCalledWith(mockPayment);
     expect(mockService.create).toHaveBeenCalledWith(
       expect.any(CreatePaymentDto)
     );
@@ -142,7 +141,7 @@ describe('payment.controller.ts', () => {
   });
 
   it('should update a payment (update)', async () => {
-    const req = { body: { id: paymentEntity.id } } as any;
+    const req = { body: { id: mockPayment.id } } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = {
@@ -176,7 +175,7 @@ describe('payment.controller.ts', () => {
   });
 
   it('should call delete function service (delete)', async () => {
-    const req = { params: { id: paymentEntity.id } } as any;
+    const req = { params: { id: mockPayment.id } } as any;
     const res = { json: jest.fn() } as any;
 
     const mockService = {
@@ -186,7 +185,7 @@ describe('payment.controller.ts', () => {
 
     await paymentController.delete(req, res);
 
-    expect(mockService.delete).toHaveBeenCalledWith(paymentEntity.id);
+    expect(mockService.delete).toHaveBeenCalledWith(mockPayment.id);
     expect(res.json).toHaveBeenCalledWith({ ok: true, message: '' });
   });
 });
