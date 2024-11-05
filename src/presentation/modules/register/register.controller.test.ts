@@ -168,43 +168,6 @@ describe('register.controller.ts', () => {
     expect(res.json).toHaveBeenCalledWith(mockRegister);
   });
 
-  it('should create a register (create)', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...body } = mockRegister;
-
-    const req = { body } as any;
-    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
-
-    const mockService = {
-      create: jest.fn().mockResolvedValue(mockRegister),
-    } as any;
-    const registerController = new RegisterController(mockService);
-
-    await registerController.create(req, res);
-
-    expect(res.json).toHaveBeenCalledWith(mockRegister);
-    expect(mockService.create).toHaveBeenCalledWith(
-      expect.any(CreateRegisterDto)
-    );
-  });
-
-  it('should throw error if not well create (create)', async () => {
-    const req = { body: {} } as any;
-    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
-
-    const mockService = { create: jest.fn() } as any;
-    const registerController = new RegisterController(mockService);
-
-    await registerController.create(req, res);
-
-    expect(mockService.create).not.toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      ok: false,
-      errors: expect.any(Array),
-    });
-  });
-
   it('should make checkIn successfully (checkIn)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...register } = mockRegister;

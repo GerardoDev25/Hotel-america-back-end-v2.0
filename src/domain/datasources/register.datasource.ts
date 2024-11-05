@@ -22,10 +22,6 @@ export abstract class RegisterDatasource {
     searchParam: FilterRegisterDto
   ): Promise<RegisterPagination>;
 
-  abstract create(
-    createRegisterDto: CreateRegisterDto
-  ): Promise<{ ok: boolean; register: IRegister }>;
-
   abstract checkIn(data: {
     registerDto: CreateRegisterDto;
     guestDtos: CreateGuestDto[];

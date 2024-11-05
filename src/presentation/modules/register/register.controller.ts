@@ -39,7 +39,6 @@ export class RegisterController {
     if (reqErrors.length > 0) return [reqErrors, undefined];
 
     // * create registerDto
-
     const [registerErrors, registerDto] = CreateRegisterDto.create({
       ...req.body.register,
       userId: req.body.userId,
@@ -103,19 +102,6 @@ export class RegisterController {
     this.registerService
       .getById(req.params.id)
       .then((data) => res.json(data))
-      .catch((error) => this.handleError(res, error));
-  };
-
-  create = async (req: Request, res: Response) => {
-    const [errors, createRegisterDto] = CreateRegisterDto.create(req.body);
-
-    if (errors) {
-      return res.status(400).json({ ok: false, errors });
-    }
-
-    this.registerService
-      .create(createRegisterDto!)
-      .then((data) => res.status(201).json(data))
       .catch((error) => this.handleError(res, error));
   };
 

@@ -73,7 +73,6 @@ describe('register.service.ts', () => {
     getAll: jest.fn().mockResolvedValue(pagination),
     getById: jest.fn().mockResolvedValue({ ok: true, register }),
     getByParams: jest.fn().mockResolvedValue(pagination),
-    create: jest.fn().mockResolvedValue({ ok: true, register }),
     update: jest.fn().mockResolvedValue(resolveData),
     delete: jest.fn().mockResolvedValue(resolveData),
     checkOut: jest.fn().mockResolvedValue({ ok: true, registerCheckOutDetail }),
@@ -114,90 +113,6 @@ describe('register.service.ts', () => {
     await registerService.getById(id);
 
     expect(mockRegisterDatasource.getById).toHaveBeenCalledWith(id);
-  });
-
-  it('should have been call with parameters (create)', async () => {
-    const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
-
-    const mockRegisterDatasource = {
-      getByParams: jest
-        .fn()
-        .mockResolvedValue({ ...pagination, registers: [] }),
-      create: jest.fn().mockResolvedValue({ ok: true, register }),
-    } as any;
-
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
-
-    await registerService.create(registerDto);
-
-    expect(mockRegisterDatasource.create).toHaveBeenCalledWith(registerDto);
-    expect(mockRoomDatasource.getById).toHaveBeenCalledWith(registerDto.roomId);
-    expect(mockRegisterDatasource.getByParams).toHaveBeenCalledWith(
-      page,
-      limit,
-      {
-        roomId: registerDto.roomId,
-      }
-    );
-  });
-
-  it('should throw error if room is not available (create)', async () => {
-    const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
-
-    const mockRegisterDatasource = {
-      getByParams: jest
-        .fn()
-        .mockResolvedValue({ ...pagination, registers: [] }),
-      create: jest.fn(),
-    } as any;
-
-    const mockRoomDatasource = {
-      getById: jest.fn().mockResolvedValue({ room: { isAvailable: false } }),
-    } as any;
-
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
-
-    try {
-      await registerService.create(registerDto);
-    } catch (error: any) {
-      expect(error).toBeInstanceOf(CustomError);
-      expect(error.message).toBe(
-        `room with id ${registerDto.roomId} is not available`
-      );
-      expect(mockRegisterDatasource.create).not.toHaveBeenCalled();
-    }
-  });
-
-  it('should throw error if register with roomId exist (create)', async () => {
-    const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
-
-    const mockRegisterDatasource = {
-      getByParams: jest
-        .fn()
-        .mockResolvedValue({ ...pagination, registers: [] }),
-      create: jest.fn(),
-    } as any;
-
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
-
-    try {
-      await registerService.create(registerDto);
-    } catch (error: any) {
-      expect(error).toBeInstanceOf(CustomError);
-      expect(error.message).toBe(
-        `room with id ${registerDto.roomId} is not available`
-      );
-      expect(mockRegisterDatasource.create).not.toHaveBeenCalled();
-    }
   });
 
   it('should have been call with parameters (checkIn)', async () => {
@@ -263,19 +178,6 @@ describe('register.service.ts', () => {
     }
   });
 
-  it('should have been call with parameters (checkOut)', async () => {
-    const id = Uuid.v4();
-
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
-
-    await registerService.checkOut(id);
-
-    expect(mockRegisterDatasource.checkOut).toHaveBeenCalledWith(id);
-  });
-
   it('should throw error if register with roomId exist (checkIn)', async () => {
     const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
     const guestDtos = [] as CreateGuestDto[];
@@ -299,6 +201,19 @@ describe('register.service.ts', () => {
       );
       expect(mockRegisterDatasource.checkIn).not.toHaveBeenCalled();
     }
+  });
+
+  it('should have been call with parameters (checkOut)', async () => {
+    const id = Uuid.v4();
+
+    const registerService = new RegisterService(
+      mockRegisterDatasource,
+      mockRoomDatasource
+    );
+
+    await registerService.checkOut(id);
+
+    expect(mockRegisterDatasource.checkOut).toHaveBeenCalledWith(id);
   });
 
   it('should have been call with parameters (update)', async () => {

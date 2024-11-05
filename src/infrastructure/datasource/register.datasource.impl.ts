@@ -1,7 +1,6 @@
 import { Guest, Register } from '@prisma/client';
 import { CustomError } from '@domain/error';
 import { RegisterDatasource } from '@domain/datasources';
-// import { IGuest, IRegister } from '@domain/entities';
 import {
   IGuest,
   IRegister,
@@ -289,25 +288,6 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       }
 
       return { ok: true, register: this.transformObject(register) };
-    } catch (error: any) {
-      throw this.handleError(error);
-    }
-  }
-
-  async create(
-    createRegisterDto: CreateRegisterDto
-  ): Promise<{ ok: boolean; register: IRegister }> {
-    const { guestsNumber, ...rest } = createRegisterDto;
-    if (!guestsNumber) {
-      throw CustomError.badRequest('guestsNumber property is required');
-    }
-
-    try {
-      const newRegister = await prisma.register.create({
-        data: { ...rest, guestsNumber },
-      });
-
-      return { ok: true, register: this.transformObject(newRegister) };
     } catch (error: any) {
       throw this.handleError(error);
     }

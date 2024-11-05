@@ -100,12 +100,6 @@ describe('register.datasource.ts', () => {
       return { ok: true, register: mockRegister };
     }
 
-    async create(
-      createRegisterDto: CreateRegisterDto
-    ): Promise<{ ok: boolean; register: IRegister }> {
-      return { ok: true, register: mockRegister };
-    }
-
     async checkIn(data: {
       registerDto: CreateRegisterDto;
       guestDtos: CreateGuestDto[];
@@ -195,31 +189,6 @@ describe('register.datasource.ts', () => {
       price: expect.any(Number),
       userId: expect.any(String),
       roomId: expect.any(String),
-    });
-  });
-
-  it('should get default behavior (create)', async () => {
-    const { id, ...rest } = mockRegister;
-    const checkOut = rest.checkOut ? new Date(rest.checkOut) : undefined;
-    const newRegister = { ...rest, checkOut };
-
-    const { ok, register } = await mockRegisterDataSource.create(newRegister);
-
-    expect(typeof mockRegisterDataSource.create).toBe('function');
-    expect(ok).toBeTruthy();
-    expect(register).toMatchObject({
-      id: expect.any(String),
-      checkIn: expect.any(String),
-      checkOut: expect.any(String),
-      guestsNumber: expect.any(Number),
-      discount: expect.any(Number),
-      price: expect.any(Number),
-      userId: expect.any(String),
-      roomId: expect.any(String),
-    });
-    expect(mockRegisterDataSource.create(newRegister)).resolves.toEqual({
-      ok: true,
-      register: mockRegister,
     });
   });
 

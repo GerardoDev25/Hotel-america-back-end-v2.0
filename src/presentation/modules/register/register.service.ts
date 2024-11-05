@@ -36,29 +36,28 @@ export class RegisterService {
     return this.registerDatasource.getById(id);
   }
 
-  create = async (createRegisterDto: CreateRegisterDto) => {
-    const page = 1;
-    const limit = 1;
+  //   const page = 1;
+  //   const limit = 1;
 
-    try {
-      const [{ room }, { registers }] = await Promise.all([
-        this.roomDatasource.getById(createRegisterDto.roomId),
-        this.registerDatasource.getByParams(page, limit, {
-          roomId: createRegisterDto.roomId,
-        }),
-      ]);
+  //   try {
+  //     const [{ room }, { registers }] = await Promise.all([
+  //       this.roomDatasource.getById(createRegisterDto.roomId),
+  //       this.registerDatasource.getByParams(page, limit, {
+  //         roomId: createRegisterDto.roomId,
+  //       }),
+  //     ]);
 
-      if (!room.isAvailable || registers[0]) {
-        throw CustomError.conflict(
-          `room with id ${createRegisterDto.roomId} is not available`
-        );
-      }
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  //     if (!room.isAvailable || registers[0]) {
+  //       throw CustomError.conflict(
+  //         `room with id ${createRegisterDto.roomId} is not available`
+  //       );
+  //     }
+  //   } catch (error) {
+  //     throw this.handleError(error);
+  //   }
 
-    return this.registerDatasource.create(createRegisterDto);
-  };
+  //   return this.registerDatasource.create(createRegisterDto);
+  // };
   async checkIn(data: {
     registerDto: CreateRegisterDto;
     guestDtos: CreateGuestDto[];

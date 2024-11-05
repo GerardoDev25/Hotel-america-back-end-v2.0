@@ -36,7 +36,6 @@ export class RegisterRoute {
 
     const middleware = {
       getById: [Commons.isValidUUID],
-      create: [authMiddleware.validateJwt, Auth.verifyRole(['reception'])],
       checkIn: [authMiddleware.validateJwt, Auth.verifyRole(['reception'])],
       checkOut: [
         Commons.isValidUUID,
@@ -56,7 +55,6 @@ export class RegisterRoute {
     route.post('/get-by-params', registerController.getByParams);
     route.get('/:id', middleware.getById, registerController.getById);
 
-    route.post('/', middleware.create, registerController.create);
     route.post('/check-in/', middleware.checkIn, registerController.checkIn);
     route.put('/', middleware.update, registerController.update);
 

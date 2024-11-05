@@ -290,53 +290,6 @@ describe('register.route.ts', () => {
     expect(body.errors[0]).toEqual(`register with id ${id} not found`);
   });
 
-  it('should create a register (create)', async () => {
-    const user = await prisma.user.create({ data: rawUser });
-    const room = await prisma.room.create({ data: rawRoom });
-
-    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
-
-    return request(testServer.app)
-      .post('/api/register')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        ...rawRegister,
-        userId: user.id,
-        roomId: room.id,
-      })
-      .expect(201)
-      .expect(({ body }) => {
-        expect(body.ok).toBeTruthy();
-        expect(body.register.id).toBeDefined();
-        expect(body.register.guestsNumber).toBe(rawRegister.guestsNumber);
-        expect(body.register.discount).toBe(rawRegister.discount);
-        expect(body.register.price).toBe(rawRegister.price);
-        expect(body.register.userId).toBe(user.id);
-        expect(body.register.roomId).toBe(room.id);
-      });
-  });
-
-  it('should get error white create a register (create)', async () => {
-    const user = await prisma.user.create({ data: rawUser });
-
-    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
-
-    return request(testServer.app)
-      .post('/api/register')
-      .set('Authorization', `Bearer ${token}`)
-      .send({})
-      .expect(400)
-      .expect(({ body }) => {
-        expect(body.ok).toBeFalsy();
-        expect(body.errors).toBeInstanceOf(Array);
-
-        expect(body.errors.length).toBe(3);
-        expect(body.errors).toContain('discount property is required');
-        expect(body.errors).toContain('price property is required');
-        expect(body.errors).toContain('roomId property is required');
-      });
-  });
-
   it('should make a checkIn (CheckIn)', async () => {
     const country = await prisma.country.create({
       data: { id: 'AR', name: 'Argentina' },
