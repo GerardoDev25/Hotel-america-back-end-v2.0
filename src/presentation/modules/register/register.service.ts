@@ -11,11 +11,6 @@ import { RegisterDatasource } from '@domain/datasources';
 export class RegisterService {
   constructor(private readonly registerDatasource: RegisterDatasource) {}
 
-  private handleError(error: unknown) {
-    if (error instanceof CustomError) throw error;
-    throw CustomError.internalServerError('Internal Server Error');
-  }
-
   private checkArrayUnique(diArray: string[]) {
     const duplicates = diArray.filter(
       (item, index) => diArray.indexOf(item) !== index
@@ -45,38 +40,12 @@ export class RegisterService {
     return this.registerDatasource.getById(id);
   }
 
-  //   const page = 1;
-  //   const limit = 1;
-
-  //   try {
-  //     const [{ room }, { registers }] = await Promise.all([
-  //       this.roomDatasource.getById(createRegisterDto.roomId),
-  //       this.registerDatasource.getByParams(page, limit, {
-  //         roomId: createRegisterDto.roomId,
-  //       }),
-  //     ]);
-
-  //     if (!room.isAvailable || registers[0]) {
-  //       throw CustomError.conflict(
-  //         `room with id ${createRegisterDto.roomId} is not available`
-  //       );
-  //     }
-  //   } catch (error) {
-  //     throw this.handleError(error);
-  //   }
-
-  //   return this.registerDatasource.create(createRegisterDto);
-  // };
   async checkIn(data: {
     registerDto: CreateRegisterDto;
     guestDtos: CreateGuestDto[];
   }) {
-    try {
-      const diArray = data.guestDtos.map((guest) => guest.di);
-      this.checkArrayUnique(diArray);
-    } catch (error) {
-      throw this.handleError(error);
-    }
+    const diArray = data.guestDtos.map((guest) => guest.di);
+    this.checkArrayUnique(diArray);
 
     return this.registerDatasource.checkIn(data);
   }

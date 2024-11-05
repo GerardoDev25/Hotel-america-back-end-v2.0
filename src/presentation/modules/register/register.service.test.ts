@@ -11,6 +11,7 @@ import { Generator } from '@src/utils/generator';
 import { citiesList } from '@src/data/seed';
 import { variables } from '@src/domain/variables';
 import { RegisterService } from '.';
+import { CustomError } from '@src/domain/error';
 
 describe('register.service.ts', () => {
   const register: IRegister = {
@@ -122,32 +123,29 @@ describe('register.service.ts', () => {
     });
   });
 
-  it.todo(
-    'should throw error if guests di are duplicated (checkIn)'
-    //   async () => {
-    //   const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
-    //   const guestDtos = [] as CreateGuestDto[];
+  it('should throw error if guests di are duplicated (checkIn)', async () => {
+    const registerDto = {} as CreateRegisterDto;
+    const guestDtos = [
+      { di: '1234567890' },
+      { di: '1234567890' },
+    ] as CreateGuestDto[];
 
-    //   const mockRegisterDatasource = {
-    //     getByParams: jest
-    //       .fn()
-    //       .mockResolvedValue({ ...pagination, registers: [] }),
-    //     checkIn: jest.fn(),
-    //   } as unknown as RegisterDatasource;
+    const mockRegisterDatasource = {
+      checkIn: jest.fn(),
+    } as unknown as RegisterDatasource;
 
-    //   const registerService = new RegisterService(mockRegisterDatasource);
+    const registerService = new RegisterService(mockRegisterDatasource);
 
-    //   try {
-    //     await registerService.checkIn({ registerDto, guestDtos });
-    //   } catch (error: any) {
-    //     expect(error).toBeInstanceOf(CustomError);
-    //     expect(error.message).toBe(
-    //       `room with id ${registerDto.roomId} is not available`
-    //     );
-    //     expect(mockRegisterDatasource.checkIn).not.toHaveBeenCalled();
-    //   }
-    // }
-  );
+    try {
+      await registerService.checkIn({ registerDto, guestDtos });
+    } catch (error: any) {
+      expect(error).toBeInstanceOf(CustomError);
+      expect(mockRegisterDatasource.checkIn).not.toHaveBeenCalled();
+      expect(error.message).toBe(
+        `di duplicate values found: ${guestDtos[0].di}`
+      );
+    }
+  });
 
   it('should have been call with parameters (checkOut)', async () => {
     const id = Uuid.v4();
