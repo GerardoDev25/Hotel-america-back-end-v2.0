@@ -389,10 +389,27 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
   }
 
   async delete(id: string): Promise<{ ok: boolean; message: string }> {
-    await this.getById(id);
-
     try {
-      await prisma.register.delete({ where: { id } });
+      await this.getById(id);
+
+      await prisma.$transaction(async (tx) => {
+        // * 1 delete charges and payments records
+        await tx.charge.deleteMany({ where: { registerId: id } });
+        await tx.payment.deleteMany({ where: { registerId: id } });
+
+        // * 2 delete cafeteria and guests records
+        const guestIds = await tx.guest.findMany({
+          where: { registerId: id },
+          select: { id: true },
+        });
+        await tx.cafeteria.deleteMany({
+          where: { guestId: { in: guestIds.map((guest) => guest.id) } },
+        });
+        await tx.guest.deleteMany({ where: { registerId: id } });
+
+        // * 3 delete register
+        await tx.register.delete({ where: { id } });
+      });
 
       return { ok: true, message: 'register deleted successfully' };
     } catch (error: any) {
