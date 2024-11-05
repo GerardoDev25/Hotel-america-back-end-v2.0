@@ -1,17 +1,17 @@
 import { Uuid } from '@src/adapters';
-import { ChargeRepository } from '@domain/repositories';
 import {
   CreateChargeDto,
   FilterChargeDto,
   UpdateChargeDto,
 } from '@domain/dtos';
+import { ChargeDatasource } from '@domain/datasources';
 import { ChargeService } from '.';
 
 describe('charge.service.ts', () => {
   const page = 2;
   const limit = 10;
 
-  const chargeRepository: ChargeRepository = {
+  const chargeDatasource: ChargeDatasource = {
     getAll: jest.fn(),
     getById: jest.fn(),
     getByParams: jest.fn(),
@@ -20,22 +20,22 @@ describe('charge.service.ts', () => {
     delete: jest.fn(),
   };
 
-  const service = new ChargeService(chargeRepository);
+  const service = new ChargeService(chargeDatasource);
 
   it('should call (getById)', async () => {
     const id = Uuid.v4();
     await service.getById(id);
 
-    expect(chargeRepository.getById).toHaveBeenCalledWith(id);
-    expect(chargeRepository.getById).toHaveBeenCalled();
+    expect(chargeDatasource.getById).toHaveBeenCalledWith(id);
+    expect(chargeDatasource.getById).toHaveBeenCalled();
   });
 
   it('should call (getByParams)', async () => {
     const params: FilterChargeDto = { amount: 12, description: '' };
     await service.getByParams({ page, limit }, params);
 
-    expect(chargeRepository.getByParams).toHaveBeenCalled();
-    expect(chargeRepository.getByParams).toHaveBeenCalledWith(
+    expect(chargeDatasource.getByParams).toHaveBeenCalled();
+    expect(chargeDatasource.getByParams).toHaveBeenCalledWith(
       page,
       limit,
       params
@@ -45,8 +45,8 @@ describe('charge.service.ts', () => {
   it('should call getAll', async () => {
     await service.getAll({ page, limit });
 
-    expect(chargeRepository.getAll).toHaveBeenCalled();
-    expect(chargeRepository.getAll).toHaveBeenCalledWith(page, limit);
+    expect(chargeDatasource.getAll).toHaveBeenCalled();
+    expect(chargeDatasource.getAll).toHaveBeenCalledWith(page, limit);
   });
 
   it('should call create', async () => {
@@ -58,8 +58,8 @@ describe('charge.service.ts', () => {
 
     await service.create(createCharge);
 
-    expect(chargeRepository.create).toHaveBeenCalled();
-    expect(chargeRepository.create).toHaveBeenCalledWith(createCharge);
+    expect(chargeDatasource.create).toHaveBeenCalled();
+    expect(chargeDatasource.create).toHaveBeenCalledWith(createCharge);
   });
 
   it('should call (update)', async () => {
@@ -67,15 +67,15 @@ describe('charge.service.ts', () => {
 
     await service.update(updateCharge);
 
-    expect(chargeRepository.update).toHaveBeenCalled();
-    expect(chargeRepository.update).toHaveBeenCalledWith(updateCharge);
+    expect(chargeDatasource.update).toHaveBeenCalled();
+    expect(chargeDatasource.update).toHaveBeenCalledWith(updateCharge);
   });
 
   it('should call (delete)', async () => {
     const id = Uuid.v4();
     await service.delete(id);
 
-    expect(chargeRepository.delete).toHaveBeenCalled();
-    expect(chargeRepository.delete).toHaveBeenCalledWith(id);
+    expect(chargeDatasource.delete).toHaveBeenCalled();
+    expect(chargeDatasource.delete).toHaveBeenCalledWith(id);
   });
 });

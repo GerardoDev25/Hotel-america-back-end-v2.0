@@ -4,7 +4,7 @@ import { RoomDatasource } from '@domain/datasources';
 import { RoomService } from '.';
 
 describe('room.service.ts', () => {
-  const mockRoomRepository = {
+  const mockRoomDatasource = {
     getAll: jest.fn(),
     getAllAvailable: jest.fn(),
     getByParams: jest.fn(),
@@ -17,12 +17,12 @@ describe('room.service.ts', () => {
   it('should to have been called with parameter (getAll)', async () => {
     const isAvailable = undefined;
     const paginationDto = { page: 1, limit: 10 } as PaginationDto;
-    const service = new RoomService(mockRoomRepository);
+    const service = new RoomService(mockRoomDatasource);
 
     await service.getAll(paginationDto, isAvailable);
 
-    expect(mockRoomRepository.getAll).toHaveBeenCalledTimes(1);
-    expect(mockRoomRepository.getAll).toHaveBeenCalledWith(
+    expect(mockRoomDatasource.getAll).toHaveBeenCalledTimes(1);
+    expect(mockRoomDatasource.getAll).toHaveBeenCalledWith(
       paginationDto.page,
       paginationDto.limit
     );
@@ -31,12 +31,12 @@ describe('room.service.ts', () => {
   it('should to have been called with parameter (getAllAvailable)', async () => {
     const isAvailable = true;
     const paginationDto = { page: 1, limit: 10 } as PaginationDto;
-    const service = new RoomService(mockRoomRepository);
+    const service = new RoomService(mockRoomDatasource);
 
     await service.getAll(paginationDto, isAvailable);
 
-    expect(mockRoomRepository.getAllAvailable).toHaveBeenCalledTimes(1);
-    expect(mockRoomRepository.getAllAvailable).toHaveBeenCalledWith(
+    expect(mockRoomDatasource.getAllAvailable).toHaveBeenCalledTimes(1);
+    expect(mockRoomDatasource.getAllAvailable).toHaveBeenCalledWith(
       paginationDto.page,
       paginationDto.limit,
       isAvailable
@@ -46,12 +46,12 @@ describe('room.service.ts', () => {
   it('should to have been called with parameter (getByParams)', async () => {
     const params: RoomFilter = { state: 'pending_cleaning' };
     const paginationDto = { page: 1, limit: 10 } as PaginationDto;
-    const service = new RoomService(mockRoomRepository);
+    const service = new RoomService(mockRoomDatasource);
 
     await service.getByParams(paginationDto, params);
 
-    expect(mockRoomRepository.getByParams).toHaveBeenCalledTimes(1);
-    expect(mockRoomRepository.getByParams).toHaveBeenCalledWith(
+    expect(mockRoomDatasource.getByParams).toHaveBeenCalledTimes(1);
+    expect(mockRoomDatasource.getByParams).toHaveBeenCalledWith(
       paginationDto.page,
       paginationDto.limit,
       params
@@ -60,12 +60,12 @@ describe('room.service.ts', () => {
 
   it('should to have been called with parameter (getById)', async () => {
     const id = 'some-id';
-    const service = new RoomService(mockRoomRepository);
+    const service = new RoomService(mockRoomDatasource);
 
     await service.getById(id);
 
-    expect(mockRoomRepository.getById).toHaveBeenCalledTimes(1);
-    expect(mockRoomRepository.getById).toHaveBeenCalledWith(id);
+    expect(mockRoomDatasource.getById).toHaveBeenCalledTimes(1);
+    expect(mockRoomDatasource.getById).toHaveBeenCalledWith(id);
   });
 
   it('should to have been called with parameter (create)', async () => {
@@ -76,13 +76,13 @@ describe('room.service.ts', () => {
       isAvailable: true,
       state: 'free',
     });
-    const service = new RoomService(mockRoomRepository);
+    const service = new RoomService(mockRoomDatasource);
 
     await service.create(room!);
 
     expect(errors).toBeUndefined();
-    expect(mockRoomRepository.create).toHaveBeenCalledTimes(1);
-    expect(mockRoomRepository.create).toHaveBeenCalledWith(room);
+    expect(mockRoomDatasource.create).toHaveBeenCalledTimes(1);
+    expect(mockRoomDatasource.create).toHaveBeenCalledWith(room);
   });
 
   it('should to have been called with parameter (update)', async () => {
@@ -92,20 +92,20 @@ describe('room.service.ts', () => {
       betsNumber: 3,
       isAvailable: true,
     });
-    const service = new RoomService(mockRoomRepository);
+    const service = new RoomService(mockRoomDatasource);
     await service.update(room!);
 
     expect(errors).toBeDefined();
-    expect(mockRoomRepository.update).toHaveBeenCalledTimes(1);
-    expect(mockRoomRepository.update).toHaveBeenCalledWith(room);
+    expect(mockRoomDatasource.update).toHaveBeenCalledTimes(1);
+    expect(mockRoomDatasource.update).toHaveBeenCalledWith(room);
   });
 
   it('should to have been called with parameter (delete)', async () => {
     const id = 'some-id';
-    const service = new RoomService(mockRoomRepository);
+    const service = new RoomService(mockRoomDatasource);
     await service.delete(id);
 
-    expect(mockRoomRepository.delete).toHaveBeenCalledTimes(1);
-    expect(mockRoomRepository.delete).toHaveBeenCalledWith(id);
+    expect(mockRoomDatasource.delete).toHaveBeenCalledTimes(1);
+    expect(mockRoomDatasource.delete).toHaveBeenCalledWith(id);
   });
 });

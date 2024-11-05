@@ -1,20 +1,20 @@
-import { CafeteriaRepository } from '@src/domain/repositories';
-import { CafeteriaService } from '.';
-import { UpdateCafeteriaDto } from '@src/domain/dtos/cafeteria';
 import { Uuid } from '@src/adapters';
+import { UpdateCafeteriaDto } from '@domain/dtos';
+import { CafeteriaDatasource } from '@domain/datasources';
+import { CafeteriaService } from '.';
 
 describe('cafeteria.service.ts', () => {
-  const chargeRepository: CafeteriaRepository = {
+  const chargeDatasource: CafeteriaDatasource = {
     getAll: jest.fn(),
     update: jest.fn(),
   };
 
-  const cafeteriaService = new CafeteriaService(chargeRepository);
+  const cafeteriaService = new CafeteriaService(chargeDatasource);
 
   test('should call (getAll)', async () => {
     await cafeteriaService.getAll();
 
-    expect(chargeRepository.getAll).toHaveBeenCalled();
+    expect(chargeDatasource.getAll).toHaveBeenCalled();
   });
 
   test('should call (update)', async () => {
@@ -25,6 +25,6 @@ describe('cafeteria.service.ts', () => {
 
     await cafeteriaService.update(cafeteriaDto);
 
-    expect(chargeRepository.update).toHaveBeenCalledWith(cafeteriaDto);
+    expect(chargeDatasource.update).toHaveBeenCalledWith(cafeteriaDto);
   });
 });

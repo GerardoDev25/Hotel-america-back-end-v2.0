@@ -2,11 +2,11 @@ import { Uuid } from '@src/adapters';
 import { citiesList } from '@src/data/seed';
 import { GuestEntity } from '@domain/entities';
 import { GuestPagination } from '@domain/interfaces';
-import { GuestRepository } from '@domain/repositories';
 import { variables } from '@domain/variables';
 import { Generator } from '@src/utils/generator';
 import { PaginationDto, CreateGuestDto, FilterGuestDto } from '@domain/dtos';
 import { GuestService } from '.';
+import { GuestDatasource } from '@src/domain/datasources';
 
 describe('guest.service.ts', () => {
   const fullName = Generator.randomName();
@@ -37,7 +37,7 @@ describe('guest.service.ts', () => {
 
   const resolveData = { ok: true, message: '' };
 
-  const mockGuestRepository: GuestRepository = {
+  const mockGuestDatasource: GuestDatasource = {
     getAll: jest.fn().mockResolvedValue(pagination),
     getById: jest.fn().mockResolvedValue({ ok: true, guest }),
     getByParams: jest.fn().mockResolvedValue(pagination),
@@ -48,11 +48,11 @@ describe('guest.service.ts', () => {
 
   it('should have been call with parameters (getAll)', async () => {
     const paginationDto: PaginationDto = { page: 1, limit: 10 };
-    const guestService = new GuestService(mockGuestRepository);
+    const guestService = new GuestService(mockGuestDatasource);
 
     await guestService.getAll(paginationDto);
 
-    expect(mockGuestRepository.getAll).toHaveBeenCalledWith(
+    expect(mockGuestDatasource.getAll).toHaveBeenCalledWith(
       paginationDto.page,
       paginationDto.limit
     );
@@ -61,11 +61,11 @@ describe('guest.service.ts', () => {
   it('should have been call with parameters (getByParams)', async () => {
     const paginationDto: PaginationDto = { page: 1, limit: 10 };
     const params: FilterGuestDto = { checkIn: new Date() };
-    const guestService = new GuestService(mockGuestRepository);
+    const guestService = new GuestService(mockGuestDatasource);
 
     await guestService.getByParams(paginationDto, params);
 
-    expect(mockGuestRepository.getByParams).toHaveBeenCalledWith(
+    expect(mockGuestDatasource.getByParams).toHaveBeenCalledWith(
       paginationDto.page,
       paginationDto.limit,
       params
@@ -74,35 +74,35 @@ describe('guest.service.ts', () => {
 
   it('should have been call with parameters (getById)', async () => {
     const id = Uuid.v4();
-    const guestService = new GuestService(mockGuestRepository);
+    const guestService = new GuestService(mockGuestDatasource);
 
     await guestService.getById(id);
 
-    expect(mockGuestRepository.getById).toHaveBeenCalledWith(id);
+    expect(mockGuestDatasource.getById).toHaveBeenCalledWith(id);
   });
 
   it('should have been call with parameters (create)', async () => {
     const guestDto = {} as CreateGuestDto;
-    const guestService = new GuestService(mockGuestRepository);
+    const guestService = new GuestService(mockGuestDatasource);
 
     await guestService.create(guestDto);
 
-    expect(mockGuestRepository.create).toHaveBeenCalledWith(guestDto);
+    expect(mockGuestDatasource.create).toHaveBeenCalledWith(guestDto);
   });
 
   it('should have been call with parameters (update)', async () => {
-    const guestService = new GuestService(mockGuestRepository);
+    const guestService = new GuestService(mockGuestDatasource);
 
     await guestService.update({ id: guest.id });
 
-    expect(mockGuestRepository.update).toHaveBeenCalledWith({ id: guest.id });
+    expect(mockGuestDatasource.update).toHaveBeenCalledWith({ id: guest.id });
   });
 
   it('should have been call with parameters (delete)', async () => {
-    const guestService = new GuestService(mockGuestRepository);
+    const guestService = new GuestService(mockGuestDatasource);
 
     await guestService.delete(guest.id);
 
-    expect(mockGuestRepository.delete).toHaveBeenCalledWith(guest.id);
+    expect(mockGuestDatasource.delete).toHaveBeenCalledWith(guest.id);
   });
 });
