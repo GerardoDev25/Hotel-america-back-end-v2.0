@@ -587,17 +587,17 @@ describe('register.route.ts', () => {
       },
     });
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
-    const guestsNumber = 'not';
+    const discount = 'not';
 
     return request(testServer.app)
       .put(`/api/register/`)
       .set('Authorization', `Bearer ${token}`)
-      .send({ id: register.id, guestsNumber })
+      .send({ id: register.id, discount })
       .expect(400)
       .expect(({ body }) => {
         const { ok, errors } = body;
         expect(ok).toBeFalsy();
-        expect(errors[0]).toBe('guestsNumber property most be a number');
+        expect(errors[0]).toBe('discount property most be a number');
       });
   });
 

@@ -7,7 +7,6 @@ describe('update-register.dto.ts', () => {
     const data = {
       id: Uuid.v4(),
       checkOut: Generator.randomDate(),
-      guestsNumber: 4,
       discount: 0,
       price: 302,
       userId: Uuid.v4(),
@@ -28,7 +27,6 @@ describe('update-register.dto.ts', () => {
     const data = {
       id: 'no valid uuid',
       checkOut: 'no valid date',
-      guestsNumber: '4',
       discount: true,
       price: null,
       userId: 'no valid uuid',
