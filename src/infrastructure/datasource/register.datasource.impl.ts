@@ -98,6 +98,34 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       }
     }
   }
+  private async checkIfRoomIsAvailable(roomId: string) {
+    try {
+      const [room, register] = await Promise.all([
+        prisma.room.findUnique({ where: { id: roomId } }),
+        prisma.register.findUnique({ where: { id: roomId } }),
+      ]);
+
+      if (!room?.isAvailable || register) {
+        throw CustomError.conflict(`room with id ${roomId} is not available`);
+      }
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  private async checkDatabaseUniqueDiGuest(diArray: string[]) {
+    const existingRecords = await prisma.guest.findMany({
+      where: { di: { in: diArray } },
+      select: { di: true },
+    });
+
+    const dbDuplicates = existingRecords.map((record) => record.di);
+    if (dbDuplicates.length > 0) {
+      throw CustomError.badRequest(
+        `di duplicate values found: ${dbDuplicates.join(', ')}`
+      );
+    }
+  }
 
   private async createCheckIn({
     guestDtos,
@@ -307,7 +335,9 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     ) as CreateGuestDto[];
 
     try {
+      await this.checkIfRoomIsAvailable(registerDto.roomId);
       await this.checkGuestsCountryIds(guestDtos);
+      await this.checkDatabaseUniqueDiGuest(guestDtos.map((guest) => guest.di));
 
       const checkInTx = await this.createCheckIn({ registerDto, guestDtos });
       return { ok: true, ...checkInTx };

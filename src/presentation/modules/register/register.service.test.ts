@@ -1,4 +1,3 @@
-import { CustomError } from '@domain/error';
 import { CreateGuestDto, CreateRegisterDto, PaginationDto } from '@domain/dtos';
 import {
   IGuest,
@@ -14,9 +13,6 @@ import { variables } from '@src/domain/variables';
 import { RegisterService } from '.';
 
 describe('register.service.ts', () => {
-  const page = 1;
-  const limit = 1;
-
   const register: IRegister = {
     id: Uuid.v4(),
     userId: Uuid.v4(),
@@ -81,18 +77,10 @@ describe('register.service.ts', () => {
       .mockResolvedValue({ register, guests: [guest], ok: true }),
   };
 
-  const room = { isAvailable: true };
-  const mockRoomDatasource = {
-    getById: jest.fn().mockResolvedValue({ room }),
-  } as any;
-
   it('should have been call with parameters (getAll)', async () => {
     const paginationDto: PaginationDto = { page: 1, limit: 10 };
 
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
+    const registerService = new RegisterService(mockRegisterDatasource);
 
     await registerService.getAll(paginationDto);
 
@@ -104,11 +92,7 @@ describe('register.service.ts', () => {
 
   it('should have been call with parameters (getById)', async () => {
     const id = Uuid.v4();
-
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
+    const registerService = new RegisterService(mockRegisterDatasource);
 
     await registerService.getById(id);
 
@@ -128,10 +112,7 @@ describe('register.service.ts', () => {
         .mockResolvedValue({ ok: true, register, guests: [guest] }),
     } as unknown as RegisterDatasource;
 
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
+    const registerService = new RegisterService(mockRegisterDatasource);
 
     await registerService.checkIn({ guestDtos, registerDto });
 
@@ -139,77 +120,39 @@ describe('register.service.ts', () => {
       registerDto,
       guestDtos,
     });
-    expect(mockRoomDatasource.getById).toHaveBeenCalledWith(registerDto.roomId);
-    expect(mockRegisterDatasource.getByParams).toHaveBeenCalledWith(
-      page,
-      limit,
-      { roomId: registerDto.roomId }
-    );
   });
 
-  it('should throw error if room is not available (checkIn)', async () => {
-    const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
-    const guestDtos = [] as CreateGuestDto[];
+  it.todo(
+    'should throw error if guests di are duplicated (checkIn)'
+    //   async () => {
+    //   const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
+    //   const guestDtos = [] as CreateGuestDto[];
 
-    const mockRegisterDatasource = {
-      getByParams: jest
-        .fn()
-        .mockResolvedValue({ ...pagination, registers: [] }),
-      checkIn: jest.fn(),
-    } as unknown as RegisterDatasource;
+    //   const mockRegisterDatasource = {
+    //     getByParams: jest
+    //       .fn()
+    //       .mockResolvedValue({ ...pagination, registers: [] }),
+    //     checkIn: jest.fn(),
+    //   } as unknown as RegisterDatasource;
 
-    const mockRoomDatasource = {
-      getById: jest.fn().mockResolvedValue({ room: { isAvailable: false } }),
-    } as any;
+    //   const registerService = new RegisterService(mockRegisterDatasource);
 
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
-
-    try {
-      await registerService.checkIn({ registerDto, guestDtos });
-    } catch (error: any) {
-      expect(error).toBeInstanceOf(CustomError);
-      expect(error.message).toBe(
-        `room with id ${registerDto.roomId} is not available`
-      );
-      expect(mockRegisterDatasource.checkIn).not.toHaveBeenCalled();
-    }
-  });
-
-  it('should throw error if register with roomId exist (checkIn)', async () => {
-    const registerDto = { roomId: Uuid.v4() } as CreateRegisterDto;
-    const guestDtos = [] as CreateGuestDto[];
-
-    const mockRegisterDatasource = {
-      getByParams: jest.fn().mockResolvedValue(pagination),
-      checkIn: jest.fn(),
-    } as unknown as RegisterDatasource;
-
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
-
-    try {
-      await registerService.checkIn({ registerDto, guestDtos });
-    } catch (error: any) {
-      expect(error).toBeInstanceOf(CustomError);
-      expect(error.message).toBe(
-        `room with id ${registerDto.roomId} is not available`
-      );
-      expect(mockRegisterDatasource.checkIn).not.toHaveBeenCalled();
-    }
-  });
+    //   try {
+    //     await registerService.checkIn({ registerDto, guestDtos });
+    //   } catch (error: any) {
+    //     expect(error).toBeInstanceOf(CustomError);
+    //     expect(error.message).toBe(
+    //       `room with id ${registerDto.roomId} is not available`
+    //     );
+    //     expect(mockRegisterDatasource.checkIn).not.toHaveBeenCalled();
+    //   }
+    // }
+  );
 
   it('should have been call with parameters (checkOut)', async () => {
     const id = Uuid.v4();
 
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
+    const registerService = new RegisterService(mockRegisterDatasource);
 
     await registerService.checkOut(id);
 
@@ -217,10 +160,7 @@ describe('register.service.ts', () => {
   });
 
   it('should have been call with parameters (update)', async () => {
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
+    const registerService = new RegisterService(mockRegisterDatasource);
 
     await registerService.update({ id: register.id });
 
@@ -232,10 +172,7 @@ describe('register.service.ts', () => {
   it('should have been call with parameters (delete)', async () => {
     const id = Uuid.v4();
 
-    const registerService = new RegisterService(
-      mockRegisterDatasource,
-      mockRoomDatasource
-    );
+    const registerService = new RegisterService(mockRegisterDatasource);
 
     await registerService.delete(id);
 

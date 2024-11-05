@@ -6,17 +6,26 @@ import {
   FilterRegisterDto,
   UpdateRegisterDto,
 } from '@domain/dtos';
-import { RegisterDatasource, RoomDatasource } from '@domain/datasources';
+import { RegisterDatasource } from '@domain/datasources';
 
 export class RegisterService {
-  constructor(
-    private readonly registerDatasource: RegisterDatasource,
-    private readonly roomDatasource: RoomDatasource
-  ) {}
+  constructor(private readonly registerDatasource: RegisterDatasource) {}
 
   private handleError(error: unknown) {
     if (error instanceof CustomError) throw error;
     throw CustomError.internalServerError('Internal Server Error');
+  }
+
+  private checkArrayUnique(diArray: string[]) {
+    const duplicates = diArray.filter(
+      (item, index) => diArray.indexOf(item) !== index
+    );
+
+    if (duplicates.length > 0) {
+      throw CustomError.badRequest(
+        `di duplicate values found: ${duplicates.join(', ')}`
+      );
+    }
   }
 
   async getAll(paginationDto: PaginationDto) {
@@ -62,22 +71,9 @@ export class RegisterService {
     registerDto: CreateRegisterDto;
     guestDtos: CreateGuestDto[];
   }) {
-    const { registerDto } = data;
-    const page = 1;
-    const limit = 1;
     try {
-      const [{ room }, { registers }] = await Promise.all([
-        this.roomDatasource.getById(registerDto.roomId),
-        this.registerDatasource.getByParams(page, limit, {
-          roomId: registerDto.roomId,
-        }),
-      ]);
-
-      if (!room.isAvailable || registers[0]) {
-        throw CustomError.conflict(
-          `room with id ${registerDto.roomId} is not available`
-        );
-      }
+      const diArray = data.guestDtos.map((guest) => guest.di);
+      this.checkArrayUnique(diArray);
     } catch (error) {
       throw this.handleError(error);
     }

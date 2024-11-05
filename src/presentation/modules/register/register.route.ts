@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import {
   RegisterDatasourceImpl,
-  RoomDatasourceImpl,
   UserDatasourceImpl,
 } from '@infrastructure/datasource';
 
@@ -20,18 +19,10 @@ export class RegisterRoute {
     const userDatasource = new UserDatasourceImpl(userLogger);
     const authMiddleware = new Auth(userDatasource);
 
-    // * room
-    const roomLogger = new LoggerService('room.datasource.impl.ts');
-    const roomDatasource = new RoomDatasourceImpl(roomLogger);
-
     // * register
     const registerLogger = new LoggerService('register.datasource.impl.ts');
     const registerDatasource = new RegisterDatasourceImpl(registerLogger);
-
-    const registerService = new RegisterService(
-      registerDatasource,
-      roomDatasource
-    );
+    const registerService = new RegisterService(registerDatasource);
     const registerController = new RegisterController(registerService);
 
     const middleware = {
