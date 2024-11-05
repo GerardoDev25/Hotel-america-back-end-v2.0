@@ -392,7 +392,7 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     try {
       await this.getById(id);
 
-      await prisma.$transaction(async (tx) => {
+      return await prisma.$transaction(async (tx) => {
         // * 1 delete charges and payments records
         await tx.charge.deleteMany({ where: { registerId: id } });
         await tx.payment.deleteMany({ where: { registerId: id } });
@@ -409,9 +409,9 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
 
         // * 3 delete register
         await tx.register.delete({ where: { id } });
-      });
 
-      return { ok: true, message: 'register deleted successfully' };
+        return { ok: true, message: 'register deleted successfully' };
+      });
     } catch (error: any) {
       throw this.handleError(error);
     }

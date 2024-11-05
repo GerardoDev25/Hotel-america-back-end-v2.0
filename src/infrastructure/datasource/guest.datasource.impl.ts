@@ -149,7 +149,6 @@ export class GuestDatasourceImpl extends GuestDatasource {
     updateGuestDto: UpdateGuestDto
   ): Promise<{ ok: boolean; message: string }> {
     const { id, ...rest } = updateGuestDto;
-
     await this.getById(id);
     const data = cleanObject(rest);
 
@@ -167,6 +166,8 @@ export class GuestDatasourceImpl extends GuestDatasource {
       const { guest } = await this.getById(id);
 
       return await prisma.$transaction(async (tx) => {
+        await tx.cafeteria.deleteMany({ where: { guestId: id } });
+
         const registerUpdated = await tx.register.update({
           where: { id: guest.registerId },
           data: { guestsNumber: { decrement: 1 } },
