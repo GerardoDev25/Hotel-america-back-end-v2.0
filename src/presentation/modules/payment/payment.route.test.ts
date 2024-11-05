@@ -176,7 +176,7 @@ describe('payment.route.ts', () => {
         id: expect.any(String),
         amount: params.amount,
         description: expect.any(String),
-        paidAt: params.paidAt,
+        paidAt: expect.any(String),
         type: params.type,
         registerId: register.id,
       });

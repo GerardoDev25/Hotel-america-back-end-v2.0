@@ -9,7 +9,7 @@ import { GuestController } from '.';
 describe('guest.controller.ts', () => {
   const fullName = Generator.randomName();
 
-  const guestEntity: IGuest = {
+  const mockGuest: IGuest = {
     id: Uuid.v4(),
     di: Generator.randomIdentityNumber(),
     checkIn: Generator.randomDate(),
@@ -25,7 +25,7 @@ describe('guest.controller.ts', () => {
   };
 
   const pagination: GuestPagination = {
-    guests: [guestEntity],
+    guests: [mockGuest],
     total: 0,
     page: 0,
     limit: 0,
@@ -103,36 +103,36 @@ describe('guest.controller.ts', () => {
   });
 
   it('should return a register by id (getById)', async () => {
-    const id = guestEntity.id;
+    const id = mockGuest.id;
     const req = { params: { id } } as any;
     const res = { json: jest.fn() } as any;
 
     const mockService = {
-      getById: jest.fn().mockResolvedValue(guestEntity),
+      getById: jest.fn().mockResolvedValue(mockGuest),
     } as any;
     const guestController = new GuestController(mockService);
 
     await guestController.getById(req, res);
 
     expect(mockService.getById).toHaveBeenCalledWith(id);
-    expect(res.json).toHaveBeenCalledWith(guestEntity);
+    expect(res.json).toHaveBeenCalledWith(mockGuest);
   });
 
   it('should create a register (create)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...body } = guestEntity;
+    const { id, ...body } = mockGuest;
 
     const req = { body } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = {
-      create: jest.fn().mockResolvedValue(guestEntity),
+      create: jest.fn().mockResolvedValue(mockGuest),
     } as any;
     const guestController = new GuestController(mockService);
 
     await guestController.create(req, res);
 
-    expect(res.json).toHaveBeenCalledWith(guestEntity);
+    expect(res.json).toHaveBeenCalledWith(mockGuest);
     expect(mockService.create).toHaveBeenCalledWith(expect.any(CreateGuestDto));
   });
 
@@ -154,7 +154,7 @@ describe('guest.controller.ts', () => {
   });
 
   it('should update a register (update)', async () => {
-    const req = { body: { id: guestEntity.id } } as any;
+    const req = { body: { id: mockGuest.id } } as any;
     const res = { json: jest.fn(), status: jest.fn().mockReturnThis() } as any;
 
     const mockService = {
@@ -186,7 +186,7 @@ describe('guest.controller.ts', () => {
   });
 
   it('should call delete function service (delete)', async () => {
-    const req = { params: { id: guestEntity.id } } as any;
+    const req = { params: { id: mockGuest.id } } as any;
     const res = { json: jest.fn() } as any;
 
     const mockService = {
@@ -196,7 +196,7 @@ describe('guest.controller.ts', () => {
 
     await guestController.delete(req, res);
 
-    expect(mockService.delete).toHaveBeenCalledWith(guestEntity.id);
+    expect(mockService.delete).toHaveBeenCalledWith(mockGuest.id);
     expect(res.json).toHaveBeenCalledWith({ ok: true, message: '' });
   });
 });

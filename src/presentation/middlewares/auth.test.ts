@@ -1,11 +1,11 @@
 import { UserDatasource } from '@domain/datasources';
-import { UserEntity } from '@domain/entities';
 import { JwtAdapter, Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
 import { Auth } from './auth';
+import { IUser } from '@src/domain/interfaces';
 
 describe('auth.ts', () => {
-  const user = new UserEntity({
+  const user: IUser = {
     id: Uuid.v4(),
     name: Generator.randomName(),
     password: Generator.randomPassword(),
@@ -14,7 +14,7 @@ describe('auth.ts', () => {
     phone: Generator.randomPhone(),
     role: 'admin',
     username: Generator.randomUsername(),
-  });
+  };
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -37,12 +37,9 @@ describe('auth.ts', () => {
       header: jest.fn().mockReturnValue('Bearer ' + token),
     } as any;
 
-    const userEntitySpy = jest.spyOn(UserEntity, 'fromObject');
-
     await auth.validateJwt(req, res, next);
 
     expect(res).not.toHaveBeenCalled();
-    expect(userEntitySpy).toHaveBeenCalledWith(user);
     expect(next).toHaveBeenCalled();
   });
 
@@ -134,12 +131,9 @@ describe('auth.ts', () => {
       header: jest.fn().mockReturnValue('Bearer ' + token),
     } as any;
 
-    const userEntitySpy = jest.spyOn(UserEntity, 'fromObject');
-
     await auth.validateJwt(req, res, next);
 
     expect(next).not.toHaveBeenCalled();
-    expect(userEntitySpy).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({
       ok: false,

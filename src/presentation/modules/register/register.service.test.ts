@@ -1,7 +1,11 @@
 import { CustomError } from '@domain/error';
 import { CreateGuestDto, CreateRegisterDto, PaginationDto } from '@domain/dtos';
-import { GuestEntity, RegisterEntity } from '@domain/entities';
-import { RegisterCheckOut, RegisterPagination } from '@domain/interfaces';
+import {
+  IGuest,
+  IRegister,
+  RegisterCheckOut,
+  RegisterPagination,
+} from '@domain/interfaces';
 import { RegisterDatasource } from '@domain/datasources';
 import { Uuid } from '@src/adapters';
 import { Generator } from '@src/utils/generator';
@@ -13,7 +17,7 @@ describe('register.service.ts', () => {
   const page = 1;
   const limit = 1;
 
-  const register = new RegisterEntity({
+  const register: IRegister = {
     id: Uuid.v4(),
     userId: Uuid.v4(),
     roomId: Uuid.v4(),
@@ -22,7 +26,7 @@ describe('register.service.ts', () => {
     price: 100,
     checkIn: new Date().toISOString(),
     checkOut: new Date().toISOString(),
-  });
+  };
 
   const registerCheckOutDetail: RegisterCheckOut = {
     id: Uuid.v4(),
@@ -39,7 +43,7 @@ describe('register.service.ts', () => {
   };
 
   const fullName = Generator.randomName();
-  const guest = new GuestEntity({
+  const guest: IGuest = {
     id: Uuid.v4(),
     di: Generator.randomIdentityNumber(),
     city: Generator.randomCity(citiesList),
@@ -52,7 +56,7 @@ describe('register.service.ts', () => {
     dateOfBirth: new Date().toISOString(),
     checkIn: new Date().toISOString(),
     checkOut: new Date().toISOString(),
-  });
+  };
 
   const pagination: RegisterPagination = {
     registers: [register],

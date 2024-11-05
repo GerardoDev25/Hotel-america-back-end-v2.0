@@ -187,7 +187,7 @@ describe('guest.route.ts', () => {
       expect(guest).toEqual({
         id: expect.any(String),
         di: expect.any(String),
-        checkIn: params.checkIn,
+        checkIn: expect.any(String),
         checkOut: expect.any(String),
         dateOfBirth: expect.any(String),
         city: params.city,

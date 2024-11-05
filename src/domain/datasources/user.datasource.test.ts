@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateUserDto, UpdateUserDto } from '@domain/dtos';
-import { IUserFilterDto, UserPagination } from '@domain/interfaces';
-import { UserEntity } from '@domain/entities';
+import { IUser, IUserFilterDto, UserPagination } from '@domain/interfaces';
 import { Generator } from '@src/utils/generator';
 import { Uuid } from '@src/adapters';
 import { UserDatasource } from '.';
@@ -11,7 +10,7 @@ describe('user.database.ts', () => {
   const limit = 10;
   const isActive = true;
 
-  const mockUser = new UserEntity({
+  const mockUser: IUser = {
     id: Uuid.v4(),
     birdDate: Generator.randomDate(),
     name: Generator.randomName(),
@@ -20,8 +19,8 @@ describe('user.database.ts', () => {
     role: 'admin',
     username: Generator.randomUsername(),
     isActive: true,
-  });
-  const mockUser2 = new UserEntity({
+  };
+  const mockUser2: IUser = {
     id: Uuid.v4(),
     birdDate: Generator.randomDate(),
     name: Generator.randomName(),
@@ -30,7 +29,7 @@ describe('user.database.ts', () => {
     role: 'cafe',
     username: Generator.randomUsername(),
     isActive: false,
-  });
+  };
 
   const userPagination = {
     users: [mockUser, mockUser2],
@@ -50,7 +49,7 @@ describe('user.database.ts', () => {
       return userPagination;
     }
 
-    async getById(id: string): Promise<{ ok: boolean; user: UserEntity }> {
+    async getById(id: string): Promise<{ ok: boolean; user: IUser }> {
       return { ok: true, user: mockUser };
     }
 
@@ -68,7 +67,7 @@ describe('user.database.ts', () => {
 
     async create(
       createUserDto: CreateUserDto
-    ): Promise<{ ok: boolean; user: UserEntity }> {
+    ): Promise<{ ok: boolean; user: IUser }> {
       return { ok: true, user: mockUser2 };
     }
 
@@ -114,7 +113,16 @@ describe('user.database.ts', () => {
     expect(users).toBeInstanceOf(Array);
     expect(users).toHaveLength(2);
     users.forEach((user) => {
-      expect(user).toBeInstanceOf(UserEntity);
+      expect(user).toMatchObject({
+        id: expect.any(String),
+        role: expect.any(String),
+        birdDate: expect.any(String),
+        name: expect.any(String),
+        phone: expect.any(String),
+        username: expect.any(String),
+        password: expect.any(String),
+        isActive: expect.any(Boolean),
+      });
     });
   });
 
@@ -133,7 +141,16 @@ describe('user.database.ts', () => {
     expect(users).toBeInstanceOf(Array);
     expect(users).toHaveLength(2);
     users.forEach((user) => {
-      expect(user).toBeInstanceOf(UserEntity);
+      expect(user).toMatchObject({
+        id: expect.any(String),
+        role: expect.any(String),
+        birdDate: expect.any(String),
+        name: expect.any(String),
+        phone: expect.any(String),
+        username: expect.any(String),
+        password: expect.any(String),
+        isActive: expect.any(Boolean),
+      });
     });
   });
 
@@ -147,11 +164,20 @@ describe('user.database.ts', () => {
     const { ok, user } = await mockUserDataSource.create(createUser);
 
     expect(ok).toBeTruthy();
-    expect(user).toBeInstanceOf(UserEntity);
+    expect(user).toMatchObject({
+      id: expect.any(String),
+      role: expect.any(String),
+      birdDate: expect.any(String),
+      name: expect.any(String),
+      phone: expect.any(String),
+      username: expect.any(String),
+      password: expect.any(String),
+      isActive: expect.any(Boolean),
+    });
     expect(typeof mockUserDataSource.create).toBe('function');
     expect(mockUserDataSource.create(createUser)).resolves.toEqual({
       ok: true,
-      user: expect.any(UserEntity),
+      user: expect.any(Object),
     });
   });
 

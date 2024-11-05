@@ -1,7 +1,6 @@
 import { Uuid } from '@src/adapters';
 import { citiesList } from '@src/data/seed';
-import { GuestEntity } from '@domain/entities';
-import { GuestPagination } from '@domain/interfaces';
+import { GuestPagination, IGuest } from '@domain/interfaces';
 import { variables } from '@domain/variables';
 import { Generator } from '@src/utils/generator';
 import { PaginationDto, CreateGuestDto, FilterGuestDto } from '@domain/dtos';
@@ -11,7 +10,7 @@ import { GuestDatasource } from '@src/domain/datasources';
 describe('guest.service.ts', () => {
   const fullName = Generator.randomName();
 
-  const guest = new GuestEntity({
+  const guest: IGuest = {
     id: Uuid.v4(),
     phone: Generator.randomPhone(),
     registerId: Uuid.v4(),
@@ -24,7 +23,7 @@ describe('guest.service.ts', () => {
     lastName: fullName.split(' ').at(1)!,
     checkIn: new Date().toISOString(),
     checkOut: new Date().toISOString(),
-  });
+  };
 
   const pagination: GuestPagination = {
     guests: [guest],

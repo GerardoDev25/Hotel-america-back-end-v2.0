@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { UserRole } from '@domain/interfaces';
+import { IUser, UserRole } from '@domain/interfaces';
 import { UserDatasource } from '@domain/datasources';
-import { UserEntity } from '@domain/entities';
 import { CustomError } from '@domain/error';
 import { JwtAdapter } from '@src/adapters';
 
@@ -44,7 +43,7 @@ export class Auth {
         return res.status(401).json({ ok: false, errors: ['user not active'] });
       }
 
-      req.body.user = UserEntity.fromObject(user);
+      req.body.user = user;
 
       next();
     } catch (error) {
@@ -54,7 +53,7 @@ export class Auth {
 
   static verifyRole = (roles: UserRole[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
-      const user = req.body.user as UserEntity;
+      const user = req.body.user as IUser;
 
       if (!user)
         return res
