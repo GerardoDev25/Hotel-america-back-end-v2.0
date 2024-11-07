@@ -38,7 +38,7 @@ describe('booking-validator.dto.ts', () => {
     expect(errors.length).toBe(0);
   });
 
-  it('should get checkOut roomNumber as optional (create)', () => {
+  it('should get error if pass invalid object (create)', () => {
     const dto = {
       amount: '10',
       description: false,
