@@ -1,5 +1,6 @@
 export * from './cafeteria.interface';
 export * from './country.interface';
+export * from './booking.interface';
 export * from './charge.interface';
 export * from './guest.interface';
 export * from './payment.interface';

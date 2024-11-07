@@ -11,4 +11,5 @@ export interface IBooking {
 }
 
 export type CreateBooking = Omit<IBooking, 'id' | 'createdAt'>;
-export type UpdateBooking = Partial<CreateBooking> & { id: number };
+export type UpdateBooking = Partial<CreateBooking> & { id: string };
+export type FilterBooking = Partial<Omit<IBooking, 'id' | 'description'>>;

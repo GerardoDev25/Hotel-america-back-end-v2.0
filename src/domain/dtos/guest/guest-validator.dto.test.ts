@@ -2,8 +2,8 @@ import { Generator } from '@src/utils/generator';
 import { variables } from '@domain/variables';
 import { Uuid } from '@src/adapters';
 import { citiesList } from '@src/data/seed';
+import { GuestFilter } from '@domain/interfaces';
 import { GuestValidator } from './';
-import { GuestFilter } from '@src/domain/interfaces';
 
 describe('guest-validator.dto.ts', () => {
   it('should get empty array if pass a valid object (create)', () => {
@@ -73,7 +73,7 @@ describe('guest-validator.dto.ts', () => {
     );
   });
 
-  it('should get everything optional but id required (filter)', () => {
+  it('should get everything optional (filter)', () => {
     const data = {};
     const errors = GuestValidator.filter(data);
     expect(errors.length).toBe(0);
