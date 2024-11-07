@@ -1,3 +1,5 @@
+import { ICharge, IGuest, IPayment } from '.';
+
 export interface IRegister {
   id: string;
   checkIn: string;
@@ -7,6 +9,13 @@ export interface IRegister {
   price: number;
   userId: string;
   roomId: string;
+}
+
+export interface RegisterWithDetails extends IRegister {
+  guests: Omit<IGuest, 'registerId'>[];
+  charges: Omit<ICharge, 'registerId'>[];
+  payments: Omit<IPayment, 'registerId'>[];
+  room: { roomNumber: number };
 }
 
 export interface RegisterCheckOutDB {

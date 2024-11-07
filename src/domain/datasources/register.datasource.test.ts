@@ -5,6 +5,7 @@ import {
   IRegister,
   RegisterCheckOut,
   RegisterPagination,
+  RegisterWithDetails,
 } from '@domain/interfaces';
 import {
   CreateGuestDto,
@@ -83,6 +84,14 @@ describe('register.datasource.ts', () => {
     next: null,
   };
 
+  const registerWithDetails: RegisterWithDetails = {
+    ...mockRegister,
+    guests: [],
+    charges: [],
+    payments: [],
+    room: { roomNumber: 0 },
+  };
+
   class MockRegisterDataSource implements RegisterDatasource {
     async getAll(page: number, limit: number): Promise<RegisterPagination> {
       return pagination;
@@ -96,8 +105,10 @@ describe('register.datasource.ts', () => {
       return pagination;
     }
 
-    async getById(id: string): Promise<{ ok: boolean; register: IRegister }> {
-      return { ok: true, register: mockRegister };
+    async getById(
+      id: string
+    ): Promise<{ ok: boolean; register: RegisterWithDetails }> {
+      return { ok: true, register: registerWithDetails };
     }
 
     async checkIn(data: {
@@ -180,16 +191,7 @@ describe('register.datasource.ts', () => {
 
     expect(typeof mockRegisterDataSource.getById).toBe('function');
     expect(ok).toBeTruthy();
-    expect(register).toMatchObject({
-      id: expect.any(String),
-      checkIn: expect.any(String),
-      checkOut: expect.any(String),
-      guestsNumber: expect.any(Number),
-      discount: expect.any(Number),
-      price: expect.any(Number),
-      userId: expect.any(String),
-      roomId: expect.any(String),
-    });
+    expect(register).toMatchObject(registerWithDetails);
   });
 
   it('should get default behavior (checkIn)', async () => {

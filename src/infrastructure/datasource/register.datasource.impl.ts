@@ -1,4 +1,4 @@
-import { Guest, Register } from '@prisma/client';
+import { Charge, Guest, Payment, Register } from '@prisma/client';
 import { CustomError } from '@domain/error';
 import { RegisterDatasource } from '@domain/datasources';
 import {
@@ -8,6 +8,7 @@ import {
   RegisterCheckOut,
   RegisterCheckOutDB,
   IRegisterFilterDto,
+  RegisterWithDetails,
 } from '@domain/interfaces';
 import {
   CreateGuestDto,
@@ -41,6 +42,38 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
       checkIn: entity.checkIn.toISOString().split('T').at(0) ?? '',
       checkOut: entity.checkOut?.toISOString().split('T').at(0) ?? undefined,
     };
+  }
+
+  private transformRegisterDetails(
+    chargesToTransform: Charge[],
+    guestsToTransform: Guest[],
+    paymentsToTransform: Payment[]
+  ): {
+    charges: RegisterWithDetails['charges'];
+    guests: RegisterWithDetails['guests'];
+    payments: RegisterWithDetails['payments'];
+  } {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const charges = chargesToTransform.map(({ registerId, ...charge }) => ({
+      ...charge,
+      createdAt: charge.createdAt.toISOString().split('T').at(0)!,
+    }));
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const guests = guestsToTransform.map(({ registerId, ...guest }) => ({
+      ...guest,
+      dateOfBirth: guest.dateOfBirth.toISOString().split('T').at(0)!,
+      checkIn: guest.checkIn.toISOString().split('T').at(0)!,
+      checkOut: guest.checkOut?.toISOString().split('T').at(0) ?? undefined,
+    }));
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const payments = paymentsToTransform.map(({ registerId, ...payment }) => ({
+      ...payment,
+      paidAt: payment.paidAt.toISOString().split('T').at(0)!,
+    }));
+
+    return { charges, guests, payments };
   }
 
   private checkOutObject(checkOutDB: RegisterCheckOutDB): RegisterCheckOut {
@@ -307,15 +340,36 @@ export class RegisterDatasourceImpl extends RegisterDatasource {
     }
   }
 
-  async getById(id: string): Promise<{ ok: boolean; register: IRegister }> {
+  async getById(
+    id: string
+  ): Promise<{ ok: boolean; register: RegisterWithDetails }> {
     try {
-      const register = await prisma.register.findUnique({ where: { id } });
+      const data = await prisma.register.findUnique({
+        where: { id },
+        include: {
+          Charge: true,
+          Guest: true,
+          Payment: true,
+          room: { select: { roomNumber: true } },
+        },
+      });
 
-      if (!register) {
+      if (!data) {
         throw CustomError.notFound(`register with id ${id} not found`);
       }
 
-      return { ok: true, register: this.transformObject(register) };
+      const { Charge, Guest, Payment, room, ...registerDB } = data;
+      const register = this.transformObject(registerDB);
+
+      const { charges, guests, payments } = this.transformRegisterDetails(
+        Charge,
+        Guest,
+        Payment
+      );
+      return {
+        ok: true,
+        register: { ...register, room, guests, charges, payments },
+      };
     } catch (error: any) {
       throw this.handleError(error);
     }

@@ -3,6 +3,7 @@ import {
   CreateCharge,
   CreatePayment,
   RegisterFilter,
+  RegisterWithDetails,
 } from '@domain/interfaces';
 import { variables } from '@domain/variables';
 import { DateValidator } from '@domain/type-validators';
@@ -261,15 +262,17 @@ describe('register.route.ts', () => {
       },
     });
 
-    const { body } = await request(testServer.app)
-      .get(`/api/register/${registerTest.id}`)
-      .expect(200);
+    const { body }: { body: { ok: boolean; register: RegisterWithDetails } } =
+      await request(testServer.app)
+        .get(`/api/register/${registerTest.id}`)
+        .expect(200);
 
     const { ok, register } = body;
-
     expect(ok).toBeTruthy();
+    expect(register.charges).toBeInstanceOf(Array);
+    expect(register.guests).toBeInstanceOf(Array);
+    expect(register.payments).toBeInstanceOf(Array);
     expect(register.id).toBe(registerTest.id);
-
     expect(register.guestsNumber).toBe(registerTest.guestsNumber);
     expect(register.discount).toBe(registerTest.discount);
     expect(register.price).toBe(registerTest.price);

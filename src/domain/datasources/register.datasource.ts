@@ -3,6 +3,7 @@ import {
   IRegister,
   RegisterCheckOut,
   RegisterPagination,
+  RegisterWithDetails,
 } from '@domain/interfaces';
 import {
   CreateGuestDto,
@@ -14,7 +15,9 @@ import {
 export abstract class RegisterDatasource {
   abstract getAll(page: number, limit: number): Promise<RegisterPagination>;
 
-  abstract getById(id: string): Promise<{ ok: boolean; register: IRegister }>;
+  abstract getById(
+    id: string
+  ): Promise<{ ok: boolean; register: RegisterWithDetails }>;
 
   abstract getByParams(
     page: number,
