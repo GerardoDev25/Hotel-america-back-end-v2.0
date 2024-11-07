@@ -156,3 +156,15 @@ model Charge {
   register   Register @relation(fields: [registerId], references: [id])
   registerId String
 }
+
+model Booking {
+  id           String    @id @default(uuid())
+  createdAt    DateTime  @default(now())
+  amount       Int
+  description  String
+  name         String
+  guestsNumber Int
+  checkIn      DateTime
+  checkOut     DateTime?
+  roomNumber   Int?
+}
