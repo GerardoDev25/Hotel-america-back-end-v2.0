@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   AuthRoute,
+  BookingRoute,
   CafeteriaRoute,
   ChargeRoute,
   CountryRoute,
@@ -18,6 +19,7 @@ export class AppRoute {
     const route = Router();
 
     route.use('/api/auth', AuthRoute.routes);
+    route.use('/api/booking', BookingRoute.routes);
     route.use('/api/cafeteria', CafeteriaRoute.routes);
     route.use('/api/charge', ChargeRoute.routes);
     route.use('/api/country', CountryRoute.routes);

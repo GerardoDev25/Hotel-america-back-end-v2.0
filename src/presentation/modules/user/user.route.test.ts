@@ -112,7 +112,6 @@ describe('user.route.ts', () => {
   it('should get error message if pagination is grown (getAll)', async () => {
     const page = 'page';
     const limit = 'limit';
-    await prisma.user.createMany({ data: seedData.users });
     const { body } = await request(testServer.app)
       .get(`/api/user?page=${page}&limit=${limit}`)
       .expect(400);
@@ -124,7 +123,6 @@ describe('user.route.ts', () => {
   it('should get error message if pagination contain negative numbers (getAll)', async () => {
     const page = -1;
     const limit = -3;
-    await prisma.user.createMany({ data: seedData.users });
     const { body } = await request(testServer.app)
       .get(`/api/user?page=${page}&limit=${limit}`)
       .expect(400);

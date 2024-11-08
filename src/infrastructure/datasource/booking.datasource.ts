@@ -152,7 +152,7 @@ export class BookingDatasourceImpl extends BookingDatasource {
     const data = cleanObject(rest);
 
     try {
-      await prisma.register.update({ where: { id }, data });
+      await prisma.booking.update({ where: { id }, data });
       return { ok: true, message: 'booking updated successfully' };
     } catch (error: any) {
       throw this.handleError(error);
