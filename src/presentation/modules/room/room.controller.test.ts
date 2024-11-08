@@ -26,7 +26,8 @@ describe('room.controller.ts', () => {
     prev: null,
     next: null,
   };
-  it('should return all rooms when getAllRoom is called (getAll)', async () => {
+
+  it('should return all rooms when getAll is called (getAll)', async () => {
     const res = { json: jest.fn() } as any;
     const req = { query: { page: 1, limit: 10, isAvailable: true } } as any;
 
@@ -95,7 +96,7 @@ describe('room.controller.ts', () => {
     });
   });
 
-  it('should return all rooms when getAllRoom is called (getByParams)', async () => {
+  it('should return all rooms when is called (getByParams)', async () => {
     const body: RoomFilter = {
       roomType: 'normal',
       state: 'free',
@@ -155,7 +156,7 @@ describe('room.controller.ts', () => {
     });
   });
 
-  it('should return throw error when room ID does not exist (getById)', async () => {
+  it('should throw error when room ID does not exist (getById)', async () => {
     const req = { params: { id: 'non-existent-id' } } as any;
     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
 
@@ -204,7 +205,7 @@ describe('room.controller.ts', () => {
     expect(mockService.create).toHaveBeenCalledWith(roomDto);
   });
 
-  it('should update a room when updateRoom is called (update)', async () => {
+  it('should update a room when is called (update)', async () => {
     const req = { body: { id: Uuid.v4() } } as any;
     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
 
@@ -218,7 +219,7 @@ describe('room.controller.ts', () => {
     expect(mockService.update).toHaveBeenCalledWith(expect.any(UpdateRoomDto));
   });
 
-  it('should delete a room when deleteRoom is called (delete)', async () => {
+  it('should delete a room when is called (delete)', async () => {
     const req = { params: { id: 'some-room-id' } } as any;
     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
 
