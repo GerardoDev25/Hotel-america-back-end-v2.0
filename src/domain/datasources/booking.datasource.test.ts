@@ -7,7 +7,11 @@ import {
 } from '@domain/interfaces';
 import { Generator } from '@src/utils/generator';
 import { BookingDatasource } from '.';
-import { CreateBookingDto, UpdateBookingDto } from '../dtos';
+import {
+  CreateBookingDto,
+  FilterBookingDto,
+  UpdateBookingDto,
+} from '@domain/dtos';
 
 describe('booking.datasource.ts', () => {
   const page = 2;
@@ -42,7 +46,7 @@ describe('booking.datasource.ts', () => {
     async getByParams(
       page: number,
       limit: number,
-      searchParam: IFilterBookingDto
+      searchParam: FilterBookingDto
     ): Promise<BookingPagination> {
       return pagination;
     }

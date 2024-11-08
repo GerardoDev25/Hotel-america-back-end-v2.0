@@ -1,9 +1,9 @@
+import { BookingPagination, IBooking } from '@domain/interfaces';
 import {
-  BookingPagination,
-  IBooking,
-  IFilterBookingDto,
-} from '@domain/interfaces';
-import { CreateBookingDto, UpdateBookingDto } from '@domain/dtos';
+  CreateBookingDto,
+  FilterBookingDto,
+  UpdateBookingDto,
+} from '@domain/dtos';
 
 export abstract class BookingDatasource {
   abstract getById(id: string): Promise<{ ok: boolean; booking: IBooking }>;
@@ -11,7 +11,7 @@ export abstract class BookingDatasource {
   abstract getByParams(
     page: number,
     limit: number,
-    searchParam: IFilterBookingDto
+    searchParam: FilterBookingDto
   ): Promise<BookingPagination>;
 
   abstract getAll(page: number, limit: number): Promise<BookingPagination>;
