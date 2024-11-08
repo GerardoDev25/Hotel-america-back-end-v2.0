@@ -6,3 +6,4 @@ export * from './payment.datasource';
 export * from './register.datasource';
 export * from './room.datasource';
 export * from './user.datasource';
+export * from './booking.datasource';

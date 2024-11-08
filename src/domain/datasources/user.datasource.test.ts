@@ -83,7 +83,7 @@ describe('user.database.ts', () => {
   }
 
   const mockUserDataSource = new MockUserDataSource();
-  test('test in function getById()', async () => {
+  it('test in function (getById)', async () => {
     const id = Uuid.v4();
 
     expect(typeof mockUserDataSource.getById).toBe('function');
@@ -93,7 +93,7 @@ describe('user.database.ts', () => {
     });
   });
 
-  test('test in function getByParam()', async () => {
+  it('test in function (getByParam)', async () => {
     const username = Generator.randomUsername();
 
     expect(typeof mockUserDataSource.getByParams).toBe('function');
@@ -102,7 +102,7 @@ describe('user.database.ts', () => {
     ).resolves.toEqual(userPagination);
   });
 
-  test('test in function getAll()', async () => {
+  it('test in function (getAll)', async () => {
     const { users } = await mockUserDataSource.getAll(page, limit);
 
     expect(typeof mockUserDataSource.getAll).toBe('function');
@@ -126,7 +126,7 @@ describe('user.database.ts', () => {
     });
   });
 
-  test('test in function getAllActive()', async () => {
+  it('test in function (getAllActive)', async () => {
     const { users } = await mockUserDataSource.getAllActive(
       page,
       limit,
@@ -154,7 +154,7 @@ describe('user.database.ts', () => {
     });
   });
 
-  test('test in function create()', async () => {
+  it('test in function (create)', async () => {
     const { id, ...rest } = mockUser;
     const createUser = {
       ...rest,
@@ -181,7 +181,7 @@ describe('user.database.ts', () => {
     });
   });
 
-  test('test in function update()', async () => {
+  it('test in function (update)', async () => {
     const { birdDate, ...rest } = mockUser;
 
     const { ok, message } = await mockUserDataSource.update(rest);
@@ -195,7 +195,7 @@ describe('user.database.ts', () => {
     });
   });
 
-  test('test in function delete()', async () => {
+  it('test in function (delete)', async () => {
     const id = Uuid.v4();
     const { ok, message } = await mockUserDataSource.delete(id);
 
