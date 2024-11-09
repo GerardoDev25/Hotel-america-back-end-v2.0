@@ -24,6 +24,7 @@ async function main() {
   await checkDatabaseConnection();
 
   // * delete data
+  await prisma.booking.deleteMany();
   await prisma.cafeteria.deleteMany();
   await prisma.charge.deleteMany();
   await prisma.payment.deleteMany();
@@ -34,6 +35,7 @@ async function main() {
   await prisma.user.deleteMany();
 
   // * create data
+  await prisma.booking.createMany({ data: seedData.bookings });
   await prisma.country.createMany({ data: seedData.countries });
   await prisma.room.createMany({ data: seedData.rooms });
   await prisma.user.createMany({ data: seedData.users });
