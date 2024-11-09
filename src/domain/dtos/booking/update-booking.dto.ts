@@ -3,11 +3,11 @@ import { BookingValidator } from '.';
 export class UpdateBookingDto {
   private constructor(
     public readonly id: string,
-    public readonly amount: number | undefined,
-    public readonly description: string | undefined,
-    public readonly name: string | undefined,
-    public readonly guestsNumber: number | undefined,
-    public readonly checkIn: Date | undefined,
+    public readonly amount?: number | undefined,
+    public readonly description?: string | undefined,
+    public readonly name?: string | undefined,
+    public readonly guestsNumber?: number | undefined,
+    public readonly checkIn?: Date | undefined,
     public readonly checkOut?: Date | undefined,
     public readonly roomNumber?: number | undefined
   ) {}
