@@ -1,4 +1,4 @@
-export * from './booking.datasource';
+export * from './booking.datasource.impl';
 export * from './cafeteria.database.impl';
 export * from './charge.database.impl';
 export * from './country.database.impl';
