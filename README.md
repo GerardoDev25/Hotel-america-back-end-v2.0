@@ -10,6 +10,8 @@ make sure you have installed this tools on your machine
 * yarn v1.22 or greater
 * Docker v27.2.0
 
+Go to Api <a href="https://documenter.getpostman.com/view/17729045/2sAY4sj4JY#a656993d-6eda-4923-a73e-d1537973f3c5" target="_blank"> Documentation</a>
+
 
 ## Run in development mode
 
@@ -29,3 +31,14 @@ make sure you have installed this tools on your machine
 4. migrate database execute ```yarn prisma:migrate-test``` command
 4. migrate database execute ```yarn prisma:generate-test``` command
 5. run tests ```yarn test:watch``` or ```yarn test:coverage```
+
+
+## Run in production mode
+
+1. clone the repo
+2. rename the file __.env.template__ to __.env__ and fill the fields
+3. run database execute ```yarn docker:up``` command
+4. migrate database execute ```yarn prisma:migrate``` command
+4. migrate database execute ```yarn prisma:generate``` command
+5. populate database execute ```yarn seed``` command
+6. run application ```yarn start```

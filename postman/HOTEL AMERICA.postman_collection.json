@@ -1,0 +1,1080 @@
+{
+	"info": {
+		"_postman_id": "b5acdb9f-2e0e-4375-9349-e12eceb1f262",
+		"name": "HOTEL AMERICA",
+		"description": "# Hotel System Administration API\n\nThe **Hotel System Administration API** is designed to manage the various operations of a hotel, offering a comprehensive solution for administrative tasks. This RESTful API allows developers to interact with core functionalities such as managing guest, room assignments, cafeteria services, and daily operations.\n\n## Key Features:\n\n- **Room Management**: Create, update, and manage hotel rooms and their availability.\n    \n- **Guest Services**: Handle guest check-in/check-out, and personal details.\n    \n- **Billing and Payments**: Track billing information and process guest payments.\n    \n- **Staff Management**: Administer hotel staff and roles.\n    \n\n## Authentication:\n\nThe API requires a Bearer Token for access to majority routes, ensuring secure interactions with the system.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17729045",
+		"_collection_link": "https://hotelamerica.postman.co/workspace/hotel_america-Workspace~3478acaf-4552-4c51-9a4d-1cbbda014b1b/collection/17729045-b5acdb9f-2e0e-4375-9349-e12eceb1f262?action=share&source=collection_link&creator=17729045"
+	},
+	"item": [
+		{
+			"name": "Room",
+			"item": [
+				{
+					"name": "Delete Room",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNzhiNWFlLTZmNjctNGI0NC1iZDIyLTc2OWE3OTFkYmRjNiIsImlhdCI6MTczMDI0MDcyMSwiZXhwIjoxNzMwMjQ3OTIxfQ.j14GXPYannqPpMoScdN4a2E5KJsBNCeXJ9Gbk6Sy_3E",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/room/3eb66225-5420-4bfe-851a-9c107ae2701a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"room",
+								"3eb66225-5420-4bfe-851a-9c107ae2701a"
+							]
+						},
+						"description": "### Delete Room\n\nThis endpoint is used to delete a specific room by providing the room ID in the URL.\n\n#### Request Headers\n\nthis endpoint required an Authentication header token that belong to a user with admin or reception role\n\n#### Request Body\n\nThis request does not require a request body.\n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNzhiNWFlLTZmNjctNGI0NC1iZDIyLTc2OWE3OTFkYmRjNiIsImlhdCI6MTczMDI0MDcyMSwiZXhwIjoxNzMwMjQ3OTIxfQ.j14GXPYannqPpMoScdN4a2E5KJsBNCeXJ9Gbk6Sy_3E\");\nconst requestOptions = {\n  method: \"DELETE\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/room/3eb66225-5420-4bfe-851a-9c107ae2701a\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response Body\n\n- `ok` (boolean): Indicates if the deletion was successful.\n    \n- `message` (string): A message indicating the result of the deletion operation.\n    \n\nExample:\n\n``` json\n{\n    \"ok\": true,\n    \"message\": \"room deleted successfully\"\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Room By id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/room/3eb66225-5420-4bfe-851a-9c107ae2701a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"room",
+								"3eb66225-5420-4bfe-851a-9c107ae2701a"
+							]
+						},
+						"description": "## Get Room By Id\n\nThis endpoint makes an HTTP GET request to retrieve the details of a specific room identified by the provided ID.\n\n### Request\n\nThe request does not include a request body. It uses the URL parameter to specify the ID of the room to be retrieved.\n\n- URL: `http://localhost:3000/api/room/3eb66225-5420-4bfe-851a-9c107ae2701a`\n    \n- Method: GET\n    \n\n### Response\n\nThe response to the request is in JSON format with a status code of 200 (OK). It includes the following fields:\n\n- `ok` (boolean): Indicates whether the request was successful.\n    \n- `room` (object): Contains details of the room, including its ID, type, room number, bets number, availability, and state.\n    \n\nExample response body:\n\n``` json\n{\n    \"ok\": true,\n    \"room\": {\n        \"id\": \"\",\n        \"roomType\": \"\",\n        \"roomNumber\": 0,\n        \"betsNumber\": 0,\n        \"isAvailable\": true,\n        \"state\": \"\"\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/room/?page=2&limit=3&isAvailable=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"room",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "3"
+								},
+								{
+									"key": "isAvailable",
+									"value": "true"
+								}
+							]
+						},
+						"description": "### Get Room List\n\nThis endpoint retrieves a list of rooms with pagination support.\n\n#### Request\n\n- Method: GET\n    \n- URL: `http://localhost:3000/api/room/`\n    \n- Query Parameters:\n    \n    - page (number, optional): The page number for pagination.\n        \n    - limit (number, optional): The maximum number of items to return per page.\n        \n    - isAvailable (boolean, optional): Indicates whether the room is available.\n        \n\n``` javascript\nconst requestOptions = {\n  method: \"GET\",\n  redirect: \"follow\"\n};\n\nfetch(\"http://localhost:3000/api/room/?page=2&limit=3&isAvailable=true\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response for this request is a JSON object conforming to the following schema:\n\n``` json\n{\n    \"page\": 2,\n    \"limit\": 3,\n    \"total\": 11,\n    \"next\": \"/api/room?page=3&limit=3\",\n    \"prev\": \"/api/room?page=1&limit=3\",\n    \"rooms\": [\n        {\n            \"id\": \"3eb66225-5420-4bfe-851a-9c107ae2701a\",\n            \"roomType\": \"normal\",\n            \"roomNumber\": 118,\n            \"betsNumber\": 2,\n            \"isAvailable\": true,\n            \"state\": \"free\"\n        },\n    ]\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rooms by Params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"roomType\": \"normal\",\n    \"roomNumber\": 105,\n    \"betsNumber\": 1,\n    \"isAvailable\": false,\n    \"state\": \"occupied\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/room/get-by-params?page=2&limit=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"room",
+								"get-by-params"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "3"
+								}
+							]
+						},
+						"description": "### Get Room List by Params\n\nThis endpoint retrieves a list of rooms with pagination support.\n\n#### Request\n\n- Method: POST\n    \n- URL: `http://localhost:3000/api/room/get-by-params?page=2&limit=3`\n    \n- Query Parameters:\n    \n    - page (number, optional): The page number for pagination.\n        \n    - limit (number, optional): The maximum number of items to return per page.\n        \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\n\nconst raw = JSON.stringify({\n  \"roomType\": \"normal\",\n  \"roomNumber\": 105,\n  \"betsNumber\": 1,\n  \"isAvailable\": false,\n  \"state\": \"occupied\"\n});\n\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\n\nfetch(\"http://localhost:3000/api/room/get-by-params?page=2&limit=3\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response for this request is a JSON object conforming to the following schema:\n\n``` json\n{\n    \"page\": \"number\",\n    \"limit\": \"number\",\n    \"total\": \"number\",\n    \"next\": \"string\",\n    \"prev\": \"string\",\n    \"rooms\": [\n        {\n            \"id\": \"string\",\n            \"roomType\": \"string\",\n            \"roomNumber\": \"number\",\n            \"betsNumber\": \"number\",\n            \"isAvailable\": \"boolean\",\n            \"state\": \"string\"\n        }\n    ]\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Room",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNzhiNWFlLTZmNjctNGI0NC1iZDIyLTc2OWE3OTFkYmRjNiIsImlhdCI6MTczMDI0MTE4MSwiZXhwIjoxNzMwMjQ4MzgxfQ.97bgdBKPTTu-DjgR9T4bNyDbsneCNUzV9Kdy_DVRxbI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"40921c2a-a202-4461-8536-15ddde1a5853\",\n    \"roomType\": \"suit\",\n    \"roomNumber\": 67,\n    \"betsNumber\": 12,\n    \"isAvailable\": false,\n    \"state\":\"occupied\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/room",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"room"
+							]
+						},
+						"description": "### Update Room Details\n\nThis endpoint allows the client to update the details of a room.\n\n#### Request Headers\n\nthis endpoint required an Authentication header token that belong to a user with admin, reception or laundry role\n\n#### Request Body\n\n- id (string, required): The unique identifier of the room.\n    \n- roomType (string, optional): The type of the room.\n    \n- roomNumber (number, optional, unique): The room number.\n    \n- bedsNumber (number, optional): The number of beds in the room.\n    \n- isAvailable (boolean, optional): Indicates whether the room is available or not.\n    \n- state (string, optional): The current state of the room.\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNzhiNWFlLTZmNjctNGI0NC1iZDIyLTc2OWE3OTFkYmRjNiIsImlhdCI6MTczMDI0MTE4MSwiZXhwIjoxNzMwMjQ4MzgxfQ.97bgdBKPTTu-DjgR9T4bNyDbsneCNUzV9Kdy_DVRxbI\");\nconst raw = JSON.stringify({\n  \"id\": \"40921c2a-a202-4461-8536-15ddde1a5853\",\n  \"roomType\": \"suit\",\n  \"roomNumber\": 67,\n  \"betsNumber\": 12,\n  \"isAvailable\": false,\n  \"state\": \"occupied\"\n});\nconst requestOptions = {\n  method: \"PUT\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/room\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response is a JSON object with the following schema:\n\n``` json\n{\n    \"ok\": true,\n    \"message\": \"room updated successfully\"\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Room",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNzhiNWFlLTZmNjctNGI0NC1iZDIyLTc2OWE3OTFkYmRjNiIsImlhdCI6MTczMDI0MTE4MSwiZXhwIjoxNzMwMjQ4MzgxfQ.97bgdBKPTTu-DjgR9T4bNyDbsneCNUzV9Kdy_DVRxbI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"roomType\":\"suit\",\n    \"state\":\"free\",\n    \"roomNumber\":12,\n    \"betsNumber\":12,\n    \"isAvailable\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/room",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"room"
+							]
+						},
+						"description": "### Create Room\n\nThis endpoint allows the client to create a new room.\n\n#### Request Headers\n\nthis endpoint required an Authentication header token that belong to a user with admin or reception role\n\n#### Request Body\n\n- `roomType` (string) - The type of the room.\n    \n- `state` (string) - The current state of the room.\n    \n    - free, occupied, under_maintenance, pending_cleaning\n        \n- `roomNumber` (number) - The room number.\n    \n- `betsNumber` (number) - The number of bets associated with the room.\n    \n- `isAvailable` (boolean) - Indicates if the room is available.\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNzhiNWFlLTZmNjctNGI0NC1iZDIyLTc2OWE3OTFkYmRjNiIsImlhdCI6MTczMDI0MTE4MSwiZXhwIjoxNzMwMjQ4MzgxfQ.97bgdBKPTTu-DjgR9T4bNyDbsneCNUzV9Kdy_DVRxbI\");\n\nconst raw = JSON.stringify({\n  \"roomType\": \"suit\",\n  \"state\": \"free\",\n  \"roomNumber\": 12,\n  \"betsNumber\": 12,\n  \"isAvailable\": true\n});\n\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\n\nfetch(\"http://localhost:3000/api/room\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response (JSON Schema)\n\n``` json\n{\n    \"ok\": true,\n    \"room\": {\n        \"id\": \"03243d2b-4c31-4a0c-9db1-6943166013cb\",\n        \"roomType\": \"suit\",\n        \"roomNumber\": 12,\n        \"betsNumber\": 12,\n        \"isAvailable\": true,\n        \"state\": \"free\"\n    }\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "## Room Endpoints\n\nThe **Room Endpoints** provide functionalities for managing hotel rooms, including creating, updating, retrieving, and deleting room information within the hotel system. These endpoints allow administrators to efficiently handle room inventory, availability, and room details, ensuring smooth room management for daily operations.\n\n### Key Features:\n\n- **Create Room**: Add new rooms to the hotel system, specifying details such as room number, type, etc.\n    \n- **Get Room Details**: Retrieve detailed information about a specific room by its unique ID or room number.\n    \n- **Update Room**: Modify the details of an existing room, such as type, availability status.\n    \n- **List All Rooms**: Retrieve a list of all rooms in the hotel, including their availability status.\n    \n- **Delete Room**: Remove a room from the system, typically for rooms that are no longer part of the hotel inventory.\n    \n- **Room Availability**: Manage room availability for booking purposes, ensuring up-to-date information for reservations.\n    \n\n### Authentication:\n\n- Many endpoints require a valid Bearer Token, and some operations (e.g., creating, updating, and deleting rooms) may require Admin-level permissions to ensure secure access control.\n    \n\n### Example Use Cases:\n\n- **Add a New Room**: A hotel manager adds new rooms to the system when expanding the hotel or after renovations.\n    \n- **Update Room Information**: The hotel admin updates a room’s marks it as unavailable for maintenance.\n    \n- **View Room Availability**: A staff member retrieves a list of all available rooms to assist guests with bookings.\n    \n- **Remove a Room**: A room that is no longer part of the hotel’s offerings is removed from the system to maintain an accurate room inventory.\n    \n\n### Room Details:\n\nEach room object contains the following details:\n\n- **ID**: Unique identifier for the room, automatically generated as a UUID.\n    \n- **Room Type**: The type of room, either:\n    \n    - `suit` – A luxury suite.\n        \n    - `normal` – A standard room.\n        \n- **Room Number**: The room's unique number within the hotel.\n    \n- **Bets Number**: The number of beds in the room.\n    \n- **Is Available**: A boolean indicating whether the room is currently available for booking (`true`) or not (`false`).\n    \n- **State**: The current state of the room, which can be one of the following:\n    \n    - `free` – The room is unoccupied and ready for new guests.\n        \n    - `occupied` – The room is currently occupied by guests.\n        \n    - `under_maintenance` – The room is undergoing maintenance and is not available for booking.\n        \n    - `pending_cleaning` – The room is awaiting cleaning before it can be made available again.\n        \n- **Register**: (Optional) A relation to the `Register` model, containing details of the current or last guest's stay if applicable."
+		},
+		{
+			"name": "User (staff)",
+			"item": [
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/user/f1d889cb-f401-46a2-9ebb-4f42c5b712d9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user",
+								"f1d889cb-f401-46a2-9ebb-4f42c5b712d9"
+							]
+						},
+						"description": "# Delete User\n\nThis endpoint is used to delete a user by making an HTTP DELETE request to the specified URL. To access this endpoint, a bearer token of an admin user is required for authentication. The last execution of this request returned a 200 status with a JSON response containing an \"ok\" boolean field and a \"message\" string field.\n\nThis endpoint is used to delete a specific user by their unique identifier.\n\n#### Request Body\n\nThis request does not require a request body.\n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNzhiNWFlLTZmNjctNGI0NC1iZDIyLTc2OWE3OTFkYmRjNiIsImlhdCI6MTczMDIzMTg4OSwiZXhwIjoxNzMwMjM5MDg5fQ.HeLA8xn2RKGZvb9P_WmCPCMEfHwmkzXiLxNrf3eifp4\");\nconst requestOptions = {\n  method: \"DELETE\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/user/169bb743-aebd-4443-802e-e01fc1c7ce5f\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\n- `ok` (boolean): Indicates if the deletion was successful.\n    \n- `message` (string): A message confirming the deletion.\n    \n\nExample Response:\n\n``` json\n{\n    \"ok\": true,\n    \"message\": \"user deleted successfully\"\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/user/24e70acd-a92f-489e-88fc-685cbeac77c7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user",
+								"24e70acd-a92f-489e-88fc-685cbeac77c7"
+							]
+						},
+						"description": "## Get User By id\n\nThis endpoint makes an HTTP GET request to retrieve user information based on the provided user ID. In case the user is not found, the response returns a status code of 400 with a JSON body containing an \"ok\" key set to true and an \"errors\" array with the error message.\n\nThe response for a successful request includes user details such as ID, role, birth date, name, phone, username, and an \"isActive\" boolean value.\n\n### Request\n\nThe request does not require any request body or parameters. It uses an HTTP GET method to send a request to the server with the user ID included in the URL path.\n\n``` js\nconst requestOptions = {\n  method: \"GET\",\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/user/681a4a20-af26-41f2-8168-4bde28105fd1\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n### Response\n\nUpon a successful request, the server responds with a status code of 200 and a JSON object in the response body. The response includes a boolean value \"ok\" indicating the success status, and a \"user\" object containing details such as user ID, role, birth date, name, phone number, username, and an \"isActive\" flag.\n\nExample response body:\n\n``` json\n{\n    \"ok\": true,\n    \"user\": {\n        \"id\": \"681a4a20-af26-41f2-8168-4bde28105fd1\",\n        \"role\": \"admin\",\n        \"birthDate\": \"1993-10-10\",\n        \"name\": \"John\",\n        \"phone\": \"Doe\",\n        \"username\": \"johndoe1\",\n        \"isActive\": true\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/user/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user",
+								""
+							]
+						},
+						"description": "### Retrieve User Data with Pagination\n\nThis endpoint is used to retrieve a list of users with pagination using the `limit` and `page` query parameters.\n\n#### Request\n\n- Method: GET\n    \n- URL: `http://localhost:3000/api/user/?limit=3&page=1`\n    \n    - `limit` (number): The number of users per page.\n        \n    - `page` (number): The page number to retrieve.\n        \n\n``` javascript\nconst requestOptions = {\n  method: \"GET\",\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/user/\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nUpon a successful execution, the API returns a JSON object with the following fields:\n\n- `page` (number): The current page number.\n    \n- `limit` (number): The limit of users per page.\n    \n- `total` (number): The total number of users.\n    \n- `next` (string): The URL for the next page, if available.\n    \n- `prev` (string): The URL for the previous page, if available.\n    \n- `users` (array): An array of user objects, each containing the following fields:\n    \n    - `id` (string): The user's ID.\n        \n    - `role` (string): The user's role.\n        \n    - `birthDate` (string): The user's date of birth.\n        \n    - `name` (string): The user's name.\n        \n    - `phone` (string): The user's phone number.\n        \n    - `username` (string): The user's username.\n        \n    - `isActive` (boolean): Indicates whether the user is active.\n        \n\nExample Response Body:\n\n``` json\n{\n    \"page\": 0,\n    \"limit\": 0,\n    \"total\": 0,\n    \"next\": null,\n    \"prev\": null,\n    \"users\": [\n        {\n            \"id\": \"\",\n            \"role\": \"\",\n            \"birthDate\": \"\",\n            \"name\": \"\",\n            \"phone\": \"\",\n            \"username\": \"\",\n            \"isActive\": true\n        }\n    ]\n}\n\n ```\n\nThis endpoint is used to retrieve a list of users.\n\n#### Request\n\n- Method: GET\n    \n- URL: `http://localhost:3000/api/user/`\n    \n\n#### Response\n\nUpon a successful execution, the API returns a JSON object with the following fields:\n\n- `page` (number): The current page number.\n    \n- `limit` (number): The limit of users per page.\n    \n- `total` (number): The total number of users.\n    \n- `next` (string): The URL for the next page, if available.\n    \n- `prev` (string): The URL for the previous page, if available.\n    \n- `users` (array): An array of user objects, each containing the following fields:\n    \n    - `id` (string): The user's ID.\n        \n    - `role` (string): The user's role.\n        \n    - `birthDate` (string): The user's date of birth.\n        \n    - `name` (string): The user's name.\n        \n    - `phone` (string): The user's phone number.\n        \n    - `username` (string): The user's username.\n        \n    - `isActive` (boolean): Indicates whether the user is active.\n        \n\nExample Response Body:\n\n``` json\n{\n    \"page\": 0,\n    \"limit\": 0,\n    \"total\": 0,\n    \"next\": null,\n    \"prev\": null,\n    \"users\": [\n        {\n            \"id\": \"\",\n            \"role\": \"\",\n            \"birthDate\": \"\",\n            \"name\": \"\",\n            \"phone\": \"\",\n            \"username\": \"\",\n            \"isActive\": true\n        }\n    ]\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"id\": \"681a4a20-af26-41f2-8168-4bde28105fd1\",\n        \"birdDate\": \"2014-09-25T18:58:35.848Z\",\n        \"phone\": \"1234.1223.61\",\n        \"isActive\": true\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user"
+							]
+						},
+						"description": "### Update User\n\nThis endpoint allows the client to update user information using an HTTP PUT request.\n\n#### Request Headers\n\nthis endpoint required an Authentication header token that belong to a user with admin role\n\n#### Request Body\n\n- `id` (string, required): The unique identifier of the user.\n    \n- `birdDate` (string, optional): The birth date of the user.\n    \n- `phone` (string, optional): The phone number of the user.\n    \n- `isActive` (boolean, optional): Indicates whether the user is active or not.\n    \n- `role` (string, optional): The role of the user.\n    \n- `name` (string, optional): The name of the user.\n    \n- `username` (string, optional, unique): The username of the user.\n    \n- `password` (string, optional): The password of the user.\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNzhiNWFlLTZmNjctNGI0NC1iZDIyLTc2OWE3OTFkYmRjNiIsImlhdCI6MTczMDIzOTA5NSwiZXhwIjoxNzMwMjQ2Mjk1fQ.63cH9Y4UAXOlqwZvkDLHjKpaMRLkwvjNS-veABMXrJE\");\nconst raw = JSON.stringify({\n  \"id\": \"24e70acd-a92f-489e-88fc-685cbeac77c7\",\n  \"birdDate\": \"2014-09-25T18:58:35.848Z\",\n  \"phone\": \"1234.1223.61\",\n  \"isActive\": true,\n  \"role\": \"cafe\",\n  \"name\": \"Jonh\",\n  \"username\": \"jonh@username1\",\n  \"password\": \"jonh@username1\"\n});\nconst requestOptions = {\n  method: \"PUT\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/user\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\n- `ok` (boolean): Indicates the success status of the request.\n    \n- `message` (string): Additional information or error message.\n    \n\nExample:\n\n``` json\n{\n    \"ok\": true,\n    \"message\": \"user updated successfully\"\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users by Params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"role\": \"cafe\",\n    \"birdDate\": \"2014-09-25\",\n    \"name\": \"Jonh\",\n    \"phone\": \"1234.1223.61\",\n    \"username\": \"jonh@username1\",\n    \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/user/get-by-params",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user",
+								"get-by-params"
+							]
+						},
+						"description": "### Get User by Parameters\n\nThis endpoint allows the client to retrieve user information by providing specific parameters using an HTTP POST request.\n\n#### Request Body\n\n- `birdDate` (string, optional): The birth date of the user.\n    \n- `phone` (string, optional): The phone number of the user.\n    \n- `isActive` (boolean, optional): Indicates whether the user is active or not.\n    \n- `role` (string, optional): The role of the user.\n    \n- `name` (string, optional): The name of the user.\n    \n- `username` (string, optional, unique): The username of the user.\n    \n- `password` (string, optional): The password of the user.\n    \n\n#### Query Parameters\n\n- `limit` (integer, optional): The limit for the number of users to be returned.\n    \n- `page` (integer, optional): The page number for paginated results.\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nconst raw = JSON.stringify({\n  \"role\": \"cafe\",\n  \"birdDate\": \"2014-09-25\",\n  \"name\": \"Jonh\",\n  \"phone\": \"1234.1223.61\",\n  \"username\": \"jonh@username1\",\n  \"isActive\": true\n});\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/user/get-by-params?page=0&limit=10\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\n- `page` (integer): The page number of the returned results.\n    \n- `limit` (integer): The limit set for the number of users to be returned.\n    \n- `total` (integer): The total number of users matching the provided parameters.\n    \n- `next` (string): The link to the next page of results, if available.\n    \n- `prev` (string): The link to the previous page of results, if available.\n    \n- `users` (array): An array of user objects matching the provided parameters, each containing the user's details.\n    \n\nThis endpoint allows the client to retrieve user information by providing specific parameters using an HTTP POST request.\n\n``` json\n{\n    \"page\": 0,\n    \"limit\": 0,\n    \"total\": 0,\n    \"next\": null,\n    \"prev\": null,\n    \"users\": [\n        {\n            \"id\": \"\",\n            \"role\": \"\",\n            \"birthDate\": \"\",\n            \"name\": \"\",\n            \"phone\": \"\",\n            \"username\": \"\",\n            \"isActive\": true\n        }\n    ]\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"role\": \"cafe\",\n    \"birdDate\": \"2024-09-25T18:58:35.848Z\",\n    \"name\": \"Jonh\",\n    \"phone\": \"1234.1223.61\",\n    \"username\": \"superdoe14\",\n    \"password\": \"123456\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user"
+							]
+						},
+						"description": "### Create User\n\nThis endpoint allows the client to add a new user with the provided details.\n\n#### Request Headers\n\nthis endpoint required an Authentication header token that belong to a user with admin role\n\n#### Request Body\n\n- `role` (string, required): The role of the user, \"cafe\", \"admin\", \"laundry\" and \"reception\".\n    \n- `birdDate` (string, required): The birth date of the user in ISO 8601 format, e.g., \"2024-09-25T18:58:35.848Z\".\n    \n- `name` (string, required): The name of the user, e.g., \"Jonh\".\n    \n- `phone` (string, required): The phone number of the user, e.g., \"1234.1223.61\".\n    \n- `username` (string, required, unique): The username of the user, e.g., \"superdoe14\".\n    \n- `password` (string, required): The password for the user.\n    \n- `isActive` (boolean, optional): The status of the user, default false.\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNzhiNWFlLTZmNjctNGI0NC1iZDIyLTc2OWE3OTFkYmRjNiIsImlhdCI6MTczMDIzMTg4OSwiZXhwIjoxNzMwMjM5MDg5fQ.HeLA8xn2RKGZvb9P_WmCPCMEfHwmkzXiLxNrf3eifp4\");\nconst raw = JSON.stringify({\n  \"role\": \"cafe\",\n  \"birdDate\": \"2024-09-25T18:58:35.848Z\",\n  \"name\": \"Jonh\",\n  \"phone\": \"1234.1223.61\",\n  \"username\": \"superdoe14\",\n  \"password\": \"123456\",\n  \"isActive\": false\n});\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/user\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\n- Status: 201 Created\n    \n- Content-Type: application/json\n    \n- `ok` (boolean): Indicates if the operation was successful.\n    \n- `user` (object): Details of the newly added user including their `id`, `role`, `birdDate`, `name`, `phone`, `username`, and `isActive` status."
+					},
+					"response": []
+				}
+			],
+			"description": "## User (Staff) Endpoints\n\nThe **User (Staff) Endpoints** provide a set of functionalities for managing hotel staff members. These endpoints allow administrators to create, update, retrieve, and deactivate staff members within the hotel management system. The endpoints are secured, requiring a valid Bearer Token for access, ensuring that only authorized users can perform these actions.\n\n### Key Features:\n\n- **Create Staff**: Add new staff members to the system with details such as name, role, and contact information.\n    \n- **Get Staff Details**: Retrieve detailed information about a specific staff member by their unique ID.\n    \n- **Update Staff**: Modify the details of an existing staff member, such as their role or contact information.\n    \n- **List All Staff**: Retrieve a list of all active staff members in the hotel system.\n    \n- **Deactivate Staff**: Disable a staff member's account to revoke access without deleting their information.\n    \n- **Role-Based Access**: Role-based controls ensure that only users with sufficient privileges (e.g., Admin) can perform sensitive operations like creating or deactivating staff.\n    \n\n### Authentication:\n\n- These endpoints require a valid Bearer Token, and some operations may require additional roles or permissions, such as Admin privileges, to ensure secure access control.\n    \n\n### Example Use Cases:\n\n- **Add a New Employee**: The hotel manager adds a new staff member to the system when onboarding new employees.\n    \n- **Update Staff Role**: The HR team updates a staff member's role from \"Receptionist\" to \"Manager.\"\n    \n- **Retrieve Active Staff List**: The hotel admin views a list of all currently active staff members for scheduling or operational management.\n    \n- **Deactivate a Staff Member**: An employee leaving the hotel can have their account deactivated while retaining their historical records in the system.\n    \n\n### User (Staff) Details:\n\nEach staff object contains the following details:\n\n- **ID**: Unique identifier for the staff member, automatically generated as a UUID.\n    \n- **Role**: The role assigned to the staff member, which can be one of the following:\n    \n    - `admin` – Has full access to manage the system.\n        \n    - `laundry` – Manages laundry services.\n        \n    - `reception` – Handles front desk and guest services.\n        \n    - `cafe` – Manages cafeteria services.\n        \n- **Birth Date**: The staff member's date of birth.\n    \n- **Name**: The full name of the staff member.\n    \n- **Phone**: The contact phone number of the staff member.\n    \n- **Username**: A unique username used for logging into the system.\n    \n- **Password**: A hashed password used for authentication (stored securely and never exposed).\n    \n- **Is Active**: A boolean indicating whether the staff member's account is active (`true`) or deactivated (`false`).\n    \n- **Register**: A relation to the `Register` model, containing records of activities or interactions involving this staff member (e.g., guest check-ins or service tasks)."
+		},
+		{
+			"name": "Register",
+			"item": [
+				{
+					"name": "Delete Register",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE1NTc2MCwiZXhwIjoxNzMxMTYyOTYwfQ.Y49mZjcNd-pi_1n4BCbNYjAJ6BBfNDlc6FlZtvD0aGs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/register/76a1b592-51c6-4493-b33b-3dd38cd9fcdd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"register",
+								"76a1b592-51c6-4493-b33b-3dd38cd9fcdd"
+							]
+						},
+						"description": "### Delete Registration\n\nThis endpoint is used to delete a specific user registration by providing the user's unique identifier in the URL.\n\n#### Request Headers\n\nthis endpoint required an Authentication header token that belong to a user with reception role\n\n#### Request Body\n\nThis endpoint does not require a request body.\n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMyYjk3ZThmLTVmNDItNDFkYy1iM2E1LTdhNWYzODgzNzA2OSIsImlhdCI6MTczMDMxODAxNiwiZXhwIjoxNzMwMzI1MjE2fQ.uUCKDwg_6UdMp_cGzbBYob_kzEy5K_gP6aUctgOutlg\");\nconst requestOptions = {\n  method: \"DELETE\",\n  headers: myHeaders,\n};\nfetch(\"http://localhost:3000/api/register/05af11e5-79b7-4541-9db5-91d4cf5ee1ac\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\n- `ok` (boolean): Indicates whether the deletion was successful.\n    \n- message (string): A successfully messages.\n    \n\nExample response:\n\n``` json\n{\n  ok: true, \n  message: \"register deleted successfully\" \n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Register by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/register/77955170-337b-4bff-8286-4a3514b27185",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"register",
+								"77955170-337b-4bff-8286-4a3514b27185"
+							]
+						},
+						"description": "### Register API\n\nThis API endpoint is used to retrieve registration details for a specific ID.\n\n#### Request\n\n- Method: GET\n    \n- URL: `http://localhost:3000/api/register/2133b960-3466-41ab-8abd-e9cce5f57b9a`\n    \n\n``` javascript\nconst requestOptions = {\n  method: \"GET\"\n};\nfetch(\"http://localhost:3000/api/register/77955170-337b-4bff-8286-4a3514b27185\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response will be a JSON object with the following schema:\n\n``` json\n{\n    \"ok\": boolean,\n    \"register\": {\n        \"id\": string,\n        \"checkIn\": string,\n        \"checkOut\": string,\n        \"guestsNumber\": integer,\n        \"discount\": integer,\n        \"price\": integer,\n        \"userId\": string,\n        \"roomId\": string,\n        \"room\": {\n            \"roomNumber\": integer\n        },\n        \"guests\": [\n            {\n                \"id\": string,\n                \"di\": string,\n                \"checkIn\": string,\n                \"checkOut\": string,\n                \"dateOfBirth\": string,\n                \"city\": string,\n                \"name\": string,\n                \"lastName\": string,\n                \"phone\": string,\n                \"roomNumber\": integer,\n                \"countryId\": string\n            }\n        ],\n        \"charges\": [\n            {\n                \"id\": string,\n                \"createdAt\": string,\n                \"amount\": integer,\n                \"description\": string,\n                \"type\": string\n            }\n        ],\n        \"payments\": [\n            {\n                \"id\": string,\n                \"paidAt\": string,\n                \"amount\": integer,\n                \"description\": string,\n                \"type\": string\n            }\n        ]\n    }\n}\n\n ```\n\n- `ok`: Indicates if the request was successful.\n    \n- `register`: Contains the registration details.\n    - `id`: The ID of the registration.\n        \n    - `checkIn`: The check-in date.\n        \n    - `checkOut`: The check-out date.\n        \n    - `guestsNumber`: The number of guests.\n        \n    - `discount`: The discount applied.\n        \n    - `price`: The total price.\n        \n    - `userId`: The ID of the user associated with the registration.\n        \n    - `roomId`: The ID of the room associated with the registration.\n        \n    - `room`: Contains the details of the room.\n        \n    - `guests`: Contains an array of guest details.\n        \n    - `charges`: Contains an array of charges details.\n        \n    - `payments`: Contains an array of payment details."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Registers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/register?page=2&limit=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"register"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						},
+						"description": "## Get Register\n\nThis API endpoint sends an HTTP GET request to register a user with the specified page and limit parameters.\n\n### API Request\n\n- Method: GET\n    \n- URL: `http://localhost:3000/api/register`\n    \n- Query Parameters:\n    \n    - `page`: _(number)_ Indicates the page number for pagination.\n        \n    - `limit`: _(number)_ Specifies the limit for the number of items per page.\n        \n\n``` javascript\nconst requestOptions = {\n  method: \"GET\",\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/register?page=2&limit=2\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n### Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{\n  \"page\": number,\n  \"limit\": number,\n  \"total\": number,\n  \"next\": string,\n  \"prev\": string,\n  \"registers\": [\n    {\n      \"id\": string,\n      \"checkIn\": string,\n      \"checkOut\": string,\n      \"guestsNumber\": number,\n      \"discount\": number,\n      \"price\": number,\n      \"userId\": string,\n      \"roomId\": string\n    }\n  ]\n}\n\n ```\n\n- `page`: The current page number.\n    \n- `limit`: The limit of items per page.\n    \n- `total`: The total number of registers.\n    \n- `next`: Link to the next page.\n    \n- `prev`: Link to the previous page.\n    \n- `registers`: An array of register objects containing the following properties:\n    \n    - `id`: The unique identifier of the register.\n        \n    - `checkIn`: The check-in date.\n        \n    - `checkOut`: The check-out date.\n        \n    - `guestsNumber`: The number of guests.\n        \n    - `discount`: The discount applied.\n        \n    - `price`: The total price.\n        \n    - `userId`: The user ID associated with the register.\n        \n    - `roomId`: The room ID associated with the register."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Register",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE1NjY3MCwiZXhwIjoxNzMxMTYzODcwfQ.E6VK_UIhFcb5MpkvEWQmU5Hpjc24wP7CAwLAS5A_qeE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"77955170-337b-4bff-8286-4a3514b27185\",\n    \"discount\": 100,\n    \"price\": 1400\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"register"
+							]
+						},
+						"description": "### Update Register\n\nThis endpoint allows the client to update registration information.\n\n#### Request Headers\n\nThis endpoint requires an Authentication header token that belongs to a user with reception role.\n\n#### Request Body\n\n- `id` (string, required): The unique identifier for the registration.\n    \n- `discount` (number, optional): The discount value for the registration.\n    \n- `price` (number, optional): The price of the registration.\n    \n- userId (string, optional) staff user id\n    \n- roomId (string, optional) room id\n    \n- checkOut (string, optional) date checkOut\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE1NjY3MCwiZXhwIjoxNzMxMTYzODcwfQ.E6VK_UIhFcb5MpkvEWQmU5Hpjc24wP7CAwLAS5A_qeE\");\nconst raw = JSON.stringify({\n  \"id\": \"77955170-337b-4bff-8286-4a3514b27185\",\n  \"discount\": 100,\n  \"price\": 1400\n});\nconst requestOptions = {\n  method: \"PUT\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/register\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n    \"ok\": true,\n    \"message\": \"\"\n}\n\n ```\n\n- `ok` (boolean): Indicates if the request was successful.\n    \n- `message` (string): Additional information or error message."
+					},
+					"response": []
+				},
+				{
+					"name": "Check-In",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE1NjY3MCwiZXhwIjoxNzMxMTYzODcwfQ.E6VK_UIhFcb5MpkvEWQmU5Hpjc24wP7CAwLAS5A_qeE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"register\": {\n        \"discount\": 0,\n        \"price\": 1200,\n        \"roomId\": \"3245b9c2-259a-4c22-ab6b-161807730334\"\n    },\n    \"guests\": [\n        {\n            \"di\": \"150680414\",\n            \"checkIn\": \"2024-10-26\",\n            \"checkOut\": \"2024-10-26\",\n            \"dateOfBirth\": \"1981-08-01\",\n            \"city\": \"Santiago\",\n            \"name\": \"jane\",\n            \"lastName\": \"smith\",\n            \"phone\": \"+16487030751\",\n            \"roomNumber\": 112,\n            \"countryId\": \"AS\"\n        },\n        {\n            \"di\": \"250680414\",\n            \"checkIn\": \"2024-10-26\",\n            \"checkOut\": \"2024-10-26\",\n            \"dateOfBirth\": \"1981-08-01\",\n            \"city\": \"Fer\",\n            \"name\": \"Ast\",\n            \"lastName\": \"Smuts\",\n            \"phone\": \"+16487030751\",\n            \"roomNumber\": 112,\n            \"countryId\": \"AS\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/register/check-in",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"register",
+								"check-in"
+							]
+						},
+						"description": "### Create Register\n\nThis API endpoint is used to register guests for a booking.\n\n#### Request Headers\n\nThis endpoint requires an Authentication header token that belongs to a user with reception role.\n\n#### Request Body\n\n- register\n    \n    - `discount` (number, required): The discount applied to the booking.\n        \n    - `price` (number, required): The price of the booking.\n        \n    - `roomId` (string, required): The ID of the room for the booking.\n        \n    - `checkOut` (string, optional): The check-out date\n        \n- `guests` Guest\\[\\] array of guest objects\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE1NjY3MCwiZXhwIjoxNzMxMTYzODcwfQ.E6VK_UIhFcb5MpkvEWQmU5Hpjc24wP7CAwLAS5A_qeE\");\nconst raw = JSON.stringify({\n  \"register\": {\n    \"discount\": 0,\n    \"price\": 1200,\n    \"roomId\": \"3245b9c2-259a-4c22-ab6b-161807730334\"\n  },\n  \"guests\": [\n    {\n      \"di\": \"150680414\",\n      \"checkIn\": \"2024-10-26\",\n      \"checkOut\": \"2024-10-26\",\n      \"dateOfBirth\": \"1981-08-01\",\n      \"city\": \"Santiago\",\n      \"name\": \"jane\",\n      \"lastName\": \"smith\",\n      \"phone\": \"+16487030751\",\n      \"roomNumber\": 112,\n      \"countryId\": \"AS\"\n    },\n    {\n      \"di\": \"250680414\",\n      \"checkIn\": \"2024-10-26\",\n      \"checkOut\": \"2024-10-26\",\n      \"dateOfBirth\": \"1981-08-01\",\n      \"city\": \"Fer\",\n      \"name\": \"Ast\",\n      \"lastName\": \"Smuts\",\n      \"phone\": \"+16487030751\",\n      \"roomNumber\": 112,\n      \"countryId\": \"AS\"\n    }\n  ]\n});\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/register/check-in\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response is in JSON format with the following schema:\n\n``` json\n{\n  \"ok\": true,\n  \"register\": {\n    \"id\": \"\",\n    \"checkIn\": \"\",\n    \"guestsNumber\": 0,\n    \"discount\": 0,\n    \"price\": 0,\n    \"userId\": \"\",\n    \"roomId\": \"\"\n  },\n  \"guests\": [\n    {\n      \"id\": \"\",\n      \"di\": \"\",\n      \"checkIn\": \"\",\n      \"checkOut\": \"\",\n      \"dateOfBirth\": \"\",\n      \"city\": \"\",\n      \"name\": \"\",\n      \"lastName\": \"\",\n      \"phone\": \"\",\n      \"roomNumber\": 0,\n      \"countryId\": \"\",\n      \"registerId\": \"\"\n    }\n  ]\n}\n\n ```\n\n- `ok` (boolean): Indicates if the registration was successful.\n    \n- `register` (object): Details of the registered booking, including ID, check-in date, number of guests, discount, price, user ID, and room ID.\n    \n\nThe response status for a successful registration is 201."
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Params",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"guestsNumber\": 5,\n    \"discount\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/register/get-by-params",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"register",
+								"get-by-params"
+							]
+						},
+						"description": "### Get Register by Parameters\n\nThis API endpoint is used to retrieve registered guests for a booking based on specific parameters.\n\n#### Request Body\n\n- `guestsNumber` (number, optional number of guests for the booking.\n    \n- `discount` (number,, optional): The discount applied to the booking.\n    \n- `price` (number, optional): The price of the booking.\n    \n- `roomId` (string, optional ID of the room for the booking.\n    \n- `checkIn` (string, optional) check-in date and time for the booking.\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\n\nconst raw = JSON.stringify({\n  \"guestsNumber\": 5,\n  \"discount\": 0\n});\n\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\n\nfetch(\"http://localhost:3000/api/register/get-by-params\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response is in JSON format with the following schema:\n\n``` json\n{\n  \"page\": 0,\n  \"limit\": 0,\n  \"total\": 0,\n  \"next\": null,\n  \"prev\": null,\n  \"registers\": [\n    {\n      \"id\": \"\",\n      \"checkIn\": \"\",\n      \"guestsNumber\": 0,\n      \"discount\": 0,\n      \"price\": 0,\n      \"userId\": \"\",\n      \"roomId\": \"\"\n    }\n  ]\n}\n\n ```\n\n- `page` (number): The current page number.\n    \n- `limit` (number): The limit of items per page.\n    \n- `total` (number): The total number of registered guests.\n    \n- `next` (string): The URL for the next page of results.\n    \n- `prev` (string): The URL for the previous page of results.\n    \n- `registers` (array): An array of registered guests with their details including ID, check-in date, number of guests, discount, price, user ID, and room ID.\n    \n\nThe response status for a successful retrieval is 200."
+					},
+					"response": []
+				}
+			],
+			"description": "## Register Endpoints\n\nThe **Register Endpoints** provide functionalities for managing guest registrations within the hotel system. These endpoints allow staff to handle room bookings, track check-ins and check-outs, and manage billing details such as payments and charges. Each registration is associated with a user (staff), a room, and can include information about guests, payments, and additional charges.\n\n### Key Features:\n\n- **Create Registration**: Register a guest's stay by assigning a room, capturing check-in details, guest count, and applicable pricing.\n    \n- **Get Registration Details**: Retrieve detailed information about a specific guest registration, including room and payment details.\n    \n- **Update Registration**: Modify existing registrations, such as check-out times or guest counts.\n    \n- **List All Registrations**: Retrieve a list of all guest registrations, including filtering options for current or past stays.\n    \n- **Delete Registration**: Remove a registration from the system if it was created in error or is no longer needed.\n    \n\n### Authentication:\n\n- Many of these endpoints require a valid Bearer Token for access. Some operations, such as creating or deleting registrations, may require additional role-based permissions.\n    \n\n### Example Use Cases:\n\n- **Check-in a Guest**: A staff member checks in a guest by creating a registration, assigning a room, and capturing the check-in date and number of guests.\n    \n- **Update Check-out Information**: The receptionist updates a guest's registration to include the check-out date and final billing information.\n    \n- **Retrieve Past Registrations**: The admin views past registrations to generate reports on room occupancy and financials.\n    \n- **Manage Room Assignment**: The receptionist ensures that a room is not double-booked by linking each registration to a specific room.\n    \n\n### Registration Details:\n\nEach registration object contains the following details:\n\n- **ID**: Unique identifier for the registration, automatically generated as a UUID.\n    \n- **Check-In**: The date and time of the guest's check-in (defaults to the current time).\n    \n- **Check-Out**: (Optional) The date and time of the guest's check-out.\n    \n- **Guests Number**: The number of guests staying in the room.\n    \n- **Discount**: Any discount applied to the room price (default is 0).\n    \n- **Price**: amoutn of money per day\n    \n\n#### Relationships:\n\n- **User**: The staff member handling the registration.\n    \n- **Room**: The room assigned to the registration (each room can only be assigned to one active registration).\n    \n- **Guests**: A list of guests associated with the registration (typically used to track individual guest details).\n    \n- **Payments**: Records of payments made for the stay.\n    \n- **Charges**: Additional charges applied to the stay (e.g., for extra services or amenities)."
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Get auth Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "john_doe@username",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"alice_johnson@username\",\n    \"password\": \"alice_johnson@username\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "### Login API\n\nThis API endpoint is used to authenticate and login a user.\n\n#### Request Body\n\n- `username`: (string, required) The username of the user.\n    \n- `password`: (string, required) The password of the user.\n    \n\n#### Response\n\nUpon successful authentication, the API returns a JSON object with the following properties:\n\n- `ok`: A boolean indicating the success of the login operation.\n    \n- `user`: An object containing user details such as id, role, birth date, name, phone, username, and isActive status.\n    \n- `token`: A string containing the authentication token.\n    \n\nExample:\n\n``` json\n{\n    \"ok\": true,\n    \"user\": {\n        \"id\": \"\",\n        \"role\": \"\",\n        \"birthDate\": \"\",\n        \"name\": \"\",\n        \"phone\": \"\",\n        \"username\": \"\",\n        \"isActive\": true\n    },\n    \"token\": \"\"\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjliYmNhMGM2LWM5MTYtNDU3YS05MmEyLTk2ZjVmNmY1YzE4MyIsImlhdCI6MTcyNzI5MTA2NywiZXhwIjoxNzI3Mjk4MjY3fQ.XNYb7P5130pU9NuoCwrmLTDO4MEFVi4jt11TQgFQY1E\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/refresh-token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"refresh-token"
+							]
+						},
+						"description": "### Refresh Token\n\nThis endpoint is used to refresh the authentication token.\n\n#### Request Body\n\n- token (string, required): The authentication token to be refreshed.\n    \n\n#### Response\n\nThe response is a JSON object with the following schema:\n\n``` json\n{\n    \"ok\": true,\n    \"user\": {\n        \"id\": \"\",\n        \"role\": \"\",\n        \"birthDate\": \"\",\n        \"name\": \"\",\n        \"phone\": \"\",\n        \"username\": \"\",\n        \"isActive\": true\n    },\n    \"token\": \"\"\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "## Authentication System\n\nThe **Authentication System** for the Hotel System Administration API ensures that only authorized users can access and manage hotel resources. The API uses **Bearer Token** authentication to secure all endpoints, requiring clients to include a valid token in the `Authorization` header of each request.\n\n### Key Features:\n- **Token-Based Authentication**: Users must authenticate with valid credentials (e.g., username and password) to receive a Bearer Token.\n- **Token Expiration**: Bearer tokens have a limited lifespan and must be refreshed upon expiration to maintain access.\n- **Role-Based Access Control**: Different roles (e.g. admin, laundry, reception, cafe) are assigned varying levels of access to ensure secure and appropriate management of hotel resources.\n- **Secure Endpoints**: All sensitive operations require a valid Bearer Token for access, preventing unauthorized actions.\n\n### Authentication Flow:\n1. **Login**: The user sends their credentials to the authentication endpoint.\n2. **Token Issuance**: Upon successful authentication, the server responds with a Bearer Token.\n3. **Authorized Requests**: The client includes the token in the `Authorization` header (`Authorization: Bearer <token>`) for subsequent requests.\n4. **Token Expiration**: Once the token expires, the client must re-authenticate to obtain a new one.\n\n### Error Handling:\n- **401 Unauthorized**: Returned when a request lacks a valid token or the token is expired/invalid.\n- **403 Forbidden**: Returned when the user does not have sufficient permissions for a specific action.\n\nThis system ensures that all interactions with the API are secure, preventing unauthorized access and protecting sensitive hotel data.\n"
+		},
+		{
+			"name": "Guest",
+			"item": [
+				{
+					"name": "Get Guests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/guest?page=2&limit=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"guest"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "## Get Guest\n\nThis API endpoint sends an HTTP GET request to retrieve a list of guests with the specified page and limit parameters.\n\n### API Request\n\n- Method: GET\n    \n- URL: `http://localhost:3000/api/guest?page=2&limit=5`\n    \n- Query Parameters:\n    \n    - `page`: _(number)_ Indicates the page number for pagination.\n        \n    - `limit`: _(number)_ Specifies the limit for the number of items per page.\n        \n\n``` javascript\nconst requestOptions = {\n  method: \"GET\",\n  redirect: \"follow\"\n};\n\nfetch(\"http://localhost:3000/api/guest?page=2&limit=5\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n### Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{\n  \"page\": number,\n  \"limit\": number,\n  \"total\": number,\n  \"next\": string,\n  \"prev\": string,\n  \"guests\": [\n    {\n      \"id\": string,\n      \"di\": string,\n      \"checkIn\": string,\n      \"checkOut\": string,\n      \"dateOfBirth\": string,\n      \"city\": string,\n      \"name\": string,\n      \"lastName\": string,\n      \"phone\": string,\n      \"roomNumber\": number,\n      \"countryId\": string,\n      \"registerId\": string\n    }\n  ]\n}\n\n ```\n\n- `page`: The current page number.\n    \n- `limit`: The limit of items per page.\n    \n- `total`: The total number of guests.\n    \n- `next`: Link to the next page.\n    \n- `prev`: Link to the previous page.\n    \n- `guests`: An array of guest objects containing the following properties:\n    \n    - `id`: The unique identifier of the guest.\n        \n    - `di`: The guest's identification number.\n        \n    - `checkIn`: The check-in date.\n        \n    - `checkOut`: The check-out date.\n        \n    - `dateOfBirth`: The date of birth of the guest.\n        \n    - `city`: The city of the guest.\n        \n    - `name`: The first name of the guest.\n        \n    - `lastName`: The last name of the guest.\n        \n    - `phone`: The phone number of the guest.\n        \n    - `roomNumber`: The room number associated with the guest.\n        \n    - `countryId`: The ID of the country associated with the guest.\n        \n    - `registerId`: The ID of the register associated with the guest."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Guest By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/guest/36051508-3681-46ad-8e91-23a4c3a2ceb2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"guest",
+								"36051508-3681-46ad-8e91-23a4c3a2ceb2"
+							]
+						},
+						"description": "### Get Guest\n\nThis API endpoint sends an HTTP GET request to retrieve details of a specific guest identified by the provided UUID.\n\n#### API Request\n\n- Method: GET\n    \n- URL: `http://localhost:3000/api/guest/36051508-3681-46ad-8e91-23a4c3a2ceb2`\n    \n\n``` javascript\nconst requestOptions = {\n  method: \"GET\"\n};\nfetch(\"http://localhost:3000/api/guest/36051508-3681-46ad-8e91-23a4c3a2ceb2\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{\n  \"ok\": true,\n  \"guest\": {\n    \"id\": \"\",\n    \"di\": \"\",\n    \"checkIn\": \"\",\n    \"checkOut\": \"\",\n    \"dateOfBirth\": \"\",\n    \"city\": \"\",\n    \"name\": \"\",\n    \"lastName\": \"\",\n    \"phone\": \"\",\n    \"roomNumber\": 0,\n    \"countryId\": \"\",\n    \"registerId\": \"\"\n  }\n}\n\n ```\n\n- `ok`: Indicates if the request was successful.\n    \n- `guest`: An object containing the details of the guest with the following properties:\n    \n    - `id`: The unique identifier of the guest.\n        \n    - `di`: The guest's identification number.\n        \n    - `checkIn`: The check-in date.\n        \n    - `checkOut`: The check-out date.\n        \n    - `dateOfBirth`: The date of birth of the guest.\n        \n    - `city`: The city of the guest.\n        \n    - `name`: The first name of the guest.\n        \n    - `lastName`: The last name of the guest.\n        \n    - `phone`: The phone number of the guest.\n        \n    - `roomNumber`: The room number associated with the guest.\n        \n    - `countryId`: The ID of the country associated with the guest.\n        \n    - `registerId`: The ID of the register associated with the guest."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Guest",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMyYjk3ZThmLTVmNDItNDFkYy1iM2E1LTdhNWYzODgzNzA2OSIsImlhdCI6MTczMDMzMTg4NSwiZXhwIjoxNzMwMzM5MDg1fQ.rd2IHpLlwI9SPg0qhuJByFmNo35hrN2csGxBMUIJjoY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/guest/44ae5c3a-639c-414d-866b-34e9f4aeb32a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"guest",
+								"44ae5c3a-639c-414d-866b-34e9f4aeb32a"
+							]
+						},
+						"description": "### Delete Guest\n\nThis API endpoint sends an HTTP DELETE request to delete the details of a specific guest identified by the provided UUID.\n\n#### Request Headers\n\nthis endpoint required an Authentication header token that belong to a user with reception role\n\n#### API Request\n\n- Method: DELETE\n    \n- URL: `http://localhost:3000/api/guest/44ae5c3a-639c-414d-866b-34e9f4aeb32a`\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMyYjk3ZThmLTVmNDItNDFkYy1iM2E1LTdhNWYzODgzNzA2OSIsImlhdCI6MTczMDMzMTg4NSwiZXhwIjoxNzMwMzM5MDg1fQ.rd2IHpLlwI9SPg0qhuJByFmNo35hrN2csGxBMUIJjoY\");\n\nconst requestOptions = {\n  method: \"DELETE\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\n\nfetch(\"http://localhost:3000/api/guest/44ae5c3a-639c-414d-866b-34e9f4aeb32a\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{\n    \"ok\": true,\n    \"message\": \"guest deleted successfully\"\n}\n\n ```\n\n- `ok`: Indicates if the request was successful.\n    \n- `message`: A message indicating the status of the deletion operation."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Guest",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMyYjk3ZThmLTVmNDItNDFkYy1iM2E1LTdhNWYzODgzNzA2OSIsImlhdCI6MTczMDMzMTg4NSwiZXhwIjoxNzMwMzM5MDg1fQ.rd2IHpLlwI9SPg0qhuJByFmNo35hrN2csGxBMUIJjoY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"di\": \"050680414\",\n    \"checkIn\": \"2024-10-26\",\n    \"checkOut\": \"2024-10-26\",\n    \"dateOfBirth\": \"1981-08-01\",\n    \"city\": \"Santiago\",\n    \"name\": \"jane\",\n    \"lastName\": \"smith\",\n    \"phone\": \"+16487030751\",\n    \"roomNumber\": 104,\n    \"countryId\": \"AS\",\n    \"registerId\": \"d5695bcc-0ae0-4554-a4f8-a6965e162711\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/guest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"guest"
+							]
+						},
+						"description": "### Create Guest\n\nThis API endpoint sends an HTTP POST request to create a new guest with the provided details.\n\n#### Request Headers\n\nthis endpoint required an Authentication header token that belong to a user with reception role\n\n#### Request Body\n\n- Method: POST\n    \n- URL: `http://localhost:3000/api/guest`\n    \n- Body:\n    \n    - `di`: (string) The guest's identification number.\n        \n    - `checkIn`: (string) The check-in date.\n        \n    - `checkOut`: (string) The check-out date.\n        \n    - `dateOfBirth`: (string) The date of birth of the guest.\n        \n    - `city`: (string) The city of the guest.\n        \n    - `name`: (string) The first name of the guest.\n        \n    - `lastName`: (string) The last name of the guest.\n        \n    - `phone`: (string) The phone number of the guest.\n        \n    - `roomNumber`: (number) The room number associated with the guest.\n        \n    - `countryId`: (string) The ID of the country associated with the guest.\n        \n    - `registerId`: (string) The ID of the register associated with the guest.\n        \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMyYjk3ZThmLTVmNDItNDFkYy1iM2E1LTdhNWYzODgzNzA2OSIsImlhdCI6MTczMDMzMTg4NSwiZXhwIjoxNzMwMzM5MDg1fQ.rd2IHpLlwI9SPg0qhuJByFmNo35hrN2csGxBMUIJjoY\");\nconst raw = JSON.stringify({\n  \"di\": \"050680411\",\n  \"checkIn\": \"2024-10-26\",\n  \"checkOut\": \"2024-10-26\",\n  \"dateOfBirth\": \"1981-08-01\",\n  \"city\": \"Santiago\",\n  \"name\": \"jane\",\n  \"lastName\": \"smith\",\n  \"phone\": \"+16487030751\",\n  \"roomNumber\": 104,\n  \"countryId\": \"AS\",\n  \"registerId\": \"d5695bcc-0ae0-4554-a4f8-a6965e162711\"\n});\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/guest\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{\n  \"ok\": true,\n  \"guest\": {\n    \"id\": \"\",\n    \"di\": \"\",\n    \"checkIn\": \"\",\n    \"checkOut\": \"\",\n    \"dateOfBirth\": \"\",\n    \"city\": \"\",\n    \"name\": \"\",\n    \"lastName\": \"\",\n    \"phone\": \"\",\n    \"roomNumber\": 0,\n    \"countryId\": \"\",\n    \"registerId\": \"\"\n  }\n}\n\n ```\n\n- `ok`: Indicates if the request was successful.\n    \n- `guest`: An object containing the details of the created guest with the following properties:\n    \n    - `id`: The unique identifier of the guest.\n        \n    - `di`: The guest's identification number.\n        \n    - `checkIn`: The check-in date.\n        \n    - `checkOut`: The check-out date.\n        \n    - `dateOfBirth`: The date of birth of the guest.\n        \n    - `city`: The city of the guest.\n        \n    - `name`: The first name of the guest.\n        \n    - `lastName`: The last name of the guest.\n        \n    - `phone`: The phone number of the guest.\n        \n    - `roomNumber`: The room number associated with the guest.\n        \n    - `countryId`: The ID of the country associated with the guest.\n        \n    - `registerId`: The ID of the register associated with the guest."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Guest By Params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"di\": \"050680411\",\n    \"checkIn\": \"2024-10-26\",\n    \"checkOut\": \"2024-10-26\",\n    \"dateOfBirth\": \"1981-08-01\",\n    \"city\": \"Santiago\",\n    \"name\": \"jane\",\n    \"lastName\": \"smith\",\n    \"phone\": \"+16487030751\",\n    \"roomNumber\": 104,\n    \"countryId\": \"AS\",\n    \"registerId\": \"d5695bcc-0ae0-4554-a4f8-a6965e162711\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/guest/get-by-params",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"guest",
+								"get-by-params"
+							]
+						},
+						"description": "### Get Guest By Parameters\n\nThis API endpoint sends an HTTP POST request to get guests with their parameters.\n\n#### Request Body\n\n- Method: POST\n    \n- URL: `http://localhost:3000/api/guest`\n    \n- Body:\n    \n    - `di`: (string, optional) The guest's identification number.\n        \n    - `checkIn`: (string, optional) The check-in date.\n        \n    - `checkOut`: (string , optional) The check-out date.\n        \n    - `dateOfBirth`: (string, optional) The date of birth of the guest.\n        \n    - `city`: (string, optional) The city of the guest.\n        \n    - `name`: (string, optional) The first name of the guest.\n        \n    - `lastName`: (string, optional) The last name of the guest.\n        \n    - `phone`: (string, optional) The phone number of the guest.\n        \n    - `roomNumber`: (number, optional) The room number associated with the guest.\n        \n    - `countryId`: (string, optional) The ID of the country associated with the guest.\n        \n    - `registerId`: (string, optional) The ID of the register associated with the guest.\n        \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\n\nconst raw = JSON.stringify({\n  \"di\": \"050680411\",\n  \"checkIn\": \"2024-10-26\",\n  \"checkOut\": \"2024-10-26\",\n  \"dateOfBirth\": \"1981-08-01\",\n  \"city\": \"Santiago\",\n  \"name\": \"jane\",\n  \"lastName\": \"smith\",\n  \"phone\": \"+16487030751\",\n  \"roomNumber\": 104,\n  \"countryId\": \"AS\",\n  \"registerId\": \"d5695bcc-0ae0-4554-a4f8-a6965e162711\"\n});\n\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\n\nfetch(\"http://localhost:3000/api/guest/get-by-params\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{\n    \"page\": 1,\n    \"limit\": 10,\n    \"total\": 1,\n    \"next\": null,\n    \"prev\": null,\n    \"guests\": [\n        {\n            \"id\": \"30a1220a-50d2-4a08-864d-53bb753b144c\",\n            \"di\": \"050680411\",\n            \"checkIn\": \"2024-10-31\",\n            \"checkOut\": \"2024-10-26\",\n            \"dateOfBirth\": \"1981-08-01\",\n            \"city\": \"santiago\",\n            \"name\": \"jane\",\n            \"lastName\": \"smith\",\n            \"phone\": \"+16487030751\",\n            \"roomNumber\": 104,\n            \"countryId\": \"AS\",\n            \"registerId\": \"d5695bcc-0ae0-4554-a4f8-a6965e162711\"\n        }\n    ]\n}\n\n ```\n\n- `ok`: Indicates if the request was successful.\n    \n- `guests`: arrar objects containing the details of the guests with the following properties:\n    \n    - `id`: The unique identifier of the guest.\n        \n    - `di`: The guest's identification number.\n        \n    - `checkIn`: The check-in date.\n        \n    - `checkOut`: The check-out date.\n        \n    - `dateOfBirth`: The date of birth of the guest.\n        \n    - `city`: The city of the guest.\n        \n    - `name`: The first name of the guest.\n        \n    - `lastName`: The last name of the guest.\n        \n    - `phone`: The phone number of the guest.\n        \n    - `roomNumber`: The room number associated with the guest.\n        \n    - `countryId`: The ID of the country associated with the guest.\n        \n    - `registerId`: The ID of the register associated with the guest."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Guest",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMyYjk3ZThmLTVmNDItNDFkYy1iM2E1LTdhNWYzODgzNzA2OSIsImlhdCI6MTczMDMzMTg4NSwiZXhwIjoxNzMwMzM5MDg1fQ.rd2IHpLlwI9SPg0qhuJByFmNo35hrN2csGxBMUIJjoY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"cd5c7cbd-adf1-40a6-9151-a19c0c5ae60e\",\n    \"di\": \"050680412\",\n    \"checkIn\": \"2024-10-28\",\n    \"checkOut\": \"2024-10-29\",\n    \"dateOfBirth\": \"1981-08-02\",\n    \"city\": \"Santiago\",\n    \"name\": \"jane\",\n    \"lastName\": \"smith\",\n    \"phone\": \"+16487030751\",\n    \"roomNumber\": 104,\n    \"countryId\": \"AS\",\n    \"registerId\": \"d5695bcc-0ae0-4554-a4f8-a6965e162711\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/guest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"guest"
+							]
+						},
+						"description": "### Update Guest\n\nThis API endpoint sends an HTTP PUT request to update an existing guest with the provided details.\n\n#### Request Headers\n\nThis endpoint requires an Authentication header token that belongs to a user with reception role.\n\n#### Request Body\n\n- Method: PUT\n    \n- URL: `http://localhost:3000/api/guest`\n    \n- Body:\n    \n    - `id`: (string, required) The unique identifier of the guest.\n        \n    - `di`: (string, optional) The guest's identification number.\n        \n    - `checkIn`: (string, optional) The check-in date.\n        \n    - `checkOut`: (string, optional) The check-out date.\n        \n    - `dateOfBirth`: (string, optional) The date of birth of the guest.\n        \n    - `city`: (string, optional) The city of the guest.\n        \n    - `name`: (string, optional) The first name of the guest.\n        \n    - `lastName`: (string, optional) The last name of the guest.\n        \n    - `phone`: (string, optional) The phone number of the guest.\n        \n    - `roomNumber`: (number, optional) The room number associated with the guest.\n        \n    - `countryId`: (string, optional) The ID of the country associated with the guest.\n        \n    - `registerId`: (string, optional) The ID of the register associated with the guest.\n        \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nmyHeaders.append(\"Authorization\", \"Bearer <YOUR_AUTH_TOKEN>\");\nconst raw = JSON.stringify({\n  \"id\": \"cd5c7cbd-adf1-40a6-9151-a19c0c ...\",\n  \"di\": \"050680412\",\n  \"checkIn\": \"2024-10-28\",\n  \"checkOut\": \"2024-10-29\",\n  \"dateOfBirth\": \"1981-08-02\",\n  \"city\": \"Santiago\",\n  \"name\": \"jane\",\n  \"lastName\": \"smith\",\n  \"phone\": \"+16487030751\",\n  \"roomNumber\": 104,\n  \"countryId\": \"AS\",\n  \"registerId\": \"d5695bcc-0ae0-4554-a4f8-a6965e ...\"\n});\nconst requestOptions = {\n  method: \"PUT\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/guest\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{{\n    \"ok\": true,\n    \"message\": \"guest updated successfully\"\n}\n\n ```\n\n- `ok`: Indicates if the request was successful.\n    \n- `message`: An optional message regarding the request."
+					},
+					"response": []
+				}
+			],
+			"description": "## Guest Endpoints\n\nThe **Guest Endpoints** provide functionalities for managing guest information within the hotel system. These endpoints allow hotel staff to create, update, retrieve, and delete guest records. Each guest is linked to their registration, room number, and country of origin, ensuring comprehensive management of guest details for their stay.\n\n### Key Features:\n\n- **Create Guest**: Add new guest details when they check in, including personal information, room assignment, and nationality.\n    \n- **Get Guest Details**: Retrieve detailed information about a specific guest by their unique ID.\n    \n- **Update Guest**: Modify the details of an existing guest record, such as check-out time or contact information.\n    \n- **List All Guests**: Retrieve a list of all guests currently registered in the hotel.\n    \n- **Delete Guest**: Remove a guest's information from the system, typically after their stay is completed.\n    \n\n### Authentication:\n\n- These endpoints require a valid Bearer Token for access. Some operations, like creating or updating guest records, may require role-based permissions depending on the user’s role (e.g., reception staff).\n    \n\n### Example Use Cases:\n\n- **Register a Guest**: A receptionist registers a guest during check-in, linking them to their assigned room and recording their personal information.\n    \n- **Update Contact Information**: A guest's phone number is updated if they provide a new contact number during their stay.\n    \n- **Check-Out a Guest**: A receptionist updates the guest's record with the check-out time once their stay is completed.\n    \n- **View Guest List**: The admin or receptionist retrieves a list of all guests currently staying at the hotel to monitor occupancy levels.\n    \n\n### Guest Details:\n\nEach guest object contains the following details:\n\n- **ID**: Unique identifier for the guest, automatically generated as a UUID.\n    \n- **DI**: A unique identification number (e.g., national ID or passport number) for the guest.\n    \n- **Check-In**: The date and time the guest checked in (defaults to the current time).\n    \n- **Check-Out**: (Optional) The date and time the guest checked out.\n    \n- **Date of Birth**: The guest's date of birth.\n    \n- **City**: The guest's city of residence.\n    \n- **Name**: The guest's first name.\n    \n- **Last Name**: The guest's last name.\n    \n- **Phone**: The guest's contact phone number.\n    \n- **Room Number**: The room number assigned to the guest for their stay.\n    \n\n#### Relationships:\n\n- **Country**: The country of origin of the guest, linked through the `Country` model.\n    \n- **Register**: The registration details associated with the guest’s stay, linking them to the `Register` model for tracking their stay.\n    \n- **Cafeteria**: A list of cafeteria services or charges associated with the guest during their stay."
+		},
+		{
+			"name": "Booking",
+			"item": [
+				{
+					"name": "Get Bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/booking?page=2&limit=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"booking"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "# Get Booking Details\n\nThis endpoint retrieves a list of booking details with pagination support.\n\n## Request\n\n### Endpoint\n\n`GET` [http://localhost:3000/api/booking](http://localhost:3000/api/booking)\n\n### Query Parameters\n\n- `page` (integer) - The page number for pagination.\n    \n- `limit` (integer) - The number of items to return per page.\n    \n\n``` javascript\nconst requestOptions = {\n  method: \"GET\"\n};\nfetch(\"http://localhost:3000/api/booking?page=2&limit=5\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n## Response\n\n### Body\n\nThe response will be in JSON format and will contain the following fields:\n\n``` json\n{\n    \"page\": 2,\n    \"limit\": 5,\n    \"total\": 15,\n    \"next\": \"/api/booking?page=3&limit=5\",\n    \"prev\": \"/api/booking?page=1&limit=5\",\n    \"bookings\": [\n        {\n            \"id\": \"7b368fc7-e47c-474e-b22b-da9b377ff5c3\",\n            \"createdAt\": \"2024-11-08\",\n            \"amount\": 130,\n            \"description\": \"Room for 2 nights\",\n            \"name\": \"Morgan White\",\n            \"guestsNumber\": 2,\n            \"checkIn\": \"2024-11-16\",\n            \"checkOut\": \"2024-11-18\",\n            \"roomNumber\": 104\n        },\n        {\n            \"id\": \"820d8bd4-dbd9-455d-8753-205787f0c0f8\",\n            \"createdAt\": \"2024-11-08\",\n            \"amount\": 75,\n            \"description\": \"Single room for 1 night\",\n            \"name\": \"Chris Lee\",\n            \"guestsNumber\": 1,\n            \"checkIn\": \"2024-11-14\"\n        },\n        {\n            \"id\": \"95ff9d0f-09d4-4119-bae3-d2d52d888e88\",\n            \"createdAt\": \"2024-11-08\",\n            \"amount\": 145,\n            \"description\": \"Room for 2 nights\",\n            \"name\": \"Casey Harris\",\n            \"guestsNumber\": 2,\n            \"checkIn\": \"2024-11-18\",\n            \"checkOut\": \"2024-11-20\",\n            \"roomNumber\": 105\n        },\n        {\n            \"id\": \"a32a5d26-03ef-41fe-9585-0934988c08e6\",\n            \"createdAt\": \"2024-11-08\",\n            \"amount\": 120,\n            \"description\": \"Room for 2 nights\",\n            \"name\": \"John Doe\",\n            \"guestsNumber\": 2,\n            \"checkIn\": \"2024-11-10\",\n            \"checkOut\": \"2024-11-12\",\n            \"roomNumber\": 101\n        },\n        {\n            \"id\": \"a34f867e-775d-4f29-a43f-e37db7c0f916\",\n            \"createdAt\": \"2024-11-08\",\n            \"amount\": 200,\n            \"description\": \"Suite for 3 nights\",\n            \"name\": \"Pat Taylor\",\n            \"guestsNumber\": 3,\n            \"checkIn\": \"2024-11-17\",\n            \"checkOut\": \"2024-11-20\",\n            \"roomNumber\": 203\n        }\n    ]\n}\n\n ```\n\n- `page` (integer) - The current page number.\n    \n- `limit` (integer) - The limit of items per page.\n    \n- `total` (integer) - The total number of bookings available.\n    \n- `next` (string) - The link to the next page of results.\n    \n- `prev` (string) - The link to the previous page of results.\n    \n- `bookings` (array) - An array of booking objects containing the following fields:\n    \n    - `id` (string) - The unique identifier of the booking.\n        \n    - `createdAt` (string) - The date and time when the booking was created.\n        \n    - `amount` (integer) - The amount of the booking.\n        \n    - `description` (string) - The description of the booking.\n        \n    - `name` (string) - The name associated with the booking.\n        \n    - `guestsNumber` (integer) - The number of guests for the booking.\n        \n    - `checkIn` (string) - The check-in date for the booking.\n        \n    - `checkOut` (string) - The check-out date for the booking.\n        \n    - `roomNumber` (integer) - The room number associated with the booking."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/booking/7b368fc7-e47c-474e-b22b-da9b377ff5c3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"booking",
+								"7b368fc7-e47c-474e-b22b-da9b377ff5c3"
+							]
+						},
+						"description": "### Get Booking Details\n\nThis endpoint retrieves the details of a specific booking identified by the unique ID in the URL.\n\n#### Request\n\n- Method: GET\n    \n- URL: `http://localhost:3000/api/booking/7b368fc7-e47c-474e-b22b-da9b377ff5c3`\n    \n\n``` javascript\nconst requestOptions = {\n  method: \"GET\"\n};\nfetch(\"http://localhost:3000/api/booking/7b368fc7-e47c-474e-b22b-da9b377ff5c3\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\n- Status: 200\n    \n- Content-Type: application/json\n    \n\nThis response includes the details of the requested booking, with fields such as ID, creation timestamp, amount, description, guest name, number of guests, check-in and check-out dates, and room number.\n\n``` json\n{\n    \"ok\": true,\n    \"booking\": {\n        \"id\": \"7b368fc7-e47c-474e-b22b-da9b377ff5c3\",\n        \"createdAt\": \"2024-11-08\",\n        \"amount\": 130,\n        \"description\": \"Room for 2 nights\",\n        \"name\": \"Morgan White\",\n        \"guestsNumber\": 2,\n        \"checkIn\": \"2024-11-16\",\n        \"checkOut\": \"2024-11-18\",\n        \"roomNumber\": 104\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking By Params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 130\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/booking/get-by-params",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"booking",
+								"get-by-params"
+							]
+						},
+						"description": "### Get Booking by Parameters\n\nThis API endpoint allows you to retrieve bookings based on specific parameters.\n\n#### Request Body\n\n- **amount** (number, optional) - The amount associated with the booking.\n    \n- **name** (string, optional) name of who do the booking\n    \n- **guestsNumber** (number, optional) total guest number\n    \n- **checkIn** (string, optional) check-in data\n    \n- **checkOut** (string, optional) check-out data\n    \n- **roomNumber** (number, optional) room number designed\n    \n- **createdAt** (string, optional) date of when the booking was created\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nconst raw = JSON.stringify({\n  \"amount\": 130\n});\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/booking/get-by-params\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response will be in JSON format and will include the following fields:\n\n``` json\n{\n    \"page\": 1,\n    \"limit\": 10,\n    \"total\": 1,\n    \"next\": null,\n    \"prev\": null,\n    \"bookings\": [\n        {\n            \"id\": \"7b368fc7-e47c-474e-b22b-da9b377ff5c3\",\n            \"createdAt\": \"2024-11-08\",\n            \"amount\": 130,\n            \"description\": \"Room for 2 nights\",\n            \"name\": \"Morgan White\",\n            \"guestsNumber\": 2,\n            \"checkIn\": \"2024-11-16\",\n            \"checkOut\": \"2024-11-18\",\n            \"roomNumber\": 104\n        }\n    ]\n}\n\n ```\n\n- **page** (number) - The page number of the results.\n    \n- **limit** (number) - The limit of items per page.\n    \n- **total** (number) - The total number of bookings that match the parameters.\n    \n- **next** (string) - The link to the next page of results, if available.\n    \n- **prev** (string) - The link to the previous page of results, if available.\n    \n- **bookings** (array) - An array of booking objects with the following properties:\n    \n    - **id** (string) - The unique identifier of the booking.\n        \n    - **createdAt** (string) - The date and time when the booking was created.\n        \n    - **amount** (number) - The amount associated with the booking.\n        \n    - **description** (string) - The description of the booking.\n        \n    - **name** (string) - The name associated with the booking.\n        \n    - **guestsNumber** (number) - The number of guests for the booking.\n        \n    - **checkIn** (string) - The check-in date for the booking.\n        \n    - **checkOut** (string) - The check-out date for the booking.\n        \n    - **roomNumber** (number) - The room number associated with the booking."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Bokking",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE2MjMyNywiZXhwIjoxNzMxMTY5NTI3fQ.mTY206bvJPsO5ptmg4tc1qU0pfH4hXWaX6fMR34MvjU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 1200,\n    \"guestsNumber\": 2,\n    \"name\": \"Jonh Smith\",\n    \"description\": \"room for two night\",\n    \"checkIn\": \"2024-12-12\",\n    \"checkOut\":\"2024-12-15\",\n    \"roomNumber\":121\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/booking",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"booking"
+							]
+						},
+						"description": "### Create a New Booking\n\nThis API endpoint is used to create a new booking for a guest.\n\n#### Request Headers\n\nThis endpoint requires an Authentication header token that belongs to a user with reception role.\n\n#### Request Body\n\n- `amount` (number): The amount for the booking.\n    \n- `guestsNumber` (number): The number of guests for the booking.\n    \n- `name` (string): The name of the guest.\n    \n- `description` (string): Description of the booking.\n    \n- `checkIn` (string): The check-in date for the booking in the format \"YYYY-MM-DD\".\n    \n- `checkOut` (string, optional): The check-out date for the booking in the format \"YYYY-MM-DD\".\n    \n- `roomNumber` (number, optional): The room number for the booking.\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE2MjMyNywiZXhwIjoxNzMxMTY5NTI3fQ.mTY206bvJPsO5ptmg4tc1qU0pfH4hXWaX6fMR34MvjU\");\nconst raw = JSON.stringify({\n  \"amount\": 1200,\n  \"guestsNumber\": 2,\n  \"name\": \"Jonh Smith\",\n  \"description\": \"room for two night\",\n  \"checkIn\": \"2024-12-12\",\n  \"checkOut\": \"2024-12-15\",\n  \"roomNumber\": 121\n});\nconst requestOptions = {\n  method: \"POST\",\n  headers: myHeaders,\n  body: raw\n};\nfetch(\"http://localhost:3000/api/booking\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nUpon successful creation of the booking, the API returns a status code of 201 and a JSON object with the following fields:\n\n``` json\n{\n    \"ok\": true,\n    \"booking\": {\n        \"id\": \"49c429a9-2ac5-4a49-a602-e5ff0f51b9cc\",\n        \"createdAt\": \"2024-11-09\",\n        \"amount\": 1200,\n        \"description\": \"room for two night\",\n        \"name\": \"jonh smith\",\n        \"guestsNumber\": 2,\n        \"checkIn\": \"2024-12-12\",\n        \"checkOut\": \"2024-12-15\",\n        \"roomNumber\": 121\n    }\n}\n\n ```\n\n- `ok` (boolean): Indicates if the booking was successfully created.\n    \n- `booking` (object): Contains details of the created booking including:\n    \n    - `id` (string): The unique identifier for the booking.\n        \n    - `createdAt` (string): The timestamp when the booking was created.\n        \n    - `amount` (number): The amount for the booking.\n        \n    - `description` (string): Description of the booking.\n        \n    - `name` (string): The name of the guest.\n        \n    - `guestsNumber` (number): The number of guests for the booking.\n        \n    - `checkIn` (string): The check-in date for the booking.\n        \n    - `checkOut` (string): The check-out date for the booking.\n        \n    - `roomNumber` (number): The room number for the booking."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Booking",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE2MzEzNywiZXhwIjoxNzMxMTcwMzM3fQ.jsmCr9SFehPVxgYVB5iPd0t37r0b7OxXNzrdiq3AJLc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"49c429a9-2ac5-4a49-a602-e5ff0f51b9cc\",\n    \"amount\": 1300,\n    \"description\": \"room for tree night\",\n    \"name\": \"jonh doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/booking",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"booking"
+							]
+						},
+						"description": "### Update Booking\n\nThis endpoint allows updating a booking by sending an HTTP PUT request to the specified URL.\n\n#### Request Headers\n\nThis endpoint requires an Authentication header token that belongs to a user with reception role.\n\n#### Request Body\n\n- id (string): The ID of the booking to be updated.\n    \n- `amount` (number, optional): The amount for the booking.\n    \n- `guestsNumber` (number, optional): The number of guests for the booking.\n    \n- `name` (string, optional): The name of the guest.\n    \n- `description` (string, optional): Description of the booking.\n    \n- `checkIn` (string, optional): The check-in date for the booking in the format \"YYYY-MM-DD\".\n    \n- `checkOut` (string, optional): The check-out date for the booking in the format \"YYYY-MM-DD\".\n    \n- `roomNumber` (number, optional): The room number for the booking.\n    \n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Content-Type\", \"application/json\");\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE2MzEzNywiZXhwIjoxNzMxMTcwMzM3fQ.jsmCr9SFehPVxgYVB5iPd0t37r0b7OxXNzrdiq3AJLc\");\nconst raw = JSON.stringify({\n  \"id\": \"49c429a9-2ac5-4a49-a602-e5ff0f51b9cc\",\n  \"amount\": 1300,\n  \"description\": \"room for tree night\",\n  \"name\": \"jonh doe\"\n});\nconst requestOptions = {\n  method: \"PUT\",\n  headers: myHeaders,\n  body: raw\n};\nfetch(\"http://localhost:3000/api/booking\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\nThe response is in JSON format and follows the schema below:\n\n``` json\n{\n    \"ok\": true,\n    \"message\": \"booking updated successfully\"\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Booking",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE2MzEzNywiZXhwIjoxNzMxMTcwMzM3fQ.jsmCr9SFehPVxgYVB5iPd0t37r0b7OxXNzrdiq3AJLc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/booking/7b368fc7-e47c-474e-b22b-da9b377ff5c3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"booking",
+								"7b368fc7-e47c-474e-b22b-da9b377ff5c3"
+							]
+						},
+						"description": "### Delete Booking\n\nThis endpoint is used to delete a specific booking by providing the booking ID in the URL.\n\n#### Request Headers\n\nThis endpoint requires an Authentication header token that belongs to a user with reception role.\n\n#### Request Body\n\nThis request does not require a request body.\n\n``` javascript\nconst myHeaders = new Headers();\nmyHeaders.append(\"Authorization\", \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZDE2NmMwLWRhMzctNDkyOC05MjcyLWE2NWRiYTc2YmMxMCIsImlhdCI6MTczMTE2MzEzNywiZXhwIjoxNzMxMTcwMzM3fQ.jsmCr9SFehPVxgYVB5iPd0t37r0b7OxXNzrdiq3AJLc\");\nconst requestOptions = {\n  method: \"DELETE\",\n  headers: myHeaders,\n  redirect: \"follow\"\n};\nfetch(\"http://localhost:3000/api/booking/7b368fc7-e47c-474e-b22b-da9b377ff5c3\", requestOptions)\n  .then((response) => response.text())\n  .then((result) => console.log(result))\n  .catch((error) => console.error(error));\n\n ```\n\n#### Response\n\n- `ok` (boolean): Indicates if the deletion was successful.\n    \n- `message` (string): A message confirming the status of the deletion.\n    \n\nExample Response:\n\n``` json\n{\n    \"ok\": true,\n    \"message\": \"booking deleted successfully\"\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "## Booking Endpoints\n\nThe **Booking Endpoints** enable efficient management of hotel room bookings, allowing staff to handle guest reservations, track occupancy, and manage booking details such as check-in/check-out dates. Each booking can links a guest to a room and can include additional details like guest count, total amount, and booking purpose.\n\n### Key Features\n\n- **Create Booking**: Register a new booking by assigning a room, specifying check-in/check-out dates, guest count, and additional booking details.\n    \n- **Retrieve Booking Details**: View comprehensive details for a specific booking\n    \n- **Update Booking**: Modify an existing booking's details, such as adjusting the check-out date, changing guest count, or updating the amount.\n    \n- **List All Bookings**: Retrieve a list of all bookings, with options to filter by date range or specific guest details for better organization and reporting.\n    \n- **Delete Booking**: Remove a booking record from the system, typically used when a booking is created in error or canceled before the guest checks in.\n    \n\n### Authentication\n\n- Most booking endpoints require a valid Bearer Token for access. Role-based permissions may be necessary for certain operations, such as creating or deleting bookings, to ensure secure and appropriate access.\n    \n\n### Example Use Cases\n\n- **Booking a Room**: Receptionists create a booking for a guest by selecting a room, setting the check-in date, and capturing any additional details like guest count or special requirements.\n    \n- **Extend a Guest's Stay**: Update an existing booking to extend the check-out date, adjusting the room’s availability and total charges.\n    \n- **View Current and Upcoming Bookings**: Admins or receptionists retrieve active or upcoming bookings to track occupancy and room readiness.\n    \n- **Remove a Booking**: In case of a booking error or guest cancellation, the booking can be safely deleted from the system.\n    \n\n### Booking Details\n\nEach booking object contains the following attributes:\n\n- **ID**: Unique identifier for each booking, generated as a UUID.\n    \n- **Created At**: Timestamp of when the booking was created.\n    \n- **Amount**: Total price of the booking.\n    \n- **Description**: Notes about the booking, e.g., \"Vacation stay\" or \"Business trip.\"\n    \n- **Name**: Primary guest’s name.\n    \n- **Guests Number**: Number of guests for this booking.\n    \n- **Check-In**: Date and time of guest check-in.\n    \n- **Check-Out**: (Optional) Date and time of guest check-out.\n    \n- **Room Number**: (Optional) Room assigned for this booking."
+		}
+	]
+}
