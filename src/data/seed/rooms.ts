@@ -33,15 +33,15 @@ export const rooms: Omit<IRoom, 'id'>[] = [
     roomType: 'suit',
     roomNumber: 104,
     betsNumber: 1,
-    isAvailable: true,
-    state: 'free',
+    isAvailable: false,
+    state: 'pending_cleaning',
   },
   {
     roomType: 'normal',
     roomNumber: 105,
     betsNumber: 1,
     isAvailable: false,
-    state: 'occupied',
+    state: 'under_maintenance',
   },
   {
     roomType: 'normal',
@@ -76,7 +76,7 @@ export const rooms: Omit<IRoom, 'id'>[] = [
     roomNumber: 110,
     betsNumber: 3,
     isAvailable: false,
-    state: 'occupied',
+    state: 'under_maintenance',
   },
   {
     roomType: 'normal',
@@ -89,8 +89,8 @@ export const rooms: Omit<IRoom, 'id'>[] = [
     roomType: 'normal',
     roomNumber: 112,
     betsNumber: 3,
-    isAvailable: true,
-    state: 'free',
+    isAvailable: false,
+    state: 'pending_cleaning',
   },
   {
     roomType: 'normal',
@@ -111,7 +111,7 @@ export const rooms: Omit<IRoom, 'id'>[] = [
     roomNumber: 115,
     betsNumber: 3,
     isAvailable: false,
-    state: 'occupied',
+    state: 'pending_cleaning',
   },
   {
     roomType: 'normal',
@@ -152,8 +152,8 @@ export const rooms: Omit<IRoom, 'id'>[] = [
     roomType: 'normal',
     roomNumber: 121,
     betsNumber: 2,
-    isAvailable: true,
-    state: 'free',
+    isAvailable: false,
+    state: 'pending_cleaning',
   },
   {
     roomType: 'suit',
@@ -167,7 +167,7 @@ export const rooms: Omit<IRoom, 'id'>[] = [
     roomNumber: 123,
     betsNumber: 3,
     isAvailable: false,
-    state: 'occupied',
+    state: 'under_maintenance',
   },
   {
     roomType: 'normal',
@@ -201,8 +201,8 @@ export const rooms: Omit<IRoom, 'id'>[] = [
     roomType: 'normal',
     roomNumber: 128,
     betsNumber: 2,
-    isAvailable: true,
-    state: 'free',
+    isAvailable: false,
+    state: 'pending_cleaning',
   },
   {
     roomType: 'normal',

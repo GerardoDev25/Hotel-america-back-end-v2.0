@@ -42,7 +42,7 @@ async function main() {
 
   // * create registers
   const roomsDB = await prisma.room.findMany({
-    where: { isAvailable: true },
+    where: { state: 'occupied' },
     select: { id: true, betsNumber: true },
   });
 
