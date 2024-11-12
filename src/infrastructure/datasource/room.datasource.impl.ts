@@ -35,6 +35,7 @@ export class RoomDatasourceImpl extends RoomDatasource {
           skip: (page - 1) * limit,
           take: limit,
           where: { isAvailable },
+          orderBy: { roomNumber: 'asc' },
         }),
       ]);
 

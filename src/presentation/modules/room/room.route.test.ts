@@ -106,7 +106,6 @@ describe('room.route.ts', () => {
   it('should get error message if pagination is grown (getAll)', async () => {
     const page = 'page';
     const limit = 'limit';
-    // await prisma.room.createMany({ data: seedData.rooms });
     const { body } = await request(testServer.app)
       .get(`/api/room?page=${page}&limit=${limit}`)
       .expect(400);
@@ -118,7 +117,6 @@ describe('room.route.ts', () => {
   it('should get error message if pagination contain negative numbers (getAll)', async () => {
     const page = -1;
     const limit = -3;
-    // await prisma.room.createMany({ data: seedData.rooms });
     const { body } = await request(testServer.app)
       .get(`/api/room?page=${page}&limit=${limit}`)
       .expect(400);
