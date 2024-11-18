@@ -168,7 +168,7 @@ describe('guest.route.ts', () => {
 
     const params: GuestFilter = {
       city: guest.city,
-      checkIn: guest.checkIn.toISOString().split('T')[0],
+      name: rawGuest.name.toUpperCase(),
     };
 
     const { body } = await request(testServer.app)
@@ -182,7 +182,6 @@ describe('guest.route.ts', () => {
     expect(body.next).toBe(null);
     expect(body.prev).toBe(null);
     expect(body.guests).toBeInstanceOf(Array);
-
     for (const guest of body.guests) {
       expect(guest).toEqual({
         id: expect.any(String),

@@ -44,31 +44,46 @@ export class GuestDatasourceImpl extends GuestDatasource {
     }
   }
 
+  private buildSearchQuery({ name, lastName, ...searchParam }: FilterGuestDto) {
+    const where: IGuestFilterDto = cleanObject(searchParam);
+    const fullNameObject = Object.entries(cleanObject({ name, lastName }));
+
+    if (fullNameObject.length > 0) {
+      const OR: IGuestFilterDto['OR'] = [];
+      for (const field of fullNameObject) {
+        OR.push({ [field[0]]: { contains: field[1], mode: 'insensitive' } });
+      }
+      where.OR = OR;
+    }
+
+    if (searchParam.checkIn)
+      where.checkIn = {
+        gte: searchParam.checkIn,
+        lt: HandleDate.nextDay(searchParam.checkIn),
+      };
+
+    if (searchParam.checkOut)
+      where.checkOut = {
+        gte: searchParam.checkOut,
+        lt: HandleDate.nextDay(searchParam.checkOut),
+      };
+
+    if (searchParam.dateOfBirth)
+      where.dateOfBirth = {
+        gte: searchParam.dateOfBirth,
+        lt: HandleDate.nextDay(searchParam.dateOfBirth),
+      };
+
+    return where;
+  }
+
   async getByParams(
     page: number,
     limit: number,
     searchParam: FilterGuestDto
   ): Promise<GuestPagination> {
     try {
-      const where: IGuestFilterDto = cleanObject(searchParam);
-
-      if (searchParam.checkIn)
-        where.checkIn = {
-          gte: searchParam.checkIn,
-          lt: HandleDate.nextDay(searchParam.checkIn),
-        };
-
-      if (searchParam.checkOut)
-        where.checkOut = {
-          gte: searchParam.checkOut,
-          lt: HandleDate.nextDay(searchParam.checkOut),
-        };
-
-      if (searchParam.dateOfBirth)
-        where.dateOfBirth = {
-          gte: searchParam.dateOfBirth,
-          lt: HandleDate.nextDay(searchParam.dateOfBirth),
-        };
+      const where: IGuestFilterDto = this.buildSearchQuery(searchParam);
 
       const [totalDB, guestsDb] = await Promise.all([
         prisma.guest.count({ where }),

@@ -23,15 +23,20 @@ export interface GuestPagination {
 }
 
 export type GuestFilter = Partial<Omit<IGuest, 'id'>>;
+
+export type UpdateGuest = Partial<CreateGuest> & { id: string };
+
+export type CreateGuest = Omit<IGuest, 'id' | 'registerId' | 'checkIn'> & {
+  registerId?: string;
+};
+
 export type IGuestFilterDto = Partial<
   Omit<GuestFilter, 'checkIn' | 'checkOut' | 'dateOfBirth'>
 > & {
   checkIn?: Date | { gte: Date; lt: Date };
   checkOut?: Date | { gte: Date; lt: Date };
   dateOfBirth?: Date | { gte: Date; lt: Date };
+  OR?: OrField[];
 };
 
-export type CreateGuest = Omit<IGuest, 'id' | 'registerId' | 'checkIn'> & {
-  registerId?: string;
-};
-export type UpdateGuest = Partial<CreateGuest> & { id: string };
+type OrField = Record<string, { contains: string; mode: 'insensitive' }>;
