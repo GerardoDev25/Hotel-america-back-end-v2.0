@@ -115,6 +115,19 @@ export class RoomDatasourceImpl extends RoomDatasource {
     createDto: CreateRoomDto
   ): Promise<{ ok: boolean; room: IRoom }> {
     try {
+      const room = await prisma.room.findUnique({
+        where: { roomNumber: createDto.roomNumber },
+      });
+      if (room) {
+        throw CustomError.conflict(
+          `room with roomNumber: ${createDto.roomNumber} already exists`
+        );
+      }
+    } catch (error: any) {
+      throw this.handleError(error);
+    }
+
+    try {
       const newRoom = await prisma.room.create({ data: createDto });
 
       return {
