@@ -296,6 +296,25 @@ describe('room.route.ts', () => {
     });
   });
 
+  it('should get and error if number room exist (update)', async () => {
+    const user = await prisma.user.create({ data: seedData.users[0] });
+    const token = await JwtAdapter.generateToken({ payload: { id: user.id } });
+
+    const roomCreated = await prisma.room.create({ data: seedData.rooms[0] });
+    const roomNumber = roomCreated.roomNumber;
+
+    const { body } = await request(testServer.app)
+      .put(`/api/room/`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ id: roomCreated.id, roomNumber })
+      .expect(409);
+
+    expect(body).toEqual({
+      ok: false,
+      errors: [`room with roomNumber: ${roomNumber} already exists`],
+    });
+  });
+
   it('should delete a room by id (delete)', async () => {
     const user = await prisma.user.create({ data: seedData.users[0] });
     const token = await JwtAdapter.generateToken({ payload: { id: user.id } });

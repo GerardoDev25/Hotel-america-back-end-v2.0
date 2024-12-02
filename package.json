@@ -9,7 +9,7 @@
     "seed": "ts-node-dev -r tsconfig-paths/register ./src/data/seed/seed.ts",
     "dev": "npm run docker:up && tsnd -r tsconfig-paths/register --respawn --clear src/app.ts",
     "build": "rimraf ./dist && tsc  --project tsconfig.prod.json && tsc-alias",
-    "start": "npm run build && node dist/app.js",
+    "start": "node dist/app.js",
     "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx,js,jsx}' --fix",
     "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,md}'",

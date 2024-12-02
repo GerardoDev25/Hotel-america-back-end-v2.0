@@ -155,6 +155,21 @@ export class RoomDatasourceImpl extends RoomDatasource {
     const data = cleanObject(rest);
 
     try {
+      if (data.roomNumber) {
+        const room = await prisma.room.findUnique({
+          where: { roomNumber: data.roomNumber },
+        });
+        if (room) {
+          throw CustomError.conflict(
+            `room with roomNumber: ${data.roomNumber} already exists`
+          );
+        }
+      }
+    } catch (error: any) {
+      throw this.handleError(error);
+    }
+
+    try {
       await prisma.room.update({ where: { id }, data });
       return { ok: true, message: 'room updated successfully' };
     } catch (error: any) {
