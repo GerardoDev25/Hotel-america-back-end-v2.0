@@ -1,5 +1,5 @@
 # Hotel-america-back-end-v2.0
-this is a project about a hotel manager system that i was try to do before but i couldn't so let do it now
+this is a project about a hotel manager system that handler all the matter of a hotel management daily
 
 
 ## Before to start
